@@ -19,6 +19,7 @@ Instead of managing vehicle availability, customer information, and rental reser
 - Samuel Mokhles — Team Member
 - Mathew Ashraf — Team Member
 - Marwan Mohammed — Team Member
+- Basem Hany — Team Member
 
 **Contact**
 
