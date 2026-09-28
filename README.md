@@ -52,14 +52,14 @@ Development and testing will run in parallel throughout the project. Each comple
 
 ### 📅 Timeline
 
-| Week | Dates | Backend | Frontend | Testing / QA |
-|---|---|---|---|---|
-| **1** | **Sep 28 – Oct 4** | Requirements analysis, use cases, ERD, database design, project architecture, database setup | UI/UX foundation, design system, color palette, layout and navigation | Define testing strategy and prepare initial test cases |
-| **2** | **Oct 5 – 11** | Registration, login, authentication, authorization, customer profiles, driving license information | Login, registration, customer profile and dashboard | Authentication, registration, authorization and validation testing |
-| **3** | **Oct 12 – 18** | Vehicle CRUD, categories, rental rates, vehicle status and vehicle information | Vehicle listing, vehicle details and vehicle management screens | Vehicle CRUD, validation, permissions and status testing |
-| **4** | **Oct 19 – 25** | Availability checks, date validation, reservation creation, rental status and double-booking prevention | Vehicle search, availability results, booking flow and reservation confirmation | Availability, date validation, reservation, cancellation and double-booking testing |
-| **5** | **Oct 26 – Nov 1** | Vehicle pickup and return, payment management, rental history, rental status updates and module integration | Rental details, payment screens, return screens, My Rentals and rental history | Complete rental lifecycle, payment, return and history testing |
-| **6** | **Nov 2 – 8** | System integration, bug fixing, validation, error handling and final API cleanup | Frontend integration, responsive design, UI polishing and error/loading states | End-to-end, integration and regression testing, final bug verification |
+| Week | Backend | Frontend | Testing / QA |
+|---|---|---|---|
+| **Week 1** | Requirements analysis, use cases, ERD, database design, project architecture, database setup | UI/UX foundation, design system, color palette, layout and navigation | Define testing strategy and prepare initial test cases |
+| **Week 2** | Registration, login, authentication, authorization, customer profiles, driving license information | Login, registration, customer profile and dashboard | Authentication, registration, authorization and validation testing |
+| **Week 3** | Vehicle CRUD, categories, rental rates, vehicle status and vehicle information | Vehicle listing, vehicle details and vehicle management screens | Vehicle CRUD, validation, permissions and status testing |
+| **Week 4** | Availability checks, date validation, reservation creation, rental status and double-booking prevention | Vehicle search, availability results, booking flow and reservation confirmation | Availability, date validation, reservation, cancellation and double-booking testing |
+| **Week 5** | Vehicle pickup and return, payment management, rental history, rental status updates and module integration | Rental details, payment screens, return screens, My Rentals and rental history | Complete rental lifecycle, payment, return and history testing |
+| **Week 6** | System integration, bug fixing, validation, error handling and final API cleanup | Frontend integration, responsive design, UI polishing and error/loading states | End-to-end, integration and regression testing, final bug verification |
 
 ---
 
