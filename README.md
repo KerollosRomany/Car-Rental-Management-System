@@ -61,6 +61,8 @@ Development and testing will run in parallel throughout the project. Each comple
 | **Week 5** | Vehicle pickup and return, payment management, rental history, rental status updates and module integration | Rental details, payment screens, return screens, My Rentals and rental history | Complete rental lifecycle, payment, return and history testing |
 | **Week 6** | System integration, bug fixing, validation, error handling and final API cleanup | Frontend integration, responsive design, UI polishing and error/loading states | End-to-end, integration and regression testing, final bug verification |
 
+<img width="1535" height="703" alt="image" src="https://github.com/user-attachments/assets/bc49d16e-8218-4c21-b2c4-71e2e733e397" />
+
 ---
 
 ## 🧪 Testing Strategy
