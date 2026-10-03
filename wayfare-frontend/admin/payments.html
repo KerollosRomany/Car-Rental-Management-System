@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payments | Wayfare staff</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="../assets/css/app.css">
+</head>
+<body class="theme-light" data-layout="admin" data-base="../" data-page="payments" data-title="Payments">
+  <div class="admin">
+    <aside id="admin-sidebar" aria-label="Staff navigation"></aside>
+    <div class="admin-main">
+      <header id="admin-topbar"></header>
+
+      <main class="admin-content" id="main">
+        <div class="page-head">
+          <div>
+            <h1>Payments</h1>
+            <p>Record what customers pay and keep every rental settled.</p>
+          </div>
+          <button class="btn btn-primary" type="button" id="add-payment"><i class="ph ph-plus" aria-hidden="true"></i>Record payment</button>
+        </div>
+
+        <section class="stats stats--3" id="stats" aria-label="Payment totals"></section>
+
+        <section class="card" style="overflow:hidden" aria-label="Payments">
+          <div class="toolbar">
+            <div class="input-wrap">
+              <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+              <input class="input" id="q" type="search" placeholder="Search customer, rental or payment" aria-label="Search payments">
+            </div>
+            <select class="select select-sm" id="f-status" aria-label="Filter by status">
+              <option value="">All statuses</option>
+              <option value="paid">Paid</option>
+              <option value="pending">Pending</option>
+              <option value="refunded">Refunded</option>
+            </select>
+            <select class="select select-sm" id="f-method" aria-label="Filter by method">
+              <option value="">All methods</option>
+              <option>Card</option>
+              <option>Cash</option>
+              <option>Bank transfer</option>
+            </select>
+          </div>
+          <div class="table-wrap" id="payments-table"></div>
+          <div class="table-foot"><span id="payments-count"></span></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Record payment -->
+  <dialog class="modal" id="payment-dialog" aria-labelledby="payment-dialog-title">
+    <form id="payment-form" novalidate style="display:flex;flex-direction:column;min-height:0;flex:1">
+      <div class="dialog-head">
+        <div><h3 id="payment-dialog-title">Record payment</h3><p>Log a payment taken at the branch or received by transfer.</p></div>
+        <button class="icon-btn" type="button" data-close aria-label="Close"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-grid">
+          <div class="field span-2">
+            <label class="label" for="p-rental">Rental</label>
+            <select class="select" id="p-rental" name="rentalId" required data-msg-required="Choose the rental this payment belongs to."></select>
+          </div>
+          <div class="field">
+            <label class="label" for="p-amount">Amount (USD)</label>
+            <input class="input" id="p-amount" name="amount" type="number" min="1" step="1" required>
+          </div>
+          <div class="field">
+            <label class="label" for="p-date">Date</label>
+            <input class="input" id="p-date" name="date" type="date" required>
+          </div>
+          <div class="field">
+            <label class="label" for="p-method">Method</label>
+            <select class="select" id="p-method" name="method"><option>Card</option><option>Cash</option><option>Bank transfer</option></select>
+          </div>
+          <div class="field">
+            <label class="label" for="p-status">Status</label>
+            <select class="select" id="p-status" name="status"><option value="paid">Paid</option><option value="pending">Pending</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-foot">
+        <button class="btn btn-secondary" type="button" data-close>Cancel</button>
+        <button class="btn btn-primary" type="submit" id="payment-save">Save payment</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/render.js"></script>
+  <script src="../assets/js/pages/admin-payments.js"></script>
+</body>
+</html>

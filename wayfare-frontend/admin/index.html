@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | Wayfare staff</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="../assets/css/app.css">
+</head>
+<body class="theme-light" data-layout="admin" data-base="../" data-page="dashboard" data-title="Dashboard">
+  <div class="admin">
+    <aside id="admin-sidebar" aria-label="Staff navigation"></aside>
+    <div class="admin-main">
+      <header id="admin-topbar"></header>
+
+      <main class="admin-content" id="main">
+        <div class="page-head">
+          <div>
+            <h1 id="greeting">Dashboard</h1>
+            <p id="today-line"></p>
+          </div>
+          <a class="btn btn-primary" href="rentals.html"><i class="ph ph-key" aria-hidden="true"></i>Review requests</a>
+        </div>
+
+        <section class="stats" id="stats" aria-label="Key numbers"></section>
+
+        <div class="dash-grid">
+          <section class="card chart-card" aria-labelledby="t-monthly">
+            <div class="card-head">
+              <div>
+                <h3 id="t-monthly">Rentals per month</h3>
+                <p class="card-sub">Rentals that started in each of the last six months.</p>
+              </div>
+              <div class="segmented" role="radiogroup" aria-label="View">
+                <input type="radio" name="view-monthly" id="vm-chart" value="chart" checked><label for="vm-chart">Chart</label>
+                <input type="radio" name="view-monthly" id="vm-table" value="table"><label for="vm-table">Table</label>
+              </div>
+            </div>
+            <div class="card-body">
+              <div data-panel="chart" id="chart-monthly" class="chart-box"></div>
+              <div data-panel="table" id="table-monthly" hidden></div>
+            </div>
+          </section>
+
+          <section class="card chart-card" aria-labelledby="t-types">
+            <div class="card-head">
+              <div>
+                <h3 id="t-types">Fleet by type</h3>
+                <p class="card-sub">Cars in each category.</p>
+              </div>
+              <div class="segmented" role="radiogroup" aria-label="View">
+                <input type="radio" name="view-types" id="vt-chart" value="chart" checked><label for="vt-chart">Chart</label>
+                <input type="radio" name="view-types" id="vt-table" value="table"><label for="vt-table">Table</label>
+              </div>
+            </div>
+            <div class="card-body">
+              <div data-panel="chart" id="chart-types"></div>
+              <div data-panel="table" id="table-types" hidden></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="dash-grid dash-grid--wide">
+          <section class="card" aria-labelledby="t-requests" style="overflow:hidden">
+            <div class="card-head" style="padding-bottom:16px">
+              <div>
+                <h3 id="t-requests">Requests waiting</h3>
+                <p class="card-sub" id="requests-sub"></p>
+              </div>
+              <a class="btn btn-secondary btn-sm" href="rentals.html">View all</a>
+            </div>
+            <div class="table-wrap" id="requests-table"></div>
+          </section>
+
+          <section class="card" aria-labelledby="t-due" style="overflow:hidden">
+            <div class="card-head" style="padding-bottom:12px">
+              <div>
+                <h3 id="t-due">Due back soon</h3>
+                <p class="card-sub">Cars that are out on rent.</p>
+              </div>
+            </div>
+            <div id="due-list" class="due-list"></div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/render.js"></script>
+  <script src="../assets/js/charts.js"></script>
+  <script src="../assets/js/admin-actions.js"></script>
+  <script src="../assets/js/pages/admin-dashboard.js"></script>
+</body>
+</html>

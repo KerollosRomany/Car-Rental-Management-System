@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My rentals | Wayfare</title>
+  <meta name="description" content="Track your rental requests, upcoming trips and past rentals.">
+  <link rel="icon" href="assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body data-layout="site" data-page="rentals">
+  <div id="site-header"></div>
+
+  <main id="main" class="container page-pad stack" style="--stack-gap:28px">
+    <div class="page-head">
+      <div>
+        <h1 id="greeting">My rentals</h1>
+        <p>Track requests, upcoming trips and everything you have rented before.</p>
+      </div>
+      <a class="btn btn-primary" href="cars.html"><i class="ph ph-plus" aria-hidden="true"></i>Rent a car</a>
+    </div>
+
+    <section class="stats" id="stats" aria-label="Summary"></section>
+
+    <section id="current" hidden aria-label="Current rental"></section>
+
+    <section class="card rentals-card" aria-label="All rentals">
+      <div class="tabs" role="tablist" id="tabs" aria-label="Filter rentals"></div>
+      <div class="rental-list" id="rental-list" role="tabpanel"></div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/render.js"></script>
+  <script src="assets/js/pages/my-rentals.js"></script>
+</body>
+</html>

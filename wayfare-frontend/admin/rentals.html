@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rentals | Wayfare staff</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="../assets/css/app.css">
+</head>
+<body class="theme-light" data-layout="admin" data-base="../" data-page="rentals" data-title="Rentals">
+  <div class="admin">
+    <aside id="admin-sidebar" aria-label="Staff navigation"></aside>
+    <div class="admin-main">
+      <header id="admin-topbar"></header>
+
+      <main class="admin-content" id="main">
+        <div class="page-head">
+          <div>
+            <h1>Rentals</h1>
+            <p>Approve requests, hand over keys and record returns.</p>
+          </div>
+        </div>
+
+        <section class="card" style="overflow:hidden" aria-label="Rentals">
+          <div class="tabs" role="tablist" id="tabs" aria-label="Rental stage" style="padding-inline:12px"></div>
+          <div class="toolbar">
+            <div class="input-wrap">
+              <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+              <input class="input" id="q" type="search" placeholder="Search customer, car or reference" aria-label="Search rentals">
+            </div>
+            <span class="spacer"></span>
+            <span class="muted text-sm" id="result-count"></span>
+          </div>
+          <div class="table-wrap" id="rentals-table" role="tabpanel"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/render.js"></script>
+  <script src="../assets/js/admin-actions.js"></script>
+  <script src="../assets/js/pages/admin-rentals.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wayfare | Rent a car for your next trip</title>
+  <meta name="description" content="Compare cars, check availability for your dates and send a rental request in a minute.">
+  <link rel="icon" href="assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body data-layout="site" data-page="home">
+  <div id="site-header"></div>
+
+  <main id="main">
+    <!-- Hero and search -->
+    <section class="hero" style="--hero-img:url('https://images.unsplash.com/photo-1608790039230-6121188d1280?auto=format&fit=crop&w=2200&q=80')" aria-labelledby="hero-title">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Four branches, open daily</p>
+          <h1 id="hero-title">The right car for the <em>road ahead</em></h1>
+          <p>Compare cars, check your dates and send a rental request in a minute.</p>
+        </div>
+      </div>
+
+      <div class="container hero-console">
+        <form class="search-card" id="hero-search" role="search" aria-label="Search cars">
+          <div class="search-cell">
+            <label for="s-loc">Pick-up location</label>
+            <div class="cell-control">
+              <i class="ph ph-map-pin" aria-hidden="true"></i>
+              <select class="plain-select" id="s-loc" name="loc"></select>
+            </div>
+          </div>
+          <div class="search-cell">
+            <label for="s-dates">Pick-up and return</label>
+            <div class="cell-control">
+              <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+              <input class="plain-input" id="s-dates" name="dates" type="text" readonly>
+            </div>
+          </div>
+          <div class="search-cell">
+            <label for="s-type">Car type</label>
+            <div class="cell-control">
+              <i class="ph ph-car-profile" aria-hidden="true"></i>
+              <select class="plain-select" id="s-type" name="category"></select>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-lg" type="submit"><i class="ph ph-magnifying-glass" aria-hidden="true"></i>Search cars</button>
+        </form>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="quick-types" id="quick-types" aria-label="Browse by car type"></div>
+    </div>
+
+    <!-- Popular cars -->
+    <section class="section container" aria-labelledby="popular-title">
+      <div class="section-head row-end">
+        <div>
+          <h2 id="popular-title">Ready this week</h2>
+          <p style="margin-top:12px">Cars you can request right now, with the daily rate up front.</p>
+        </div>
+        <a class="btn btn-secondary" href="cars.html">View all cars<i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+      </div>
+      <div class="car-grid car-grid--4" id="popular-cars"></div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section container how" aria-labelledby="how-title" style="padding-top:0">
+      <div class="section-head" style="margin-bottom:0">
+        <h2 id="how-title">From search to keys in four moves</h2>
+      </div>
+      <ol class="how-steps">
+        <li class="how-step">
+          <span class="how-icon"><i class="ph ph-magnifying-glass" aria-hidden="true"></i></span>
+          <h3>Choose your car</h3>
+          <p>Pick your dates, then filter by type, price, seats and fuel.</p>
+        </li>
+        <li class="how-step">
+          <span class="how-icon"><i class="ph ph-file-text" aria-hidden="true"></i></span>
+          <h3>Send a request</h3>
+          <p>Confirm your pick-up branch and send it. No payment is needed yet.</p>
+        </li>
+        <li class="how-step">
+          <span class="how-icon"><i class="ph ph-seal-check" aria-hidden="true"></i></span>
+          <h3>Get confirmed</h3>
+          <p>Our team reviews the request and confirms it from your account.</p>
+        </li>
+        <li class="how-step">
+          <span class="how-icon"><i class="ph ph-key" aria-hidden="true"></i></span>
+          <h3>Pick up and drive</h3>
+          <p>Collect the keys at your branch and return the car on your last day.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- Benefits -->
+    <section class="section container" aria-labelledby="why-title" style="padding-top:0">
+      <div class="split">
+        <div class="split-media">
+          <img src="https://images.unsplash.com/photo-1653978681856-ab2f1feb221b?auto=format&fit=crop&w=1000&q=80" alt="White Hyundai Staria van parked on a rocky beach" loading="lazy" width="1000" height="1040">
+        </div>
+        <div>
+          <h2 id="why-title">Straightforward from the first click</h2>
+          <ul class="benefit-list">
+            <li class="benefit">
+              <span class="benefit-icon"><i class="ph ph-currency-dollar" aria-hidden="true"></i></span>
+              <div><h3>Clear daily rates</h3><p>The price on the card is the daily rate. The total updates as you choose dates.</p></div>
+            </li>
+            <li class="benefit">
+              <span class="benefit-icon"><i class="ph ph-calendar-check" aria-hidden="true"></i></span>
+              <div><h3>Booked days are greyed out</h3><p>You can only pick dates that work, so requests are rarely turned down.</p></div>
+            </li>
+            <li class="benefit">
+              <span class="benefit-icon"><i class="ph ph-map-pin" aria-hidden="true"></i></span>
+              <div><h3>Four pick-up branches</h3><p>Airport, downtown, central station and the harbor.</p></div>
+            </li>
+            <li class="benefit">
+              <span class="benefit-icon"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i></span>
+              <div><h3>Every rental in one place</h3><p>Track pending requests, upcoming trips and past rentals from your account.</p></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Closing banner -->
+    <section class="container" aria-labelledby="cta-title">
+      <div class="cta-banner" style="--cta-img:url('https://images.unsplash.com/photo-1486673748761-a8d18475c757?auto=format&fit=crop&w=1800&q=80')">
+        <h2 id="cta-title">Somewhere good is a few days away</h2>
+        <p>Browse the fleet, pick your dates and send a request.</p>
+        <div class="actions">
+          <a class="btn btn-primary btn-lg" href="cars.html">Browse all cars</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/render.js"></script>
+  <script src="assets/js/pages/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Car details | Wayfare</title>
+  <meta name="description" content="Check specs, availability and the daily rate, then send a rental request.">
+  <link rel="icon" href="assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body data-layout="site" data-page="cars">
+  <div id="site-header"></div>
+
+  <main id="main" class="container page-pad">
+    <nav class="breadcrumbs" aria-label="Breadcrumb" id="crumbs">
+      <a href="cars.html">Cars</a>
+    </nav>
+
+    <div class="detail" id="detail" style="margin-top:20px">
+      <div class="detail-main">
+        <div class="gallery"><div class="skeleton" style="aspect-ratio:16/10;border-radius:var(--r-lg)"></div></div>
+        <div class="car-head"><div class="skeleton" style="height:36px;width:50%"></div></div>
+        <div class="spec-grid"><div class="skeleton" style="height:120px;grid-column:1/-1"></div></div>
+      </div>
+      <aside class="booking card card-pad is-stitched" aria-label="Request this car">
+        <div class="skeleton" style="height:340px"></div>
+      </aside>
+    </div>
+
+    <section class="section" id="similar" hidden style="padding-bottom:0">
+      <div class="section-head row-end">
+        <h2>You might also like</h2>
+        <a class="btn btn-secondary" href="cars.html">All cars<i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+      </div>
+      <div class="car-grid car-grid--4" id="similar-grid"></div>
+    </section>
+  </main>
+
+  <!-- Review and send -->
+  <dialog class="modal" id="confirm-booking" aria-labelledby="cb-title">
+    <div id="cb-review">
+      <div class="dialog-head">
+        <div><h3 id="cb-title">Review your request</h3><p>Check the details, then send. Our team confirms it from here.</p></div>
+        <button class="icon-btn" type="button" data-close aria-label="Close"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="dialog-body stack" style="--stack-gap:20px">
+        <div class="rd-car" id="cb-car"></div>
+        <dl class="kv" id="cb-lines"></dl>
+        <div class="notice"><i class="ph ph-info" aria-hidden="true"></i><div>No payment is taken now. You pay at the branch once the request is confirmed.</div></div>
+      </div>
+      <div class="dialog-foot">
+        <button class="btn btn-secondary" type="button" data-close>Back</button>
+        <button class="btn btn-primary" type="button" id="cb-send">Send request</button>
+      </div>
+    </div>
+
+    <div id="cb-done" hidden>
+      <div class="done">
+        <div class="done-icon"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+        <h3>Request sent</h3>
+        <p>Reference <strong class="mono" id="cb-ref"></strong>. We will confirm it shortly. You can follow the status in My rentals.</p>
+        <div class="row" style="justify-content:center;margin-top:8px">
+          <a class="btn btn-primary" href="my-rentals.html">View my rentals</a>
+          <a class="btn btn-secondary" href="cars.html">Keep browsing</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="site-footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/render.js"></script>
+  <script src="assets/js/pages/car.js"></script>
+</body>
+</html>

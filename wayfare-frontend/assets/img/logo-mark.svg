@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none">
+  <title>Wayfare</title>
+  <!-- Key-tag badge: chamfered corners, stitched inner edge, wide W -->
+  <path d="M1 7 L7 1 H41 L47 7 V41 L41 47 H7 L1 41 Z" fill="#d18a4c"/>
+  <path d="M5.4 9 L9 5.4 H39 L42.6 9 V39 L39 42.6 H9 L5.4 39 Z" stroke="#1a1108" stroke-opacity=".55" stroke-width="1" stroke-dasharray="2.8 2.4"/>
+  <path d="M12.5 15 L18.5 33 L24 19 L29.5 33 L35.5 15" stroke="#1a1108" stroke-width="3.2" stroke-miterlimit="2.2" stroke-linejoin="miter"/>
+</svg>

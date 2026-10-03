@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile | Wayfare</title>
+  <meta name="description" content="Update your contact details, driving license and password.">
+  <link rel="icon" href="assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body data-layout="site" data-page="profile">
+  <div id="site-header"></div>
+
+  <main id="main" class="container page-pad stack" style="--stack-gap:28px">
+    <div class="page-head">
+      <div>
+        <h1>Profile</h1>
+        <p>Keep your details current so pick-up is quick.</p>
+      </div>
+    </div>
+
+    <div class="profile-grid">
+      <aside class="card card-pad profile-card" id="profile-card" aria-label="Account summary"></aside>
+
+      <div class="stack" style="--stack-gap:24px">
+        <form class="card form-card" id="form-personal" novalidate>
+          <div class="card-head"><div><h3>Personal details</h3><p>We use these to contact you about your rentals.</p></div></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field span-2">
+                <label class="label" for="p-name">Full name</label>
+                <input class="input" id="p-name" name="name" type="text" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label class="label" for="p-email">Email</label>
+                <input class="input" id="p-email" name="email" type="email" autocomplete="email" required>
+              </div>
+              <div class="field">
+                <label class="label" for="p-phone">Phone</label>
+                <input class="input" id="p-phone" name="phone" type="tel" autocomplete="tel" pattern="[0-9+\s\-]{8,16}" data-msg-pattern="Enter a phone number with 8 to 16 digits." required>
+              </div>
+            </div>
+          </div>
+          <div class="card-foot"><button class="btn btn-dark" type="submit">Save changes</button></div>
+        </form>
+
+        <form class="card form-card" id="form-license" novalidate>
+          <div class="card-head"><div><h3>Driving license</h3><p>Staff check this against your physical license at pick-up.</p></div></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field">
+                <label class="label" for="p-license">License number</label>
+                <input class="input mono" id="p-license" name="licenseNumber" type="text" required>
+              </div>
+              <div class="field">
+                <label class="label" for="p-expiry">Expiry date</label>
+                <input class="input" id="p-expiry" name="licenseExpiry" type="date" required data-msg-required="Enter the expiry date shown on your license.">
+              </div>
+            </div>
+          </div>
+          <div class="card-foot"><button class="btn btn-dark" type="submit">Save license</button></div>
+        </form>
+
+        <form class="card form-card" id="form-password" novalidate>
+          <div class="card-head"><div><h3>Password</h3><p>Use at least 8 characters.</p></div></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field span-2">
+                <label class="label" for="pw-current">Current password</label>
+                <div class="input-wrap has-action">
+                  <i class="ph ph-lock-simple" aria-hidden="true"></i>
+                  <input class="input" id="pw-current" name="current" type="password" autocomplete="current-password" required>
+                  <button class="input-action" type="button" data-toggle-password aria-label="Show password"><i class="ph ph-eye" aria-hidden="true"></i></button>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label" for="pw-new">New password</label>
+                <div class="input-wrap has-action">
+                  <i class="ph ph-lock-simple" aria-hidden="true"></i>
+                  <input class="input" id="pw-new" name="password" type="password" autocomplete="new-password" minlength="8" required>
+                  <button class="input-action" type="button" data-toggle-password aria-label="Show password"><i class="ph ph-eye" aria-hidden="true"></i></button>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label" for="pw-confirm">Confirm new password</label>
+                <div class="input-wrap has-action">
+                  <i class="ph ph-lock-simple" aria-hidden="true"></i>
+                  <input class="input" id="pw-confirm" name="confirm" type="password" autocomplete="new-password" data-match="#pw-new" required>
+                  <button class="input-action" type="button" data-toggle-password aria-label="Show password"><i class="ph ph-eye" aria-hidden="true"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-foot"><button class="btn btn-dark" type="submit">Update password</button></div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/render.js"></script>
+  <script src="assets/js/pages/profile.js"></script>
+</body>
+</html>

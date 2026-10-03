@@ -1,0 +1,193 @@
+/* ==========================================================================
+   Flatpickr skin: obsidian surface, cognac range, hatched booked days.
+   Sizing is left to flatpickr so its layout maths keeps working.
+   ========================================================================== */
+
+.flatpickr-calendar {
+  font-family: var(--font-body);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-lg);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-lg);
+  padding: 0;
+  color: var(--text);
+  overflow: hidden;
+}
+
+.flatpickr-calendar::before,
+.flatpickr-calendar::after {
+  display: none;
+}
+
+.flatpickr-months {
+  align-items: center;
+  padding: 8px 6px 0;
+}
+
+.flatpickr-innerContainer {
+  padding: 0 6px 6px;
+}
+
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+  display: grid;
+  place-items: center;
+  top: 6px;
+  height: 36px;
+  width: 36px;
+  padding: 0;
+  border-radius: var(--r-md);
+  color: var(--text-2);
+  fill: var(--text-2);
+}
+
+.flatpickr-months .flatpickr-prev-month:hover,
+.flatpickr-months .flatpickr-next-month:hover {
+  background: var(--surface-3);
+}
+
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg {
+  fill: var(--text);
+}
+
+.flatpickr-months .flatpickr-month {
+  height: 46px;
+  color: var(--text);
+}
+
+.flatpickr-current-month {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding-top: 9px;
+}
+
+.flatpickr-current-month .cur-month,
+.flatpickr-current-month input.cur-year {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.flatpickr-weekdays {
+  height: 32px;
+  background: transparent;
+}
+
+span.flatpickr-weekday {
+  background: transparent;
+  color: var(--text-3);
+  font-weight: 600;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.flatpickr-day {
+  border-radius: var(--r-md);
+  color: var(--text-2);
+  font-weight: 500;
+  border-color: transparent;
+}
+
+.flatpickr-day:hover,
+.flatpickr-day:focus {
+  background: var(--surface-3);
+  border-color: var(--surface-3);
+  color: var(--text);
+}
+
+.flatpickr-day.today {
+  border-color: var(--accent);
+}
+
+.flatpickr-day.today:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+
+.flatpickr-day.inRange {
+  background: var(--accent-soft);
+  border-color: transparent;
+  color: var(--text);
+  box-shadow: -5px 0 0 var(--accent-soft), 5px 0 0 var(--accent-soft);
+}
+
+.flatpickr-day.startRange + .endRange:not(:nth-child(7n + 1)),
+.flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n + 1)),
+.flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n + 1)) {
+  box-shadow: -10px 0 0 var(--accent);
+}
+
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover,
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+  color: var(--obs-400);
+  background: transparent;
+}
+
+.flatpickr-day.prevMonthDay:hover,
+.flatpickr-day.nextMonthDay:hover {
+  background: var(--surface-3);
+}
+
+.flatpickr-day.is-booked,
+.flatpickr-day.is-booked:hover {
+  color: var(--obs-400);
+  background: repeating-linear-gradient(135deg, var(--surface-3) 0 3px, transparent 3px 7px);
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.flatpickr-day.prevMonthDay.is-booked,
+.flatpickr-day.nextMonthDay.is-booked {
+  opacity: 0.5;
+}
+
+/* Alt input uses our .input look */
+input.flatpickr-input.input[readonly] {
+  cursor: pointer;
+  background-color: var(--field);
+}
+
+.range-legend {
+  display: flex;
+  gap: 18px;
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--line);
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+
+.range-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.range-legend i {
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+}
+
+.range-legend i.booked {
+  background: repeating-linear-gradient(135deg, var(--obs-400) 0 2px, var(--surface-3) 2px 5px);
+}

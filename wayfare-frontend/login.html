@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log in | Wayfare</title>
+  <meta name="description" content="Log in to Wayfare to follow your rental requests and book again.">
+  <link rel="icon" href="assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body data-layout="none" data-page="login">
+  <main class="auth" id="main">
+    <section class="auth-visual" style="background-image:url('https://images.unsplash.com/photo-1555832438-e6ada221ff4d?auto=format&fit=crop&w=1400&q=80')">
+      <a class="brand" href="index.html" aria-label="Wayfare home"><img class="brand-mark" src="assets/img/logo-mark.svg" alt="" width="36" height="36"><span class="brand-word">Wayfare</span></a>
+      <div>
+        <h1>Drive your <em>way</em></h1>
+        <p>Log in to follow your requests, see pick-up details and book your next car in a few clicks.</p>
+        <ul class="perk-list">
+          <li><i class="ph ph-calendar-check" aria-hidden="true"></i>See live availability</li>
+          <li><i class="ph ph-lightning" aria-hidden="true"></i>Request in a minute</li>
+          <li><i class="ph ph-key" aria-hidden="true"></i>Track every rental</li>
+          <li><i class="ph ph-map-pin" aria-hidden="true"></i>Four pick-up branches</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="auth-panel">
+      <div class="auth-card">
+        <a class="brand auth-mobile-brand" href="index.html" aria-label="Wayfare home"><img class="brand-mark" src="assets/img/logo-mark.svg" alt="" width="36" height="36"><span class="brand-word">Wayfare</span></a>
+        <h2>Welcome back</h2>
+        <p class="sub">Log in to manage your rentals.</p>
+
+        <!-- Backend: set action to the login endpoint and method="post". -->
+        <form data-auth-form="login" action="index.html" method="post" novalidate>
+          <div class="field">
+            <label class="label" for="email">Email</label>
+            <div class="input-wrap">
+              <i class="ph ph-envelope-simple" aria-hidden="true"></i>
+              <input class="input" id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="password">Password</label>
+            <div class="input-wrap has-action">
+              <i class="ph ph-lock-simple" aria-hidden="true"></i>
+              <input class="input" id="password" name="password" type="password" autocomplete="current-password" placeholder="Your password" minlength="8" required>
+              <button class="input-action" type="button" data-toggle-password aria-label="Show password"><i class="ph ph-eye" aria-hidden="true"></i></button>
+            </div>
+          </div>
+
+          <div class="row" style="justify-content:space-between;flex-wrap:wrap">
+            <label class="check"><input type="checkbox" name="remember" checked>Remember me</label>
+            <a class="link text-sm" href="#">Forgot password?</a>
+          </div>
+
+          <button class="btn btn-primary btn-lg btn-block" type="submit">Log in</button>
+        </form>
+
+        <p class="auth-foot">New to Wayfare? <a class="link" href="register.html">Create an account</a></p>
+        <p class="auth-foot" style="margin-top:12px">Working at a branch? <a class="link" href="admin/login.html">Staff login</a></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/pages/auth.js"></script>
+</body>
+</html>

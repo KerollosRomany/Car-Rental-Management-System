@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Customers | Wayfare staff</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="../assets/css/app.css">
+</head>
+<body class="theme-light" data-layout="admin" data-base="../" data-page="customers" data-title="Customers">
+  <div class="admin">
+    <aside id="admin-sidebar" aria-label="Staff navigation"></aside>
+    <div class="admin-main">
+      <header id="admin-topbar"></header>
+
+      <main class="admin-content" id="main">
+        <div class="page-head">
+          <div>
+            <h1>Customers</h1>
+            <p id="customers-sub">Contact details and driving licenses.</p>
+          </div>
+          <button class="btn btn-primary" type="button" id="add-customer"><i class="ph ph-user-plus" aria-hidden="true"></i>Add customer</button>
+        </div>
+
+        <section class="card" style="overflow:hidden" aria-label="Customers">
+          <div class="toolbar">
+            <div class="input-wrap">
+              <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+              <input class="input" id="q" type="search" placeholder="Search name, email, phone or license" aria-label="Search customers">
+            </div>
+            <select class="select select-sm" id="f-license" aria-label="Filter by license">
+              <option value="">All licenses</option>
+              <option value="unchecked">Not checked yet</option>
+              <option value="expiring">Expiring in 90 days</option>
+            </select>
+          </div>
+          <div class="table-wrap" id="customers-table"></div>
+          <div class="table-foot"><span id="customers-count"></span></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add / edit customer -->
+  <dialog class="modal" id="customer-dialog" aria-labelledby="customer-dialog-title">
+    <form id="customer-form" novalidate style="display:flex;flex-direction:column;min-height:0;flex:1">
+      <div class="dialog-head">
+        <div><h3 id="customer-dialog-title">Add customer</h3><p>For walk-in customers who book at the branch.</p></div>
+        <button class="icon-btn" type="button" data-close aria-label="Close"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-grid">
+          <div class="field span-2"><label class="label" for="u-name">Full name</label><input class="input" id="u-name" name="name" type="text" required placeholder="As shown on the license"></div>
+          <div class="field"><label class="label" for="u-email">Email</label><input class="input" id="u-email" name="email" type="email" required placeholder="name@example.com"></div>
+          <div class="field"><label class="label" for="u-phone">Phone</label><input class="input" id="u-phone" name="phone" type="tel" required pattern="[0-9+\s\-]{8,16}" data-msg-pattern="Enter a phone number with 8 to 16 digits." placeholder="0100 000 0000"></div>
+          <div class="field"><label class="label" for="u-license">License number</label><input class="input mono" id="u-license" name="licenseNumber" type="text" required placeholder="DL-00000000"></div>
+          <div class="field"><label class="label" for="u-expiry">License expiry</label><input class="input" id="u-expiry" name="licenseExpiry" type="date" required data-msg-required="Enter the expiry date shown on the license."></div>
+          <div class="field span-2">
+            <label class="check"><input class="switch" type="checkbox" id="u-verified" name="licenseVerified" role="switch"><span>License checked against the original</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-foot">
+        <button class="btn btn-secondary" type="button" data-close>Cancel</button>
+        <button class="btn btn-primary" type="submit" id="customer-save">Save customer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/render.js"></script>
+  <script src="../assets/js/pages/admin-customers.js"></script>
+</body>
+</html>

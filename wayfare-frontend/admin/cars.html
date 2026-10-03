@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cars | Wayfare staff</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="../assets/css/app.css">
+</head>
+<body class="theme-light" data-layout="admin" data-base="../" data-page="cars" data-title="Cars">
+  <div class="admin">
+    <aside id="admin-sidebar" aria-label="Staff navigation"></aside>
+    <div class="admin-main">
+      <header id="admin-topbar"></header>
+
+      <main class="admin-content" id="main">
+        <div class="page-head">
+          <div>
+            <h1>Cars</h1>
+            <p id="cars-sub">Add, edit and remove cars from the fleet.</p>
+          </div>
+          <button class="btn btn-primary" type="button" id="add-car"><i class="ph ph-plus" aria-hidden="true"></i>Add car</button>
+        </div>
+
+        <section class="card" style="overflow:hidden" aria-label="Fleet">
+          <div class="toolbar">
+            <div class="input-wrap">
+              <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+              <input class="input" id="q" type="search" placeholder="Search brand, model or plate" aria-label="Search cars">
+            </div>
+            <select class="select select-sm" id="f-cat" aria-label="Filter by type"></select>
+            <select class="select select-sm" id="f-status" aria-label="Filter by status">
+              <option value="">All statuses</option>
+              <option value="available">Available</option>
+              <option value="rented">Rented</option>
+              <option value="maintenance">Maintenance</option>
+            </select>
+          </div>
+          <div class="table-wrap" id="cars-table"></div>
+          <div class="table-foot">
+            <span id="cars-count"></span>
+            <div class="pager" id="pager" aria-label="Pages"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add / edit car -->
+  <dialog class="modal wide" id="car-dialog" aria-labelledby="car-dialog-title">
+    <form id="car-form" novalidate style="display:flex;flex-direction:column;min-height:0;flex:1">
+      <div class="dialog-head">
+        <div><h3 id="car-dialog-title">Add car</h3><p>Customers see these details on the car page.</p></div>
+        <button class="icon-btn" type="button" data-close aria-label="Close"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-grid">
+          <div class="field"><label class="label" for="c-brand">Brand</label><input class="input" id="c-brand" name="brand" type="text" required placeholder="Toyota"></div>
+          <div class="field"><label class="label" for="c-model">Model</label><input class="input" id="c-model" name="model" type="text" required placeholder="Corolla"></div>
+          <div class="field"><label class="label" for="c-year">Year</label><input class="input" id="c-year" name="year" type="number" min="2000" max="2030" required placeholder="2023"></div>
+          <div class="field"><label class="label" for="c-category">Type</label><select class="select" id="c-category" name="category" required></select></div>
+          <div class="field"><label class="label" for="c-trans">Transmission</label>
+            <select class="select" id="c-trans" name="transmission"><option>Automatic</option><option>Manual</option></select></div>
+          <div class="field"><label class="label" for="c-fuel">Fuel</label>
+            <select class="select" id="c-fuel" name="fuel"><option>Petrol</option><option>Diesel</option><option>Hybrid</option><option>Electric</option></select></div>
+          <div class="field"><label class="label" for="c-seats">Seats</label><input class="input" id="c-seats" name="seats" type="number" min="2" max="12" required placeholder="5"></div>
+          <div class="field"><label class="label" for="c-bags">Luggage (bags)</label><input class="input" id="c-bags" name="bags" type="number" min="0" max="10" placeholder="2"></div>
+          <div class="field"><label class="label" for="c-rate">Daily rate (USD)</label><input class="input" id="c-rate" name="dailyRate" type="number" min="1" required placeholder="45"></div>
+          <div class="field"><label class="label" for="c-plate">Plate number</label><input class="input mono" id="c-plate" name="plate" type="text" required placeholder="WF 0000"></div>
+          <div class="field"><label class="label" for="c-color">Colour</label><input class="input" id="c-color" name="color" type="text" placeholder="White"></div>
+          <div class="field"><label class="label" for="c-status">Status</label>
+            <select class="select" id="c-status" name="status">
+              <option value="available">Available</option>
+              <option value="rented">Rented</option>
+              <option value="maintenance">Maintenance</option>
+            </select></div>
+
+          <div class="field span-2">
+            <span class="label">Photo</span>
+            <label class="dropzone" id="dz" for="c-photo">
+              <span class="dz-preview" id="dz-preview" role="img" aria-label="Photo preview" hidden></span>
+              <span class="dz-empty" id="dz-empty"><i class="ph ph-upload-simple" aria-hidden="true"></i><strong>Drop a photo here or browse</strong><span>JPG or PNG. Landscape photos look best.</span></span>
+              <input class="sr-only" id="c-photo" type="file" accept="image/*">
+            </label>
+          </div>
+
+          <div class="field span-2"><label class="label" for="c-desc">Description</label><textarea class="textarea" id="c-desc" name="description" rows="3" placeholder="Two sentences about what makes this car a good pick."></textarea></div>
+          <div class="field span-2"><label class="label" for="c-features">Included features</label><input class="input" id="c-features" name="features" type="text" placeholder="Air conditioning, Bluetooth audio, Reverse camera">
+            <p class="hint">Separate features with commas.</p></div>
+        </div>
+      </div>
+      <div class="dialog-foot">
+        <button class="btn btn-secondary" type="button" data-close>Cancel</button>
+        <button class="btn btn-primary" type="submit" id="car-save">Save car</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/render.js"></script>
+  <script src="../assets/js/pages/admin-cars.js"></script>
+</body>
+</html>

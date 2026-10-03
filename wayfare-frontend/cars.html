@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cars | Wayfare</title>
+  <meta name="description" content="Browse every car in the Wayfare fleet and filter by type, price, seats and fuel.">
+  <link rel="icon" href="assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body data-layout="site" data-page="cars">
+  <div id="site-header"></div>
+
+  <main id="main" class="container page-pad">
+    <div class="page-head">
+      <div>
+        <h1>Available cars</h1>
+        <p id="result-summary">Pick your dates to see what is free.</p>
+      </div>
+      <div class="row">
+        <button class="btn btn-secondary filters-open" type="button" data-filters-open><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Filters</button>
+        <div class="sort-field">
+          <label class="sr-only" for="f-sort">Sort by</label>
+          <select class="select select-sm" id="f-sort">
+            <option value="recommended">Recommended</option>
+            <option value="price-asc">Price: low to high</option>
+            <option value="price-desc">Price: high to low</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trip details: set once, carried to the car page -->
+    <div class="plan-bar card">
+      <div class="field plan-field">
+        <label class="label" for="f-loc">Pick-up location</label>
+        <div class="input-wrap">
+          <i class="ph ph-map-pin" aria-hidden="true"></i>
+          <select class="select" id="f-loc"></select>
+        </div>
+      </div>
+      <div class="field plan-field plan-dates">
+        <label class="label" for="f-dates">Pick-up and return</label>
+        <div class="input-wrap">
+          <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+          <input class="input" id="f-dates" type="text" readonly>
+        </div>
+      </div>
+      <button class="btn btn-ghost" type="button" id="clear-dates" hidden>Clear dates</button>
+      <span class="spacer"></span>
+      <label class="check plan-switch"><input class="switch" type="checkbox" id="f-available" role="switch"><span>Show available only</span></label>
+    </div>
+
+    <div class="listing">
+      <aside class="filters" id="filters" aria-label="Filters">
+        <div class="filters-head">
+          <h2>Filters</h2>
+          <div class="row" style="--row-gap:4px">
+            <button class="link text-sm" type="button" id="reset-filters" style="background:none;border:0;padding:6px 8px">Reset</button>
+            <button class="icon-btn filters-close" type="button" data-filters-close aria-label="Close filters"><i class="ph ph-x" aria-hidden="true"></i></button>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h3>Car type</h3>
+          <div class="chip-wrap" id="f-types"></div>
+        </div>
+
+        <div class="filter-group">
+          <h3>Daily price</h3>
+          <div class="range-head"><span>Up to</span><strong id="price-out">$200</strong></div>
+          <input class="range" id="f-price" type="range" min="30" max="200" step="5" value="200" aria-label="Maximum daily price">
+        </div>
+
+        <div class="filter-group">
+          <h3>Transmission</h3>
+          <div class="segmented" role="radiogroup" aria-label="Transmission">
+            <input type="radio" name="trans" id="t-any" value="Any" checked><label for="t-any">Any</label>
+            <input type="radio" name="trans" id="t-auto" value="Automatic"><label for="t-auto">Automatic</label>
+            <input type="radio" name="trans" id="t-man" value="Manual"><label for="t-man">Manual</label>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h3>Seats</h3>
+          <div class="segmented" role="radiogroup" aria-label="Seats">
+            <input type="radio" name="seats" id="s-any" value="Any" checked><label for="s-any">Any</label>
+            <input type="radio" name="seats" id="s-24" value="2-4"><label for="s-24">2 to 4</label>
+            <input type="radio" name="seats" id="s-5" value="5"><label for="s-5">5</label>
+            <input type="radio" name="seats" id="s-7" value="7+"><label for="s-7">7+</label>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h3>Fuel</h3>
+          <div class="stack" style="--stack-gap:10px" id="f-fuel"></div>
+        </div>
+
+        <button class="btn btn-dark btn-block filters-apply" type="button" data-filters-close>Show results</button>
+      </aside>
+
+      <section class="results" aria-live="polite" aria-label="Results">
+        <div class="active-filters" id="active-filters"></div>
+        <div class="car-grid" id="car-grid"></div>
+        <div id="empty"></div>
+      </section>
+    </div>
+  </main>
+
+  <div class="filters-scrim" data-filters-close></div>
+  <div id="site-footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/render.js"></script>
+  <script src="assets/js/pages/cars.js"></script>
+</body>
+</html>
