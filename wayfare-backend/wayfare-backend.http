@@ -1,0 +1,6 @@
+@wayfare_backend_HostAddress = http://localhost:5290
+
+GET {{wayfare_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
