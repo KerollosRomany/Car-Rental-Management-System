@@ -110,10 +110,10 @@ A booking made by a customer for a car.
 
 | # | Relationship | Entities | Cardinality | Participation | Meaning | Foreign key |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Login as | ApplicationUser, Customer | 1 : 1 | ApplicationUser full, Customer full | A user logs in as one customer profile | Customer.UserId |
+| 1 | Login as | ApplicationUser, Customer | 1 : 1 | ApplicationUser partial , Customer full | A user logs in as one customer profile | Customer.UserId |
 | 2 | Has | Customer, Rental | 1 : m | Customer partial, Rental full | A customer has many rentals, and may have none yet | Rental.CustomerId |
 | 3 | Has | Car, Rental | 1 : m | Car partial, Rental full | A car has many rentals, and may have none yet | Rental.CarId |
-| 4 | Belong to | Branch, Car | 1 : m | Branch full, Car full | A branch holds many cars, and every car belongs to a branch | Car.BranchId |
+| 4 | Belong to | Branch, Car | 1 : m | Branch partial, Car full | A branch may holds many cars, and every car belongs to a branch | Car.BranchId |
 | 5 | Has | Branch, Rental | 1 : m | Branch partial, Rental full | A branch handles many rentals, and may have none yet | Rental.BranchId |
 | 6 | Has images | Car, CarImage | 1 : m | Car full, CarImage full | A car has many images, and every image belongs to a car | CarImage.CarId |
 

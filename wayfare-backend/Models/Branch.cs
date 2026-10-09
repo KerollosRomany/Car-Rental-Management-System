@@ -9,7 +9,7 @@ namespace wayfare_backend.Models
     public class Branch
     {
         public int Id { get; set; }
-        public BranchName Name;
+        public BranchName Name { get; set; }
         public ICollection<Car> Cars { get; set; } 
             = new List<Car>();
         public ICollection<Rental> Rentals { get; set; } 
