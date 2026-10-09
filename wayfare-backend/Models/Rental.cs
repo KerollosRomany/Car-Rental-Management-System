@@ -22,7 +22,7 @@ namespace wayfare_backend.Models
         public decimal PaidAmount { get; set; }
         public decimal RefundedAmount { get; set; }
         //Rental Status Enum
-        public RentalStatus RentalStatus;
+        public RentalStatus RentalStatus { get; set; }
         
         // FK
         public int CustomerId { get; set; }

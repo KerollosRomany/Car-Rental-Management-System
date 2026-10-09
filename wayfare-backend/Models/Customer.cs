@@ -15,12 +15,12 @@ namespace wayfare_backend.Models
         public string LicenseImageUrl { get; set; } = string.Empty;
         public DateTime LicenseExp { get; set; }
         public DateTime JoinedAtDate { get; private set; }
-        public UserLicense LicenseState;
+        public UserLicense LicenseState { get; set; }
         
         public ICollection<Rental> Rental 
             = new List<Rental>();
 
-        // Ctor to set the Join
+        // Ctor to set the JoinAtDate
         public Customer()
         {
             JoinedAtDate = DateTime.UtcNow;

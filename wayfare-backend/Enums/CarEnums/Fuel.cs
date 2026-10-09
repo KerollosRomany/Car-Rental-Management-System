@@ -1,10 +1,10 @@
 namespace wayfare_backend.Enums.CarEnums
 {
-    public enum CarFuel
+    public enum Fuel
     {
         Petrol = 1,
         Electric = 2,
-        Hybird = 3,
+        Hybrid = 3,
         Disel = 4
     }
 }
