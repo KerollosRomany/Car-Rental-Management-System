@@ -1,6 +1,6 @@
 namespace wayfare_backend.Enums.CarEnums
 {
-    public enum CarTransmission
+    public enum Transmission
     {
         Automatic = 1,
         Manual = 2

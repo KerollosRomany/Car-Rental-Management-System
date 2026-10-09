@@ -20,7 +20,7 @@ namespace wayfare_backend.Models
         public ICollection<Rental> Rental 
             = new List<Rental>();
 
-        // Ctor to set the Join
+        // Ctor to set the JoinAtDate
         public Customer()
         {
             JoinedAtDate = DateTime.UtcNow;

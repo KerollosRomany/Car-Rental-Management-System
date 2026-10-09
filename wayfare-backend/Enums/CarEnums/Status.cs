@@ -1,6 +1,6 @@
 namespace wayfare_backend.Enums.CarEnums
 {
-    public enum CarStatus
+    public enum Status
     {
         Available = 1,
         Rented = 2,

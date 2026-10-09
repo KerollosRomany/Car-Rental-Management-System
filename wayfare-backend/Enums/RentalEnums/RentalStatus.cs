@@ -2,7 +2,7 @@ namespace wayfare_backend.Enums.RentalEnums
 {
     public enum RentalStatus
     {
-        Requested = 1,
+        Pending = 1,
         Approved = 2,
         Acitve = 3,
         Completed = 4,
