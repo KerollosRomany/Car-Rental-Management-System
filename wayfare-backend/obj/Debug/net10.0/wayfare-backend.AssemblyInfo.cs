@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("wayfare-backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+df4df48fae28d3f2949bc45806b29927bd999cad")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2fb5aa1e80e319c191ac50b8410c9b7e9886cb3a")]
 [assembly: System.Reflection.AssemblyProductAttribute("wayfare-backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("wayfare-backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
