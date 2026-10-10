@@ -1,6 +1,6 @@
 namespace wayfare_backend.Enums.CarEnums
 {
-    public enum Type
+    public enum CarType
     {
         Economy = 1,
         Suv = 2,
