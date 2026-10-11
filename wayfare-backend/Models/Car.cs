@@ -24,9 +24,9 @@ namespace wayfare_backend.Models
         public string PlateNumber { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string IncludedFeature { get; set; } = string.Empty;
-        public CarStatus CarStatus { get; set; }
-        public CarFuel CarFuel { get; set; }
-        public CarTransmission CarTransmission { get; set; }
+        public Status Status { get; set; }
+        public Fuel Fuel { get; set; }
+        public Transmission Transmission { get; set; }
         public CarType CarType { get; set; } 
         
         public ICollection<CarImage> Images { get; set; }
