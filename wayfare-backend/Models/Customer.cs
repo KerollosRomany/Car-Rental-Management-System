@@ -17,7 +17,7 @@ namespace wayfare_backend.Models
         public DateTime JoinedAtDate { get; private set; }
         public UserLicense LicenseState { get; set; }
         
-        public ICollection<Rental> Rental 
+        public ICollection<Rental> Rentals 
             = new List<Rental>();
 
         // Ctor to set the JoinAtDate
