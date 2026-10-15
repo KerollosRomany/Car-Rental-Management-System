@@ -1,4 +1,4 @@
-/* Staff: customers. Search, license checks, history, add and edit. */
+/* Staff: customers. Search, license checks and rental history. Customers are added when they register. */
 App.ready(async () => {
   const { $, icon, fmt, esc } = App;
   const state = { q: "", license: "" };
@@ -132,17 +132,12 @@ App.ready(async () => {
       </div>
       <div class="dialog-foot">
         <button class="btn btn-secondary" type="button" data-close>Close</button>
-        <button class="btn btn-dark" type="button" id="d-edit">${icon("pencil-simple")}Edit details</button>
       </div>`;
     $("#d-verified", dlg).addEventListener("change", async (e) => {
-      await Api.saveCustomer({ id: c.id, licenseVerified: e.target.checked });
+      await Api.setLicenseVerified(c.id, e.target.checked);
       App.toast(e.target.checked ? `${c.name}'s license marked as checked.` : "License check removed.");
       await load();
       openDrawerRefresh(c.id);
-    });
-    $("#d-edit", dlg).addEventListener("click", () => {
-      dlg.close();
-      openForm(c);
     });
     App.openDialog(dlg);
   }
@@ -153,54 +148,6 @@ App.ready(async () => {
     const dlg = $("#customer-drawer");
     if (c && dlg && dlg.open) openDrawer(c);
   }
-
-  /* ---------- Add / edit ---------- */
-  const dlg = $("#customer-dialog");
-  const form = $("#customer-form");
-  let editing = null;
-
-  function openForm(c) {
-    editing = c || null;
-    form.reset();
-    App.$$(".field", form).forEach((f) => f.classList.remove("has-error"));
-    $("#customer-dialog-title").textContent = c ? "Edit customer" : "Add customer";
-    App.setUpload($(".upload", form), c ? c.licensePhoto : null, "Current license photo");
-    if (c) {
-      form.elements.name.value = c.name;
-      form.elements.email.value = c.email;
-      form.elements.phone.value = c.phone;
-      form.elements.licenseExpiry.value = c.licenseExpiry || "";
-      form.elements.licenseVerified.checked = Boolean(c.licenseVerified);
-    }
-    App.openDialog(dlg);
-  }
-  $("#add-customer").addEventListener("click", () => openForm());
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!App.validate(form)) return;
-    const f = form.elements;
-    const file = f.licensePhoto.files[0];
-    const data = {
-      name: f.name.value.trim(),
-      email: f.email.value.trim(),
-      phone: f.phone.value.trim(),
-      licenseExpiry: f.licenseExpiry.value,
-      licenseVerified: f.licenseVerified.checked,
-      ...(file ? { licensePhoto: await App.readImage(file) } : {}),
-    };
-    if (editing) data.id = editing.id;
-    const btn = $("#customer-save");
-    App.setLoading(btn, true);
-    try {
-      await Api.saveCustomer(data);
-      App.closeDialog(dlg);
-      App.toast(editing ? `${data.name} updated.` : `${data.name} added.`);
-      await load();
-    } finally {
-      App.setLoading(btn, false);
-    }
-  });
 
   await load();
 });
