@@ -1,4 +1,4 @@
-/* Profile: three small forms that save through Api.updateProfile. */
+/* Profile: personal details, license photo and expiry, password. */
 App.ready(() => {
   const { $, icon, fmt, esc } = App;
   const me = DB.me;
@@ -25,16 +25,16 @@ App.ready(() => {
   $("#p-name").value = me.name;
   $("#p-email").value = me.email;
   $("#p-phone").value = me.phone;
-  $("#p-license").value = me.licenseNumber;
   $("#p-expiry").value = me.licenseExpiry || "";
+  App.setUpload($("#form-license .upload"), me.licensePhoto, "Current license photo");
   renderCard();
 
-  async function save(form, patch, message) {
+  async function save(form, patch, message, call = Api.updateProfile) {
     if (!App.validate(form)) return;
     const btn = $("[type=submit]", form);
     App.setLoading(btn, true);
     try {
-      const updated = await Api.updateProfile(patch);
+      const updated = await call(await patch());
       Object.assign(me, updated);
       renderCard();
       App.toast(message);
@@ -47,12 +47,19 @@ App.ready(() => {
 
   $("#form-personal").addEventListener("submit", (e) => {
     e.preventDefault();
-    save(e.currentTarget, { name: $("#p-name").value.trim(), email: $("#p-email").value.trim(), phone: $("#p-phone").value.trim() }, "Personal details saved.");
+    save(e.currentTarget, () => ({ name: $("#p-name").value.trim(), email: $("#p-email").value.trim(), phone: $("#p-phone").value.trim() }), "Personal details saved.");
   });
 
   $("#form-license").addEventListener("submit", (e) => {
     e.preventDefault();
-    save(e.currentTarget, { licenseNumber: $("#p-license").value.trim(), licenseExpiry: $("#p-expiry").value, licenseVerified: false }, "License saved. Staff will check it at pick-up.");
+    // Sent as multipart form data: the new photo (if one was chosen) and the expiry date.
+    const file = $("#p-photo").files[0];
+    save(
+      e.currentTarget,
+      async () => ({ licenseExpiry: $("#p-expiry").value, ...(file ? { licensePhoto: await App.readImage(file) } : {}) }),
+      "License saved. Staff will check it again at pick-up.",
+      Api.updateLicense
+    );
   });
 
   $("#form-password").addEventListener("submit", async (e) => {
@@ -61,7 +68,7 @@ App.ready(() => {
     if (!App.validate(form)) return;
     const btn = $("[type=submit]", form);
     App.setLoading(btn, true);
-    await new Promise((r) => setTimeout(r, 500)); // stand-in for POST /api/me/password
+    await Api.changePassword({ currentPassword: $("#pw-current").value, newPassword: $("#pw-new").value });
     App.setLoading(btn, false);
     form.reset();
     App.toast("Password updated.");

@@ -1,4 +1,4 @@
-/* Staff: manage cars. Search, filter, paginate, add, edit, delete. */
+/* Staff: manage cars. Search, filter, paginate, add, edit, delete, several photos per car. */
 App.ready(async () => {
   const { $, $$, icon, fmt, esc } = App;
   const PAGE = 8;
@@ -10,7 +10,7 @@ App.ready(async () => {
   $("#cars-table").innerHTML = `<div style="padding:24px" class="stack"><div class="skeleton" style="height:48px"></div><div class="skeleton" style="height:48px"></div><div class="skeleton" style="height:48px"></div></div>`;
 
   async function load() {
-    cars = await Api.getCars({});
+    cars = await Api.getFleet();
     render();
   }
 
@@ -118,19 +118,37 @@ App.ready(async () => {
   /* ---------- Add / edit form ---------- */
   const dlg = $("#car-dialog");
   const form = $("#car-form");
+  const MAX_PHOTOS = 8;
   let editing = null;
-  let photo = null; // data URL for a newly chosen photo
+  let photos = []; // [{ src }] the first one is the main photo. New photos are data URLs in this demo.
 
-  const setPreview = (src) => {
-    const box = $("#dz-preview");
-    box.hidden = !src;
-    $("#dz-empty").hidden = Boolean(src);
-    box.style.backgroundImage = src ? `url("${src}")` : "";
+  const photoError = (message) => {
+    $("#photos-field").classList.toggle("has-error", Boolean(message));
+    if (message) $("#photos-error").textContent = message;
   };
+
+  function renderPhotos() {
+    $("#photo-grid").innerHTML =
+      photos
+        .map(
+          (p, i) => `
+        <div class="photo-tile${i === 0 ? " is-main" : ""}" data-i="${i}">
+          <img src="${esc(App.img(p.src, 420))}" alt="Photo ${i + 1} of ${photos.length}">
+          ${i === 0 ? `<span class="photo-badge">Main</span>` : ""}
+          <div class="photo-actions">
+            ${i > 0 ? `<button type="button" data-photo="main" aria-label="Make photo ${i + 1} the main photo" title="Make main">${icon("star")}</button>` : ""}
+            <button type="button" data-photo="remove" aria-label="Remove photo ${i + 1}" title="Remove">${icon("trash")}</button>
+          </div>
+        </div>`
+        )
+        .join("") +
+      (photos.length < MAX_PHOTOS
+        ? `<label class="photo-add" for="c-photos">${icon("plus")}<strong>${photos.length ? "Add more" : "Add photos"}</strong><span>${photos.length ? `${MAX_PHOTOS - photos.length} left` : "Drop or browse, several at once"}</span></label>`
+        : "");
+  }
 
   function openForm(car) {
     editing = car || null;
-    photo = null;
     form.reset();
     $$(".field", form).forEach((f) => f.classList.remove("has-error"));
     $("#car-dialog-title").textContent = car ? `Edit ${car.brand} ${car.model}` : "Add car";
@@ -143,43 +161,83 @@ App.ready(async () => {
       }).forEach(([k, v]) => {
         if (form.elements[k]) form.elements[k].value = v == null ? "" : v;
       });
-      setPreview(car.images[0] ? App.img(car.images[0], 800) : null);
-    } else {
-      setPreview(null);
     }
+    photos = car ? car.images.map((src) => ({ src })) : [];
+    renderPhotos();
     App.openDialog(dlg);
   }
 
   $("#add-car").addEventListener("click", () => openForm());
 
-  // Photo: read, shrink and keep as a data URL so it survives the demo reload.
-  function readPhoto(file) {
-    if (!file || !file.type.startsWith("image/")) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const img = new Image();
-      img.onload = () => {
-        const scale = Math.min(1, 1200 / img.width);
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.round(img.width * scale);
-        canvas.height = Math.round(img.height * scale);
-        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-        photo = canvas.toDataURL("image/jpeg", 0.82);
-        setPreview(photo);
+  // New photos are read, shrunk and kept as data URLs so they survive the demo reload.
+  // The real endpoint takes the original files as multipart form data instead.
+  function shrink(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onerror = () => resolve(null);
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => resolve(null);
+        img.onload = () => {
+          const scale = Math.min(1, 1200 / img.width);
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", 0.82));
+        };
+        img.src = reader.result;
       };
-      img.src = reader.result;
-    };
-    reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
+    });
   }
-  $("#c-photo").addEventListener("change", (e) => readPhoto(e.target.files[0]));
-  const dz = $("#dz");
-  ["dragenter", "dragover"].forEach((ev) => dz.addEventListener(ev, (e) => (e.preventDefault(), dz.classList.add("is-over"))));
-  ["dragleave", "drop"].forEach((ev) => dz.addEventListener(ev, (e) => (e.preventDefault(), dz.classList.remove("is-over"))));
-  dz.addEventListener("drop", (e) => readPhoto(e.dataTransfer.files[0]));
+
+  async function addPhotos(fileList) {
+    let problem = "";
+    for (const file of Array.from(fileList)) {
+      if (photos.length >= MAX_PHOTOS) {
+        problem = `A car can have up to ${MAX_PHOTOS} photos.`;
+        break;
+      }
+      if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
+        problem = "Choose JPG, PNG or WebP images.";
+        continue;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        problem = "Each photo must be under 5 MB.";
+        continue;
+      }
+      const src = await shrink(file);
+      if (src) photos.push({ src });
+    }
+    photoError(problem);
+    renderPhotos();
+  }
+
+  $("#c-photos").addEventListener("change", async (e) => {
+    await addPhotos(e.target.files);
+    e.target.value = ""; // so the same file can be chosen again
+  });
+
+  const grid = $("#photo-grid");
+  grid.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-photo]");
+    if (!btn) return;
+    const i = Number(btn.closest("[data-i]").dataset.i);
+    if (btn.dataset.photo === "remove") photos.splice(i, 1);
+    else photos.unshift(photos.splice(i, 1)[0]);
+    photoError("");
+    renderPhotos();
+  });
+  ["dragenter", "dragover"].forEach((ev) => grid.addEventListener(ev, (e) => (e.preventDefault(), grid.classList.add("is-over"))));
+  ["dragleave", "drop"].forEach((ev) => grid.addEventListener(ev, (e) => (e.preventDefault(), grid.classList.remove("is-over"))));
+  grid.addEventListener("drop", (e) => addPhotos(e.dataTransfer.files));
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (!App.validate(form)) return;
+    const valid = App.validate(form);
+    if (!photos.length) photoError("Add at least one photo of the car.");
+    if (!valid || !photos.length) return;
     const f = form.elements;
     const data = {
       brand: f.brand.value.trim(),
@@ -198,7 +256,7 @@ App.ready(async () => {
       features: f.features.value.split(",").map((s) => s.trim()).filter(Boolean),
     };
     if (editing) data.id = editing.id;
-    if (photo) data.images = [photo];
+    data.images = photos.map((p) => p.src); // first = main photo
     const btn = $("#car-save");
     App.setLoading(btn, true);
     try {

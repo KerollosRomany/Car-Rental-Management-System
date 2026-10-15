@@ -32,7 +32,7 @@
           <div class="toolbar">
             <div class="input-wrap">
               <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
-              <input class="input" id="q" type="search" placeholder="Search name, email, phone or license" aria-label="Search customers">
+              <input class="input" id="q" type="search" placeholder="Search name, email or phone" aria-label="Search customers">
             </div>
             <select class="select select-sm" id="f-license" aria-label="Filter by license">
               <option value="">All licenses</option>
@@ -59,8 +59,16 @@
           <div class="field span-2"><label class="label" for="u-name">Full name</label><input class="input" id="u-name" name="name" type="text" required placeholder="As shown on the license"></div>
           <div class="field"><label class="label" for="u-email">Email</label><input class="input" id="u-email" name="email" type="email" required placeholder="name@example.com"></div>
           <div class="field"><label class="label" for="u-phone">Phone</label><input class="input" id="u-phone" name="phone" type="tel" required pattern="[0-9+\s\-]{8,16}" data-msg-pattern="Enter a phone number with 8 to 16 digits." placeholder="0100 000 0000"></div>
-          <div class="field"><label class="label" for="u-license">License number</label><input class="input mono" id="u-license" name="licenseNumber" type="text" required placeholder="DL-00000000"></div>
           <div class="field"><label class="label" for="u-expiry">License expiry</label><input class="input" id="u-expiry" name="licenseExpiry" type="date" required data-msg-required="Enter the expiry date shown on the license."></div>
+          <div class="field span-2">
+            <label class="label" for="u-photo">License photo</label>
+            <label class="upload" for="u-photo">
+              <span class="upload-thumb"><i class="ph ph-identification-card" aria-hidden="true"></i><img alt=""></span>
+              <span class="upload-text"><strong data-upload-title>Upload a photo of the license</strong><span>JPG, PNG or WebP, up to 5 MB.</span></span>
+              <span class="btn btn-secondary btn-sm" aria-hidden="true">Browse</span>
+              <input class="sr-only" id="u-photo" name="licensePhoto" type="file" accept="image/jpeg,image/png,image/webp" data-max-mb="5" required data-msg-required="Upload a photo of the driving license.">
+            </label>
+          </div>
           <div class="field span-2">
             <label class="check"><input class="switch" type="checkbox" id="u-verified" name="licenseVerified" role="switch"><span>License checked against the original</span></label>
           </div>

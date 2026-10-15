@@ -40,9 +40,9 @@ App.ready(async () => {
     ["gear-six", "Transmission", car.transmission],
     [App.fuelIcon(car.fuel), "Fuel", car.fuel],
     ["users", "Seats", `${car.seats} seats`],
-    ["door", "Doors", `${car.doors} doors`],
     ["suitcase", "Luggage", `${car.bags} ${car.bags === 1 ? "bag" : "bags"}`],
     ["palette", "Colour", car.color],
+    ["car-profile", "Type", car.category],
   ];
 
   detail.innerHTML = `
@@ -89,7 +89,7 @@ App.ready(async () => {
         <div class="faq">
           <details><summary>What do I need to bring?<i class="ph ph-caret-down" aria-hidden="true"></i></summary><p>A valid driving license and an ID. The license must be valid for the whole rental.</p></details>
           <details><summary>How does fuel work?<i class="ph ph-caret-down" aria-hidden="true"></i></summary><p>Return the car with the same fuel level you collected it with. Electric cars come with a full charge.</p></details>
-          <details><summary>Can I cancel a request?<i class="ph ph-caret-down" aria-hidden="true"></i></summary><p>Yes, any time before our team confirms it. You can do it from My rentals.</p></details>
+          <details><summary>Can I cancel a request?<i class="ph ph-caret-down" aria-hidden="true"></i></summary><p>Yes, from My rentals. Before our team approves it you get a full refund. After approval, 10% of the amount is charged and the rest is refunded.</p></details>
         </div>
       </div>
     </div>
@@ -132,7 +132,7 @@ App.ready(async () => {
         <dl class="kv price-lines" id="price-lines"></dl>
 
         <button class="btn btn-primary btn-lg btn-block" type="submit"${maintenance ? " disabled" : ""}>Request rental</button>
-        <p class="hint" style="text-align:center">No payment now. Our team confirms your request.</p>
+        <p class="hint" style="text-align:center">You pay the total when you send the request. If our team rejects it, you get all of it back.</p>
       </form>
     </aside>`;
 

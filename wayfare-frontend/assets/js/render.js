@@ -18,6 +18,7 @@
       completed: ["Completed", "neutral"],
       rejected: ["Rejected", "danger"],
       cancelled: ["Cancelled", "neutral"],
+      refused: ["Cancelled (fee)", "neutral"],
     },
     car: {
       available: ["Available", "ok"],
@@ -26,7 +27,7 @@
     },
     payment: {
       paid: ["Paid", "ok"],
-      pending: ["Pending", "warn"],
+      partial: ["10% fee kept", "warn"],
       refunded: ["Refunded", "neutral"],
     },
   };
@@ -134,32 +135,52 @@
     { label: "Returned", icon: "flag-checkered" },
   ];
 
+  // Every step up to and including the rental's status is ticked. The step after
+  // it is marked as next. Stopped rentals end with a red cross.
   function roadHTML(r) {
-    if (r.status === "rejected" || r.status === "cancelled") {
-      const label = r.status === "rejected" ? "Rejected" : "Cancelled";
-      return `
-        <ol class="road" aria-label="Rental progress">
-          <li class="is-done"><span class="dot">${icon("file-text")}</span>Requested<small>${fmt.short(r.createdAt)}</small></li>
-          <li class="is-stopped"><span class="dot">${icon("x")}</span>${label}</li>
-        </ol>`;
-    }
-    const index = { pending: 0, approved: 1, active: 2, completed: 3 }[r.status];
     const dates = { 0: r.createdAt, 2: r.pickedUpAt, 3: r.returnedAt };
-    return `
-      <ol class="road" aria-label="Rental progress">
-        ${STEPS.map((s, i) => {
-          const state = r.status === "completed" || i < index ? "is-done" : i === index ? "is-current" : "";
-          const done = state === "is-done";
-          return `<li class="${state}"><span class="dot">${icon(done ? "check" : s.icon)}</span>${s.label}${dates[i] && (done || i === index) ? `<small>${fmt.short(dates[i])}</small>` : ""}</li>`;
-        }).join("")}
-      </ol>`;
+    const stop = { rejected: [0, "Rejected"], cancelled: [0, "Cancelled"], refused: [1, "Cancelled after approval"] }[r.status];
+    const reached = stop ? stop[0] : { pending: 0, approved: 1, active: 2, completed: 3 }[r.status];
+    const steps = STEPS.slice(0, stop ? reached + 1 : STEPS.length).map((s, i) => {
+      if (i > reached) return `<li class="${i === reached + 1 ? "is-next" : ""}"><span class="dot">${icon(s.icon)}</span>${s.label}</li>`;
+      const now = i === reached && !stop ? " is-now" : "";
+      return `<li class="is-done${now}"><span class="dot">${icon("check")}</span>${s.label}${dates[i] ? `<small>${fmt.short(dates[i])}</small>` : ""}</li>`;
+    });
+    if (stop) steps.push(`<li class="is-stopped is-now"><span class="dot">${icon("x")}</span>${stop[1]}</li>`);
+    return `<ol class="road" aria-label="Rental progress">${steps.join("")}</ol>`;
   }
+
+  // Money on a rental: paid when the request was sent, refunds after a rejection or cancellation.
+  function moneyHTML(r, staff) {
+    if (!r.paidAmount) return "";
+    const kept = r.paidAmount - r.refundedAmount;
+    const note =
+      r.status === "refused"
+        ? `<div class="notice is-warn">${icon("receipt")}<div><strong>Cancelled after approval.</strong> ${fmt.money2(kept)} (10%) was kept as a fee and ${fmt.money2(r.refundedAmount)} was refunded.</div></div>`
+        : r.refundedAmount
+        ? `<div class="notice">${icon("arrow-counter-clockwise")}<div>${staff ? "The customer got" : "You got"} the full ${fmt.money2(r.refundedAmount)} back.</div></div>`
+        : "";
+    return `
+      <div class="stack" style="--stack-gap:14px">
+        <h4>Payment</h4>
+        <dl class="kv">
+          <div><dt>Status</dt><dd>${App.status("payment", r.paymentStatus)}</dd></div>
+          <div><dt>Paid on ${fmt.date(r.paidAt)}</dt><dd>${fmt.money2(r.paidAmount)}</dd></div>
+          ${r.refundedAmount ? `<div><dt>Refunded</dt><dd>${fmt.money2(r.refundedAmount)}</dd></div>` : ""}
+        </dl>
+        ${note}
+      </div>`;
+  }
+
+  App.licensePhoto = (customer, size = "md") =>
+    customer.licensePhoto
+      ? `<img class="license-photo license-photo--${size}" src="${esc(customer.licensePhoto)}" alt="Driving license of ${esc(customer.name)}" loading="lazy">`
+      : `<span class="license-photo license-photo--${size} is-missing">${icon("identification-card")}<span>No photo</span></span>`;
 
   function drawerHTML(r, opts) {
     const staff = opts.audience === "staff";
     const car = r.car;
     const loc = (window.DB.locations.find((l) => l.id === r.pickupLocation) || {}).name || r.pickupLocation;
-    const pay = r.payment;
     return `
       <div class="dialog-head">
         <div>
@@ -192,7 +213,6 @@
           <div><dt>Duration</dt><dd>${fmt.plural(r.days, "day")}</dd></div>
           <div><dt>Pick-up location</dt><dd>${esc(loc)}</dd></div>
           <div><dt>Daily rate</dt><dd>${fmt.money(car.dailyRate)}</dd></div>
-          ${r.extraCharge ? `<div><dt>Extra charges</dt><dd>${fmt.money(r.extraCharge)}</dd></div>` : ""}
           <div><dt>Total</dt><dd style="font-size:1.125rem">${fmt.money(r.total)}</dd></div>
         </dl>
 
@@ -208,29 +228,20 @@
                     <div class="muted text-sm">${esc(r.customer.phone)}</div>
                   </div>
                 </div>
-                <dl class="kv" style="margin-top:14px">
-                  <div><dt>Driving license</dt><dd class="mono">${esc(r.customer.licenseNumber)}</dd></div>
-                  <div><dt>License expires</dt><dd>${fmt.date(r.customer.licenseExpiry)}</dd></div>
-                </dl>
+                <div class="rd-license">
+                  ${App.licensePhoto(r.customer, "sm")}
+                  <dl class="kv">
+                    <div><dt>License expires</dt><dd>${fmt.date(r.customer.licenseExpiry)}</dd></div>
+                    <div><dt>License check</dt><dd>${r.customer.licenseVerified ? `<span class="status status--ok">Verified</span>` : `<span class="status status--warn">Not checked</span>`}</dd></div>
+                  </dl>
+                </div>
               </div>`
             : ""
         }
 
-        ${
-          pay
-            ? `<div>
-                <h4 style="margin-bottom:12px">Payment</h4>
-                <dl class="kv">
-                  <div><dt>Status</dt><dd>${App.status("payment", pay.status)}</dd></div>
-                  <div><dt>Method</dt><dd>${esc(pay.method)}</dd></div>
-                  <div><dt>Amount</dt><dd>${fmt.money(pay.amount)}</dd></div>
-                </dl>
-              </div>`
-            : ""
-        }
+        ${moneyHTML(r, staff)}
 
-        ${r.condition ? `<div class="kv"><div><span class="k">Condition at return</span><span class="v">${esc(r.condition)}</span></div></div>` : ""}
-        ${r.notes ? `<div class="notice">${icon("note-pencil")}<div>${esc(r.notes)}</div></div>` : ""}
+        ${r.notes ? `<div class="notice">${icon("note-pencil")}<div><strong>Return notes.</strong> ${esc(r.notes)}</div></div>` : ""}
       </div>
       ${
         opts.actions && opts.actions.length
