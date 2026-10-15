@@ -1,0 +1,36 @@
+/* Violet Night: Violet and mint */
+:root {
+  --obs-950: #090614;
+  --obs-900: #0f0a1e;
+  --obs-850: #150f28;
+  --obs-800: #1c1433;
+  --obs-700: #271d44;
+  --obs-600: #342859;
+  --obs-500: #473a74;
+  --obs-400: #7566a3;
+  --obs-300: #9f93c6;
+  --obs-200: #c2bade;
+  --obs-100: #e2deef;
+  --pearl: #f4f1fb;
+  --cognac-300: #aaf5d3;
+  --cognac-400: #7fedbf;
+  --cognac-500: #55e2a9;
+  --cognac-600: #30c78b;
+  --cognac-700: #1c9567;
+  --accent: #55e2a9; --accent-hover: #6aeab5; --accent-press: #38cc92;
+  --accent-ink: #04211a; --accent-text: #86efc3;
+  --accent-soft: rgba(85, 226, 169, 0.16); --accent-line: rgba(85, 226, 169, 0.5);
+  --focus: #7fedbf; --ring: 0 0 0 3px rgba(85, 226, 169, 0.3);
+  --live-bg: rgba(85, 226, 169, 0.16); --live-text: #86efc3;
+  --chart-1: #30c78b; --chart-1-hover: #1c9567;
+  --stitch: repeating-linear-gradient(90deg, #55e2a9 0 7px, transparent 7px 13px);
+}
+.theme-light {
+  --bg: #f5f3fa; --bg-deep: #090614; --surface: #ffffff; --surface-2: #eeeaf6; --surface-3: #e3def0;
+  --line: #e2ddee; --line-strong: #cbc3df; --text: #140e24; --text-2: #463d63; --text-3: #675e86; --field: #ffffff;
+  --accent: #3fd29a; --accent-hover: #52dba6; --accent-press: #2db685; --accent-ink: #04211a; --accent-text: #0d7a52;
+  --accent-soft: rgba(63, 210, 154, 0.12); --accent-line: rgba(63, 210, 154, 0.5); --inverse-bg: #0f0a1e; --inverse-text: #f4f1fb; --inverse-hover: #271d44;
+  --focus: #0d7a52; --scrim: rgba(9, 6, 20, 0.55); --live-bg: rgba(63, 210, 154, 0.14); --live-text: #0d7a52;
+  --neutral-bg: #e3def0; --neutral-text: #463d63; --ring: 0 0 0 3px rgba(63, 210, 154, 0.28);
+  --shadow-sm: 0 1px 2px rgba(15, 10, 30, 0.08); --shadow-md: 0 12px 30px rgba(15, 10, 30, 0.14); --shadow-lg: 0 28px 60px rgba(15, 10, 30, 0.24);
+}
