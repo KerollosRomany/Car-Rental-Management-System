@@ -1,4 +1,4 @@
-/* Cars listing: filters, sorting, availability for chosen dates. State lives in the URL. */
+/* Cars listing: only cars the customer can book, with filters and sorting. State lives in the URL. */
 App.ready(() => {
   const { $, $$, icon, fmt, esc } = App;
   const MAX_PRICE = 200;
@@ -11,7 +11,6 @@ App.ready(() => {
     transmission: q.get("trans") || "Any",
     seats: q.get("seats") || "Any",
     fuel: (q.get("fuel") || "").split(",").filter(Boolean),
-    availableOnly: q.get("avail") === "1",
     sort: q.get("sort") || "recommended",
     from: q.get("from"),
     to: q.get("to"),
@@ -45,7 +44,6 @@ App.ready(() => {
     $$('input[name="trans"]').forEach((r) => (r.checked = r.value === state.transmission));
     $$('input[name="seats"]').forEach((r) => (r.checked = r.value === state.seats));
     $$('input[name="fuel"]').forEach((c) => (c.checked = state.fuel.includes(c.value)));
-    $("#f-available").checked = state.availableOnly;
     $("#f-sort").value = state.sort;
     $("#f-loc").value = state.loc;
     $("#clear-dates").hidden = !(state.from && state.to);
@@ -86,12 +84,11 @@ App.ready(() => {
     state.fuel = $$('input[name="fuel"]:checked').map((c) => c.value);
     update();
   });
-  $("#f-available").addEventListener("change", (e) => ((state.availableOnly = e.target.checked), update()));
   $("#f-sort").addEventListener("change", (e) => ((state.sort = e.target.value), update()));
   $("#f-loc").addEventListener("change", (e) => ((state.loc = e.target.value), syncUrl()));
 
   const reset = () => {
-    Object.assign(state, { category: [], maxPrice: MAX_PRICE, transmission: "Any", seats: "Any", fuel: [], availableOnly: false });
+    Object.assign(state, { category: [], maxPrice: MAX_PRICE, transmission: "Any", seats: "Any", fuel: [] });
     update();
   };
   $("#reset-filters").addEventListener("click", reset);
@@ -116,7 +113,6 @@ App.ready(() => {
     if (state.transmission !== "Any") p.set("trans", state.transmission);
     if (state.seats !== "Any") p.set("seats", state.seats);
     if (state.fuel.length) p.set("fuel", state.fuel.join(","));
-    if (state.availableOnly) p.set("avail", "1");
     if (state.sort !== "recommended") p.set("sort", state.sort);
     if (state.from && state.to) {
       p.set("from", state.from);
@@ -159,25 +155,24 @@ App.ready(() => {
       transmission: state.transmission,
       seats: state.seats,
       fuel: state.fuel,
-      availableOnly: state.availableOnly,
       sort: state.sort,
       from: state.from,
       to: state.to,
     });
     if (my !== token) return; // a newer render is in flight
 
-    const free = cars.filter((c) => c.availableForDates).length;
+    // The server only returns cars that can be booked, so every card here is free.
     const filtering = state.category.length || state.maxPrice < MAX_PRICE || state.transmission !== "Any" || state.seats !== "Any" || state.fuel.length;
     $("#result-summary").textContent = state.from
-      ? `${fmt.plural(free, "car")} free from ${fmt.range(state.from, state.to)}${cars.length !== free ? `, ${cars.length} in total` : ""}`
-      : `${fmt.plural(cars.length, "car")} ${filtering ? "match your filters" : "in the fleet"}. Pick your dates to check availability.`;
+      ? `${fmt.plural(cars.length, "car")} free from ${fmt.range(state.from, state.to)}${filtering ? " that match your filters" : ""}.`
+      : `${fmt.plural(cars.length, "car")} available ${filtering ? "that match your filters" : "right now"}. Pick your dates to see what is free for them.`;
 
     if (!cars.length) {
       grid.hidden = true;
       empty.innerHTML = App.empty({
         icon: "car-profile",
-        title: "No cars match these filters",
-        text: "Try a higher price, another car type, or remove a filter.",
+        title: state.from ? "No free cars for these dates and filters" : "No cars match these filters",
+        text: state.from ? "Try other dates, a higher price or another car type." : "Try a higher price, another car type, or remove a filter.",
         action: { label: "Clear all filters" },
       });
       $("[data-empty-action]", empty).addEventListener("click", reset);
