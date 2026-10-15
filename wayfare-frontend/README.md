@@ -14,7 +14,7 @@ npx serve .
 
 ## What is in it
 
-**Customer site** (dark theme)
+**Customer site** (light theme, dark navy footer and photo panels)
 
 | Page | File | What it shows |
 |---|---|---|
@@ -76,11 +76,11 @@ Statuses: car `available | rented | maintenance`, rental `pending | approved | a
 
 ## Design system
 
-- **Look:** Obsidian (near-black) with one accent, Cognac. Pearl text. Crisp 2 to 6 px corners, hairline borders, almost no shadow.
-- **Signature:** the stitch, a dashed seam like leather stitching. It appears in the logo, the booking panel, dividers and progress lines.
-- **Logo:** `assets/img/logo-mark.svg`, a key-tag badge with a stitched edge. The wordmark is live text (Archivo, wide, tracked) in `.brand-word`.
+- **Look:** Cloud Cobalt. A light page with white panels, deep navy text and dark panels, and one accent, cobalt. Crisp 2 to 6 px corners, hairline borders, almost no shadow.
+- **Signature:** the stitch, a dashed seam like a road marking. It appears in the booking panel, dividers and progress lines.
+- **Logo:** the Wayfare plate, a licence plate that reads WAYFARE with a cobalt W band. `App.logo` in `assets/js/ui.js` holds the inline SVG, which reads its colours from `--logo-*` tokens, so one file works on light and dark panels. Static copies: `assets/img/logo-plate.svg`, `logo-plate-on-dark.svg`. The favicon is `logo-icon.svg`. Static pages mark the spot with `<span data-logo></span>`.
 - **Type:** Archivo (wide) for headings, Geist for text, Geist Mono for IDs and plates.
-- **Themes:** the customer site is dark by default. Add `class="theme-light"` to `<body>` for the light staff theme. Both use the same token names.
+- **Themes:** one light theme for the customer site and the staff console. Dark panels (footer, hero, call-to-action, sign-in photo, staff sidebar) redefine the same token names in `tokens.css`, so components never use raw palette steps. Every page body carries `class="theme-light"`, which switches on the light form-control rules.
 - **Change the accent:** edit `--accent` and friends in `assets/css/tokens.css`. Components only use semantic tokens (`--surface`, `--text`, `--accent`, ...), never raw colours.
 - **Chart colour:** `--chart-1` passes the contrast, lightness and chroma checks on white. Re-check it if you change the accent.
 - **Brand name:** `App.brand` in `assets/js/ui.js`, plus the `<title>` of each page.
@@ -94,7 +94,7 @@ assets/css/       tokens, base, components, layout, pages, datepicker (app.css i
 assets/js/        data.js (sample data), api.js (data calls), ui.js (layout, forms, dialogs),
                   render.js (car card, rental drawer), charts.js, admin-actions.js
 assets/js/pages/  one small script per page
-assets/img/       logo
+assets/img/       logo plate (light and dark) and favicon
 ```
 
 ## Third-party
