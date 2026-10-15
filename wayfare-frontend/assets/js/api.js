@@ -2,24 +2,28 @@
    API layer (sample data only)
    Every list and detail page asks window.Api for its data. Each method
    returns a Promise, like fetch() would, so the backend team can replace the
-   body with a real request. The comment above each one is the suggested
-   endpoint. Nothing is saved: a reload resets everything.
+   body with a real request. The comment above each one is the endpoint it
+   stands for. Nothing is saved: a reload resets everything.
 
    Login, register and logout are plain forms and links in the HTML. The
    server handles them, so there is no session code in the front end.
 
-   Business rules the UI assumes (move these to the server):
-   - A car is free for [from, to) unless an approved or active rental overlaps.
-     The return day is exclusive, so same-day turnover is allowed.
-   - A car in maintenance is never free.
+   Business rules the UI assumes (the server owns these):
+   - Customers only ever see cars they can book: not in maintenance and, when
+     dates are chosen, free for them. A car is free for [from, to) unless an
+     approved or active rental overlaps. The return day is exclusive.
    - Total price = days x dailyRate. Days = return date minus pickup date, minimum 1.
+   - The customer pays the total when sending the request (paidAmount).
+     Rejected by staff, or cancelled before approval: everything is refunded.
+     Cancelled after approval (status "refused"): 10% is kept, 90% refunded.
    - Rental status flow: pending -> approved -> active -> completed.
-     A pending request can also become rejected or cancelled.
-   - Picking up sets the car to "rented". Recording a return sets it to "available".
+     pending can also become rejected or cancelled; approved can become refused.
+   - Handing over the keys sets the car to "rented". Recording a return sets it to "available".
    ========================================================================== */
 (function () {
   const DB = window.DB;
   const BLOCKING = ["approved", "active"];
+  const CANCEL_FEE = 0.1;
 
   const wait = (ms = 220) => new Promise((resolve) => setTimeout(resolve, ms));
   const copy = (x) => JSON.parse(JSON.stringify(x));
@@ -34,6 +38,7 @@
     return new Date(y, m - 1, d);
   };
   const daysBetween = (from, to) => Math.max(1, Math.round((parse(to) - parse(from)) / 86400000));
+  const round2 = (n) => Math.round(n * 100) / 100;
 
   function bookedRanges(carId) {
     return DB.rentals
@@ -46,19 +51,30 @@
     return !bookedRanges(car.id).some((b) => overlap(from, to, b.from, b.to));
   }
 
+  // What a cancellation would cost right now (the server decides for real).
+  function cancelQuote(rental) {
+    const fee = rental.status === "approved" ? round2(rental.paidAmount * CANCEL_FEE) : 0;
+    return { fee, refund: round2(rental.paidAmount - fee), lateCancel: rental.status === "approved" };
+  }
+
+  function paymentState(r) {
+    if (!r.refundedAmount) return "paid";
+    return r.refundedAmount >= r.paidAmount ? "refunded" : "partial";
+  }
+
   function withRelations(rental) {
     return {
       ...copy(rental),
       car: copy(findCar(rental.carId)),
       customer: copy(findCustomer(rental.customerId)),
-      payment: copy(DB.payments.find((p) => p.rentalId === rental.id) || null),
+      paymentStatus: paymentState(rental),
     };
   }
 
   const Api = {
     /* ----- Reference data ----- */
 
-    // GET /api/locations
+    // GET /api/branches   (the four seeded branches)
     async getLocations() {
       await wait(60);
       return copy(DB.locations);
@@ -66,15 +82,14 @@
 
     /* ----- Cars ----- */
 
-    // GET /api/cars?category=SUV&maxPrice=100&transmission=Automatic&seats=5&fuel=Hybrid&from=2026-10-02&to=2026-10-05&sort=price-asc
+    // GET /api/customer/cars?from=2026-10-02&to=2026-10-05&type=suv&fuel=hybrid&transmission=automatic&seats=5&maxPrice=100&sort=price-asc
+    // Customers only get cars they can book: without dates, cars that are available now.
     async getCars(filters = {}) {
       await wait();
       const f = filters;
-      let list = DB.cars.map((c) => {
-        const out = copy(c);
-        out.availableForDates = f.from && f.to ? isFree(c, f.from, f.to) : c.status === "available";
-        return out;
-      });
+      let list = DB.cars
+        .filter((c) => (f.from && f.to ? isFree(c, f.from, f.to) : c.status === "available"))
+        .map((c) => ({ ...copy(c), availableForDates: true }));
       if (f.q) {
         const q = f.q.toLowerCase();
         list = list.filter((c) => `${c.brand} ${c.model} ${c.category}`.toLowerCase().includes(q));
@@ -88,14 +103,18 @@
         else if (f.seats === "2-4") list = list.filter((c) => c.seats <= 4);
       }
       if (f.fuel && f.fuel.length) list = list.filter((c) => f.fuel.includes(c.fuel));
-      if (f.availableOnly) list = list.filter((c) => c.availableForDates);
       const order = { "price-asc": (a, b) => a.dailyRate - b.dailyRate, "price-desc": (a, b) => b.dailyRate - a.dailyRate };
       if (order[f.sort]) list.sort(order[f.sort]);
-      else list.sort((a, b) => Number(b.availableForDates) - Number(a.availableForDates));
       return list;
     },
 
-    // GET /api/cars/:id   (includes bookedRanges so the calendar can grey out days)
+    // GET /api/admin/cars   (staff only: every car, whatever its status)
+    async getFleet() {
+      await wait();
+      return copy(DB.cars);
+    },
+
+    // GET /api/customer/cars/:id   (includes bookedRanges so the calendar can grey out days)
     async getCar(id) {
       await wait(160);
       const car = findCar(id);
@@ -103,7 +122,8 @@
       return { ...copy(car), bookedRanges: bookedRanges(id) };
     },
 
-    // POST /api/cars  or  PUT /api/cars/:id   (staff only)
+    // POST /api/admin/newcar  or  PUT /api/admin/editcar/:id   (staff only, multipart form data)
+    // images: the first one is the main photo, the rest keep their order.
     async saveCar(data) {
       await wait();
       if (data.id) {
@@ -112,14 +132,14 @@
       }
       const id = `c${String(nextNumber(DB.cars)).padStart(2, "0")}`;
       const car = {
-        images: [], features: [], description: "", mileage: 0, doors: 4, bags: 2, color: "",
+        images: [], features: [], description: "", bags: 2, color: "",
         ...data, id,
       };
       DB.cars.unshift(car);
       return copy(car);
     },
 
-    // DELETE /api/cars/:id   (staff only)
+    // DELETE /api/admin/deletecar/:id   (staff only). A car with rental history answers 409.
     async deleteCar(id) {
       await wait();
       const i = DB.cars.findIndex((c) => c.id === id);
@@ -129,7 +149,8 @@
 
     /* ----- Rentals ----- */
 
-    // POST /api/rentals   body: { carId, pickupDate, returnDate, pickupLocation }
+    // POST /api/customer/rentcar/:carId   body: { startDate, endDate, branchId }
+    // The server charges the total here (paidAmount) and stores the request as pending.
     async createRental({ carId, pickupDate, returnDate, pickupLocation }) {
       await wait(500);
       const car = findCar(carId);
@@ -137,6 +158,7 @@
         throw new Error("This car is no longer available for those dates.");
       }
       const days = daysBetween(pickupDate, returnDate);
+      const total = days * car.dailyRate;
       const rental = {
         id: `R-${nextNumber(DB.rentals)}`,
         customerId: DB.me.id,
@@ -144,16 +166,19 @@
         pickupDate,
         returnDate,
         days,
-        total: days * car.dailyRate,
+        total,
         pickupLocation,
         status: "pending",
         createdAt: DB.today,
+        paidAmount: total,
+        refundedAmount: 0,
+        paidAt: DB.today,
       };
       DB.rentals.unshift(rental);
       return withRelations(rental);
     },
 
-    // GET /api/rentals?customerId=u01&status=active   (customers only see their own)
+    // Customers: GET /api/customer/rentals     Staff: GET /api/admin/rentals?status=pending
     async getRentals({ customerId, status } = {}) {
       await wait();
       let list = DB.rentals.slice();
@@ -162,126 +187,130 @@
       return list.map(withRelations);
     },
 
-    // GET /api/rentals/:id
-    async getRental(id) {
-      await wait(120);
+    // Shown in the cancel dialog before the customer confirms.
+    cancelQuote,
+
+    // pending:  PUT /api/customer/cancelrental/:id   (full refund)
+    // approved: PUT /api/customer/refuserental/:id   (10% kept, 90% refunded)
+    // Customers can only cancel their own rentals.
+    async cancelRental(id) {
+      await wait(350);
       const r = findRental(id);
-      return r ? withRelations(r) : null;
+      if (!r || !["pending", "approved"].includes(r.status)) throw new Error("This rental can no longer be cancelled.");
+      const { refund } = cancelQuote(r);
+      r.status = r.status === "approved" ? "refused" : "cancelled";
+      r.refundedAmount = refund;
+      return withRelations(r);
     },
 
-    // PATCH /api/rentals/:id/status   body: { status, ...extra }
-    // approve -> approved, pickup -> active, return -> completed, reject, cancel
+    // Staff actions, one endpoint each:
+    // PUT /api/admin/approve/:id
+    // PUT /api/admin/reject/:id          body: { reason }
+    // PUT /api/admin/handoverkeys/:id
+    // PUT /api/admin/return/:id          body: { returnedAt, notes }
     async setRentalStatus(id, status, extra = {}) {
       await wait(350);
       const r = findRental(id);
       if (!r) throw new Error("Rental not found.");
       const car = findCar(r.carId);
       r.status = status;
-      if (status === "approved") {
-        if (!DB.payments.some((p) => p.rentalId === id)) {
-          DB.payments.unshift({
-            id: `P-${nextNumber(DB.payments)}`, rentalId: id, customerId: r.customerId,
-            amount: r.total, method: "Card", status: "pending", date: DB.today,
-          });
-        }
-      }
       if (status === "active") {
         r.pickedUpAt = DB.today;
         car.status = "rented";
       }
       if (status === "completed") {
         r.returnedAt = extra.returnedAt || DB.today;
-        r.condition = extra.condition || "Good";
-        if (extra.extraCharge) {
-          r.extraCharge = Number(extra.extraCharge);
-          r.total += r.extraCharge;
-        }
         if (extra.notes) r.notes = extra.notes;
         car.status = "available";
       }
-      if (status === "rejected") r.reason = extra.reason || "Request could not be accepted.";
+      if (status === "rejected") {
+        r.reason = extra.reason || "Request could not be accepted.";
+        r.refundedAmount = r.paidAmount;
+      }
       return withRelations(r);
     },
 
     /* ----- Customers ----- */
 
-    // GET /api/customers   (staff only)
+    // GET /api/admin/customers   (staff only)
     async getCustomers() {
       await wait();
       return DB.customers.map((c) => ({
         ...copy(c),
-        rentalCount: DB.rentals.filter((r) => r.customerId === c.id && r.status !== "rejected" && r.status !== "cancelled").length,
+        rentalCount: DB.rentals.filter((r) => r.customerId === c.id && ["approved", "active", "completed"].includes(r.status)).length,
       }));
     },
 
-    // POST /api/customers  or  PUT /api/customers/:id
-    async saveCustomer(data) {
+    // PUT /api/admin/customers/:id/license   body: { verified }
+    // Customers are never added by staff: they appear when they register.
+    async setLicenseVerified(id, verified) {
       await wait();
-      if (data.id) {
-        Object.assign(findCustomer(data.id), data);
-        return copy(findCustomer(data.id));
-      }
-      const customer = {
-        licenseVerified: false, joined: DB.today, licenseExpiry: "", ...data,
-        id: `u${String(nextNumber(DB.customers)).padStart(2, "0")}`,
-      };
-      DB.customers.unshift(customer);
-      return copy(customer);
+      const c = findCustomer(id);
+      c.licenseVerified = Boolean(verified);
+      return copy(c);
     },
 
-    // PUT /api/me
+    /* ----- Profile (customers and staff) ----- */
+
+    // PUT /api/customer/profile   body: { fullName, email, phone }
     async updateProfile(data) {
       await wait(400);
       Object.assign(DB.me, data);
       return copy(DB.me);
     },
 
+    // PUT /api/customer/profile/license   (multipart: licensePhoto file and licenseExpiry)
+    // A new photo or date resets the staff check.
+    async updateLicense(data) {
+      await wait(400);
+      Object.assign(DB.me, data, { licenseVerified: false });
+      return copy(DB.me);
+    },
+
+    // PUT /api/admin/profile   body: { fullName, email, phone }
+    async updateStaffProfile(data) {
+      await wait(400);
+      Object.assign(DB.staff, data);
+      return copy(DB.staff);
+    },
+
+    // PUT /api/authentication/change-password   body: { currentPassword, newPassword }   (customers and staff)
+    async changePassword() {
+      await wait(500);
+      return true;
+    },
+
     /* ----- Payments ----- */
 
-    // GET /api/payments   (staff only)
+    // GET /api/admin/payments   (staff only)
+    // One row per rental: what was paid and what was refunded. The server records
+    // both on its own, so there is nothing to enter by hand.
     async getPayments() {
       await wait();
-      return DB.payments.map((p) => ({
-        ...copy(p),
-        customer: copy(findCustomer(p.customerId)),
-        rental: copy(findRental(p.rentalId)),
-        car: copy(findCar(findRental(p.rentalId).carId)),
-      }));
-    },
-
-    // POST /api/payments   body: { rentalId, amount, method, status, date }
-    async savePayment(data) {
-      await wait();
-      const rental = findRental(data.rentalId);
-      const existing = DB.payments.find((p) => p.id === data.id);
-      if (existing) {
-        Object.assign(existing, data);
-        return copy(existing);
-      }
-      const payment = {
-        ...data,
-        id: `P-${nextNumber(DB.payments)}`,
-        customerId: rental.customerId,
-      };
-      DB.payments.unshift(payment);
-      return copy(payment);
-    },
-
-    // PATCH /api/payments/:id   body: { status }
-    async setPaymentStatus(id, status) {
-      await wait(250);
-      const p = DB.payments.find((x) => x.id === id);
-      p.status = status;
-      return copy(p);
+      return DB.rentals
+        .filter((r) => r.paidAmount > 0)
+        .map((r) => ({
+          rentalId: r.id,
+          rentalStatus: r.status,
+          paidAt: r.paidAt,
+          paid: r.paidAmount,
+          refunded: r.refundedAmount,
+          kept: round2(r.paidAmount - r.refundedAmount),
+          status: paymentState(r), // paid | partial | refunded
+          customer: copy(findCustomer(r.customerId)),
+          car: copy(findCar(r.carId)),
+        }))
+        .sort((a, b) => (a.paidAt < b.paidAt ? 1 : -1));
     },
 
     /* ----- Dashboard ----- */
 
-    // GET /api/dashboard   (staff only)
+    // No endpoint of its own: the dashboard works these numbers out from the staff lists
+    // (cars, rentals, payments, customers). Replace the body with those four calls.
     async getDashboard() {
       await wait(200);
       const since = DB.helpers.day(-30);
-      const paid = DB.payments.filter((p) => p.status === "paid" && p.date >= since);
+      const recent = DB.rentals.filter((r) => r.paidAt >= since && r.paidAmount - r.refundedAmount > 0);
       const rentals = DB.rentals.map(withRelations);
       return {
         cars: {
@@ -293,7 +322,7 @@
         customers: DB.customers.length,
         pending: rentals.filter((r) => r.status === "pending"),
         active: rentals.filter((r) => r.status === "active"),
-        revenue: { amount: paid.reduce((sum, p) => sum + p.amount, 0), count: paid.length, days: 30 },
+        revenue: { amount: round2(recent.reduce((sum, r) => sum + r.paidAmount - r.refundedAmount, 0)), count: recent.length, days: 30 },
         monthly: copy(DB.monthly),
         byCategory: DB.categories.map((name) => ({
           name,

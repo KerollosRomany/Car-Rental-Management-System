@@ -19,6 +19,20 @@
   };
   const photo = (id) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1400&q=80`;
 
+  // Stand-in for the license photo a customer uploads. The real one is a file URL.
+  const licenseCard = (name, expiry) =>
+    "data:image/svg+xml;utf8," +
+    encodeURIComponent(
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 404'>` +
+        `<rect width='640' height='404' rx='22' fill='#ebe6dc'/><path d='M0 22a22 22 0 0 1 22-22h596a22 22 0 0 1 22 22v52H0z' fill='#1f4f7a'/>` +
+        `<text x='32' y='48' font-family='Arial' font-size='26' font-weight='700' fill='#fff' letter-spacing='2'>DRIVING LICENCE</text>` +
+        `<rect x='32' y='100' width='150' height='190' rx='8' fill='#cfc7ba'/><circle cx='107' cy='168' r='38' fill='#aaa194'/><rect x='57' y='216' width='100' height='62' rx='31' fill='#aaa194'/>` +
+        `<text x='214' y='126' font-family='Arial' font-size='15' fill='#6b645a'>NAME</text><text x='214' y='158' font-family='Arial' font-size='28' font-weight='700' fill='#22262a'>${name}</text>` +
+        `<text x='214' y='206' font-family='Arial' font-size='15' fill='#6b645a'>EXPIRES</text><text x='214' y='236' font-family='Arial' font-size='24' fill='#22262a'>${expiry}</text>` +
+        `<text x='214' y='278' font-family='Arial' font-size='15' fill='#6b645a'>CLASS B</text><rect x='32' y='318' width='576' height='54' rx='6' fill='#dfd8cb'/>` +
+        `</svg>`
+    );
+
   /* ---------- Locations ---------- */
   const locations = [
     { id: "airport", name: "Airport terminal 2" },
@@ -31,48 +45,48 @@
   const cars = [
     {
       id: "c01", brand: "Toyota", model: "Corolla", year: 2023, category: "Economy",
-      transmission: "Automatic", fuel: "Petrol", seats: 5, doors: 4, bags: 2,
-      dailyRate: 38, status: "available", plate: "WF 4821", color: "White", mileage: 18400,
+      transmission: "Automatic", fuel: "Petrol", seats: 5, bags: 2,
+      dailyRate: 38, status: "available", plate: "WF 4821", color: "White",
       images: [photo("photo-1623869675781-80aa31012a5a"), photo("photo-1638618164682-12b986ec2a75")],
       features: ["Air conditioning", "Bluetooth audio", "Reverse camera", "Apple CarPlay and Android Auto", "Cruise control", "USB-C charging"],
       description: "A dependable compact sedan that is easy to park and cheap to run. A good first pick for city trips and airport transfers.",
     },
     {
       id: "c02", brand: "Volkswagen", model: "Golf", year: 2022, category: "Economy",
-      transmission: "Manual", fuel: "Petrol", seats: 5, doors: 5, bags: 2,
-      dailyRate: 36, status: "available", plate: "WF 1907", color: "White", mileage: 31250,
+      transmission: "Manual", fuel: "Petrol", seats: 5, bags: 2,
+      dailyRate: 36, status: "available", plate: "WF 1907", color: "White",
       images: [photo("photo-1572811298797-9eecadf6cb24")],
       features: ["Air conditioning", "Bluetooth audio", "Parking sensors", "Apple CarPlay and Android Auto", "Cruise control"],
       description: "Sharp handling and a roomy boot for its size, with a six speed manual gearbox. A good fit if you like to stay in control.",
     },
     {
       id: "c03", brand: "Mini", model: "Cooper", year: 2022, category: "Economy",
-      transmission: "Automatic", fuel: "Petrol", seats: 4, doors: 3, bags: 1,
-      dailyRate: 46, status: "maintenance", plate: "WF 7733", color: "Red", mileage: 22900,
+      transmission: "Automatic", fuel: "Petrol", seats: 4, bags: 1,
+      dailyRate: 46, status: "maintenance", plate: "WF 7733", color: "Red",
       images: [photo("photo-1720343012322-40620ced673f")],
       features: ["Air conditioning", "Bluetooth audio", "Sport mode", "USB-C charging"],
       description: "Small, quick and fun in town. Seats two adults comfortably, with two more for short rides.",
     },
     {
       id: "c04", brand: "Hyundai", model: "Kona", year: 2024, category: "SUV",
-      transmission: "Automatic", fuel: "Hybrid", seats: 5, doors: 5, bags: 3,
-      dailyRate: 58, status: "rented", plate: "WF 3058", color: "Sage green", mileage: 9800,
+      transmission: "Automatic", fuel: "Hybrid", seats: 5, bags: 3,
+      dailyRate: 58, status: "rented", plate: "WF 3058", color: "Sage green",
       images: [photo("photo-1674110997072-41f11b7d4ae7")],
       features: ["Air conditioning", "Reverse camera", "Lane assist", "Apple CarPlay and Android Auto", "Keyless entry", "Heated seats"],
       description: "A compact crossover with a higher seating position, hybrid efficiency and a boot big enough for a weekend away.",
     },
     {
       id: "c05", brand: "Toyota", model: "RAV4", year: 2023, category: "SUV",
-      transmission: "Automatic", fuel: "Hybrid", seats: 5, doors: 5, bags: 4,
-      dailyRate: 72, status: "available", plate: "WF 5614", color: "Blue", mileage: 14300,
+      transmission: "Automatic", fuel: "Hybrid", seats: 5, bags: 4,
+      dailyRate: 72, status: "available", plate: "WF 5614", color: "Blue",
       images: [photo("photo-1632137924251-fcea5ff46035"), photo("photo-1615887110697-0819ec23465f")],
       features: ["Air conditioning", "Reverse camera", "Lane assist", "GPS navigation", "Roof rails", "Keyless entry", "Child seat ready"],
       description: "A hybrid SUV with real space for five and their luggage. Calm on long highway stretches and light on fuel.",
     },
     {
       id: "c06", brand: "BMW", model: "X5", year: 2023, category: "SUV",
-      transmission: "Automatic", fuel: "Diesel", seats: 5, doors: 5, bags: 5,
-      dailyRate: 128, status: "rented", plate: "WF 9002", color: "Black", mileage: 12100,
+      transmission: "Automatic", fuel: "Diesel", seats: 5, bags: 5,
+      dailyRate: 128, status: "rented", plate: "WF 9002", color: "Black",
       images: [
         photo("photo-1609184166822-bd1f1b991a06"),
         photo("photo-1731988666894-482242ceae2f"),
@@ -84,40 +98,40 @@
     },
     {
       id: "c07", brand: "Jeep", model: "Wrangler", year: 2022, category: "SUV",
-      transmission: "Automatic", fuel: "Petrol", seats: 4, doors: 4, bags: 2,
-      dailyRate: 96, status: "rented", plate: "WF 6641", color: "Red", mileage: 27650,
+      transmission: "Automatic", fuel: "Petrol", seats: 4, bags: 2,
+      dailyRate: 96, status: "rented", plate: "WF 6641", color: "Red",
       images: [photo("photo-1591738802175-709fedef8288")],
       features: ["Air conditioning", "Removable roof", "4x4 drive", "Bluetooth audio", "Roof rack"],
       description: "Removable roof, high ground clearance and a loud personality. Built for gravel roads and beach trips.",
     },
     {
       id: "c08", brand: "Range Rover", model: "Sport", year: 2023, category: "Luxury",
-      transmission: "Automatic", fuel: "Diesel", seats: 5, doors: 5, bags: 4,
-      dailyRate: 165, status: "available", plate: "WF 8120", color: "White", mileage: 8700,
+      transmission: "Automatic", fuel: "Diesel", seats: 5, bags: 4,
+      dailyRate: 165, status: "available", plate: "WF 8120", color: "White",
       images: [photo("photo-1725815761064-b84c3f4f9b94")],
       features: ["Air suspension", "Leather seats", "Heated seats", "Panoramic roof", "GPS navigation", "Parking sensors", "Keyless entry"],
       description: "Air suspension and a quiet cabin make long drives feel short. Leather seats, heated in front and rear.",
     },
     {
       id: "c09", brand: "Mercedes-Benz", model: "C-Class", year: 2023, category: "Luxury",
-      transmission: "Automatic", fuel: "Petrol", seats: 5, doors: 4, bags: 3,
-      dailyRate: 112, status: "available", plate: "WF 2276", color: "Silver", mileage: 15900,
+      transmission: "Automatic", fuel: "Petrol", seats: 5, bags: 3,
+      dailyRate: 112, status: "available", plate: "WF 2276", color: "Silver",
       images: [photo("photo-1551836989-b4622a17a792")],
       features: ["Air conditioning", "Wireless phone charging", "Lane assist", "GPS navigation", "Leather seats", "Keyless entry", "Cruise control"],
       description: "A business class sedan with a refined ride, wireless charging and a strong set of driver assistance features.",
     },
     {
       id: "c10", brand: "BMW", model: "7 Series", year: 2022, category: "Luxury",
-      transmission: "Automatic", fuel: "Hybrid", seats: 5, doors: 4, bags: 4,
-      dailyRate: 189, status: "available", plate: "WF 7007", color: "Blue grey", mileage: 19400,
+      transmission: "Automatic", fuel: "Hybrid", seats: 5, bags: 4,
+      dailyRate: 189, status: "available", plate: "WF 7007", color: "Blue grey",
       images: [photo("photo-1601362840608-942cdd122b52")],
       features: ["Reclining rear seats", "Heated seats", "Panoramic roof", "GPS navigation", "Parking sensors", "Leather seats", "Bluetooth audio"],
       description: "Our flagship sedan. The rear seats recline and heat, the ride is very quiet and the boot takes four large suitcases.",
     },
     {
-      id: "c11", brand: "Tesla", model: "Model 3", year: 2023, category: "Electric",
-      transmission: "Automatic", fuel: "Electric", seats: 5, doors: 4, bags: 2,
-      dailyRate: 89, status: "available", plate: "WF 3030", color: "White", mileage: 11200,
+      id: "c11", brand: "Tesla", model: "Model 3", year: 2023, category: "Luxury",
+      transmission: "Automatic", fuel: "Electric", seats: 5, bags: 2,
+      dailyRate: 89, status: "available", plate: "WF 3030", color: "White",
       images: [
         photo("photo-1560958089-b8a1929cea89"),
         photo("photo-1606016159991-dfe4f2746ad5"),
@@ -128,8 +142,8 @@
     },
     {
       id: "c12", brand: "Hyundai", model: "Staria", year: 2023, category: "Van",
-      transmission: "Automatic", fuel: "Diesel", seats: 9, doors: 5, bags: 6,
-      dailyRate: 104, status: "rented", plate: "WF 9190", color: "White", mileage: 16700,
+      transmission: "Automatic", fuel: "Diesel", seats: 9, bags: 6,
+      dailyRate: 104, status: "rented", plate: "WF 9190", color: "White",
       images: [photo("photo-1653978681856-ab2f1feb221b")],
       features: ["Air conditioning", "Sliding doors", "Rear climate control", "Reverse camera", "Bluetooth audio", "Child seat ready"],
       description: "A nine seat van with sliding doors and individual rear seats. Fits a family, or a small team with luggage.",
@@ -137,6 +151,7 @@
   ];
 
   /* ---------- Customers ---------- */
+  // licensePhoto is added below from the name and expiry date.
   const customers = [
     { id: "u01", name: "Ahmed Ali", email: "ahmed.ali@example.com", phone: "0100 482 7731", licenseNumber: "DL-48219377", licenseExpiry: day(640), licenseVerified: true, joined: day(-212) },
     { id: "u02", name: "Sara Mohamed", email: "sara.mohamed@example.com", phone: "0111 305 6482", licenseNumber: "DL-30577145", licenseExpiry: day(1010), licenseVerified: true, joined: day(-188) },
@@ -150,13 +165,19 @@
     { id: "u10", name: "Dina Ashraf", email: "dina.ashraf@example.com", phone: "0150 417 6630", licenseNumber: "DL-41766308", licenseExpiry: day(730), licenseVerified: true, joined: day(-47) },
     { id: "u11", name: "Laila Farouk", email: "laila.farouk@example.com", phone: "0109 842 1175", licenseNumber: "DL-84211758", licenseExpiry: day(940), licenseVerified: true, joined: day(-33) },
     { id: "u12", name: "Hassan Reda", email: "hassan.reda@example.com", phone: "0128 093 5561", licenseNumber: "DL-09355614", licenseExpiry: day(505), licenseVerified: false, joined: day(-12) },
-  ];
+  ].map(({ licenseNumber, ...c }) => ({ ...c, licensePhoto: licenseCard(c.name, c.licenseExpiry) }));
 
   /* ---------- Rentals ---------- */
+  // Money lives on the rental, like the backend's Rental table: the customer pays
+  // the total when sending the request. Rejected or cancelled before approval:
+  // all of it comes back. Cancelled after approval ("refused"): 10% is kept.
   const carById = Object.fromEntries(cars.map((c) => [c.id, c]));
   let rentals = [];
+  const refundFor = (status, paid) =>
+    status === "rejected" || status === "cancelled" ? paid : status === "refused" ? Math.round(paid * 0.9 * 100) / 100 : 0;
   const rent = (id, customerId, carId, start, end, status, loc, created, extra = {}) => {
     const days = Math.max(1, end - start);
+    const total = days * carById[carId].dailyRate;
     rentals.push({
       id: `R-${id}`,
       customerId,
@@ -164,10 +185,13 @@
       pickupDate: day(start),
       returnDate: day(end),
       days,
-      total: days * carById[carId].dailyRate,
+      total,
       pickupLocation: loc,
-      status, // pending | approved | active | completed | rejected | cancelled
+      status, // pending | approved | active | completed | rejected | cancelled | refused
       createdAt: day(created),
+      paidAmount: total,
+      refundedAmount: refundFor(status, total),
+      paidAt: day(created),
       ...extra,
     });
   };
@@ -196,31 +220,9 @@
   rent(2015, "u12", "c04", -60, -55, "completed", "downtown", -63, { pickedUpAt: day(-60), returnedAt: day(-55), condition: "Needs cleaning" });
   rent(2009, "u02", "c02", -70, -66, "completed", "airport", -73, { pickedUpAt: day(-70), returnedAt: day(-66), condition: "Good" });
   rent(2044, "u03", "c06", -20, -17, "rejected", "harbor", -23, { reason: "Driving license expired at the time of request." });
-  rent(2056, "u09", "c10", -9, -6, "cancelled", "airport", -12);
+  rent(2056, "u09", "c10", -9, -6, "refused", "airport", -12);
 
   rentals.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
-
-  /* ---------- Payments ---------- */
-  const methods = ["Card", "Cash", "Bank transfer"];
-  let payments = [];
-  let pn = 9001;
-  [...rentals].reverse().forEach((r, i) => {
-    if (["rejected", "pending"].includes(r.status)) return;
-    let status = "paid";
-    if (r.status === "approved") status = "pending";
-    if (r.status === "cancelled") status = r.id === "R-2056" ? "refunded" : null;
-    if (!status) return;
-    payments.push({
-      id: `P-${pn++}`,
-      rentalId: r.id,
-      customerId: r.customerId,
-      amount: r.total,
-      method: methods[i % methods.length],
-      status, // paid | pending | refunded
-      date: r.status === "approved" ? r.createdAt : r.pickupDate > day(0) ? r.createdAt : r.pickupDate,
-    });
-  });
-  payments.sort((a, b) => (a.date < b.date ? 1 : -1));
 
   /* ---------- Dashboard series ---------- */
   const monthLabel = (offset) => {
@@ -234,13 +236,12 @@
 
   const db = {
     today: iso(TODAY),
-    staff: { name: "Nadia Fathy", email: "nadia.fathy@wayfare.test", role: "Branch manager" },
+    staff: { id: "s01", name: "Nadia Fathy", email: "nadia.fathy@wayfare.test", phone: "0100 555 0142", role: "Branch manager" },
     locations,
-    categories: ["Economy", "SUV", "Luxury", "Electric", "Van"],
+    categories: ["Economy", "SUV", "Luxury", "Van"],
     cars,
     customers,
     rentals,
-    payments,
     monthly,
     helpers: { iso, day },
   };
