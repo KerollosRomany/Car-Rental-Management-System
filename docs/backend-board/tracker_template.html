@@ -1,0 +1,1290 @@
+<title>Wayfare Backend Board</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<style>
+/* Design plan. Palette: Cloud Cobalt. A light page with white panels, one cobalt for every action, deep navy for the brand bar and code, and plain semantic colours for status.
+   Type: Archivo (wide, for titles and numbers), Geist (text), Geist Mono (codes, hours, routes).
+   Layout: a navy brand bar with the Wayfare plate, a summary card, tabs, then one working surface per tab. Packages are the home view. Cards open in a side drawer that holds the full spec. */
+:root {
+  --bg: #f3f6fb;
+  --surface: #ffffff;
+  --surface-2: #eef2fa;
+  --ink: #0c1430;
+  --ink-2: #3b4666;
+  --ink-3: #5a6586;
+  --line: #dde3f0;
+  --line-2: #c4cde2;
+  --accent: #2447f0;
+  --accent-hover: #3a5cf8;
+  --accent-ink: #ffffff;
+  --accent-text: #1c3bd0;
+  --accent-soft: rgba(36, 71, 240, 0.09);
+  --accent-line: rgba(36, 71, 240, 0.45);
+  --ok: #12603a; --ok-bg: #e2f3ea;
+  --warn: #7a5200; --warn-bg: #fbf0d6;
+  --bad: #a12c1e; --bad-bg: #fbe4e0;
+  --info: #1d4c99; --info-bg: #e3ebfa;
+  --brand-bg: #0a1230;
+  --brand-ink: #f2f5ff;
+  --brand-ink-2: #aab6dd;
+  --brand-line: #2a3566;
+  --stitch: #6b86ff;
+  --code-bg: #0a1230;
+  --code-ink: #e6ebff;
+  --scrim: rgba(6, 12, 34, 0.55);
+  --shadow: 0 1px 2px rgba(12, 20, 48, 0.06), 0 12px 30px rgba(12, 20, 48, 0.10);
+  --font-display: "Archivo", "Geist", system-ui, sans-serif;
+  --font-body: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #070c1f; --surface: #0d1533; --surface-2: #131c40; --ink: #eef2ff; --ink-2: #b9c2e0; --ink-3: #8f9ac0;
+    --line: #1d2850; --line-2: #2c3b70; --accent: #4f6dff; --accent-hover: #6b86ff; --accent-ink: #ffffff; --accent-text: #9fb2ff;
+    --accent-soft: rgba(95, 124, 255, 0.16); --accent-line: rgba(130, 156, 255, 0.5);
+    --ok: #86d9ab; --ok-bg: rgba(86, 190, 137, 0.14); --warn: #ebc274; --warn-bg: rgba(222, 170, 70, 0.16);
+    --bad: #f5a193; --bad-bg: rgba(228, 96, 76, 0.16); --info: #a3c1f5; --info-bg: rgba(100, 148, 224, 0.16);
+    --brand-bg: #050a1a; --brand-line: #1d2850; --code-bg: #060b1e; --scrim: rgba(0, 0, 0, 0.68);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 14px 34px rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #070c1f; --surface: #0d1533; --surface-2: #131c40; --ink: #eef2ff; --ink-2: #b9c2e0; --ink-3: #8f9ac0;
+  --line: #1d2850; --line-2: #2c3b70; --accent: #4f6dff; --accent-hover: #6b86ff; --accent-ink: #ffffff; --accent-text: #9fb2ff;
+  --accent-soft: rgba(95, 124, 255, 0.16); --accent-line: rgba(130, 156, 255, 0.5);
+  --ok: #86d9ab; --ok-bg: rgba(86, 190, 137, 0.14); --warn: #ebc274; --warn-bg: rgba(222, 170, 70, 0.16);
+  --bad: #f5a193; --bad-bg: rgba(228, 96, 76, 0.16); --info: #a3c1f5; --info-bg: rgba(100, 148, 224, 0.16);
+  --brand-bg: #050a1a; --brand-line: #1d2850; --code-bg: #060b1e; --scrim: rgba(0, 0, 0, 0.68);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 14px 34px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 15px/1.55 var(--font-body); -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4 { margin: 0; font-family: var(--font-display); font-weight: 600; line-height: 1.2; text-wrap: balance; }
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; }
+a { color: var(--accent-text); }
+code, pre, .mono { font-family: var(--font-mono); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wrap { width: 100%; max-width: 1360px; margin-inline: auto; padding-inline: max(16px, 3vw); }
+[hidden] { display: none !important; }
+
+/* ---------- brand bar ---------- */
+.top { position: relative; background: var(--brand-bg); color: var(--brand-ink); }
+.top::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: repeating-linear-gradient(90deg, var(--stitch) 0 9px, transparent 9px 15px); opacity: 0.9; }
+.top .wrap { display: flex; align-items: center; gap: 16px; min-height: 68px; padding-block: 12px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.brand svg { flex: none; height: 34px; width: auto; display: block; }
+.brand h1 { font: 500 15px/1.2 var(--font-body); color: var(--brand-ink-2); padding-left: 16px; border-left: 1px solid var(--brand-line); }
+.grow { flex: 1; }
+.live { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--brand-ink-2); }
+.live i { width: 8px; height: 8px; border-radius: 50%; background: #5d6a99; }
+.live.on i { background: #4fd49a; box-shadow: 0 0 0 3px rgba(79, 212, 154, 0.2); }
+.live.ro i { background: #e0b24a; }
+.btn { appearance: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; padding: 7px 14px; border: 1px solid var(--line-2); border-radius: 4px; background: var(--surface); color: var(--ink); font-weight: 600; font-size: 13.5px; cursor: pointer; text-decoration: none; }
+.btn:hover { border-color: var(--ink-3); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn.dark { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.btn.ghost { background: transparent; }
+.btn.mini { min-height: 30px; padding: 3px 10px; font-size: 12.5px; }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+.top .btn { background: transparent; border-color: var(--brand-line); color: var(--brand-ink); }
+.top .btn:hover { border-color: #5d6a99; }
+.me { display: inline-flex; align-items: center; gap: 9px; }
+
+/* ---------- avatars ---------- */
+.av { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font: 600 10.5px/1 var(--font-body); letter-spacing: 0.02em; color: #fff; flex: none; }
+.av.lg { width: 34px; height: 34px; font-size: 12px; }
+.av0 { background: #2447f0; } .av1 { background: #0a7f92; } .av2 { background: #6b3fd4; } .av3 { background: #b02a78; }
+.av4 { background: #1f7a4d; } .av5 { background: #4a5570; } .av6 { background: #8a6d00; }
+
+/* ---------- summary ---------- */
+.sum { margin-top: 24px; padding: 24px 26px; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr); gap: 20px 44px; align-items: end; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.sum .lede { color: var(--ink-2); max-width: 54ch; margin-top: 8px; }
+.sum h2 { font-size: 28px; font-weight: 700; font-stretch: 114%; letter-spacing: -0.01em; margin-top: 4px; }
+.big { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.big strong { font: 700 46px/1 var(--font-display); font-stretch: 125%; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.big span { color: var(--ink-2); }
+.meter { display: flex; height: 10px; margin-top: 12px; border-radius: 3px; overflow: hidden; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); }
+.meter i { display: block; height: 100%; }
+.meter .m-done { background: var(--ok); } .meter .m-review { background: var(--info); } .meter .m-doing { background: var(--accent); }
+.counts { display: flex; flex-wrap: wrap; gap: 6px 18px; list-style: none; margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+.counts b { font-variant-numeric: tabular-nums; color: var(--ink); }
+.counts .late b { color: var(--bad); }
+.people { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.person { display: inline-flex; align-items: center; gap: 8px; padding: 4px 11px 4px 4px; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); font-size: 13px; cursor: pointer; }
+.person:hover { border-color: var(--line-2); }
+.person[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.person small { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+/* ---------- tabs ---------- */
+.tabs { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--line-2); margin-top: 22px; scrollbar-width: thin; }
+.tab { appearance: none; background: none; border: 0; border-bottom: 3px solid transparent; margin-bottom: -1px; padding: 12px 16px 11px; font-weight: 600; color: var(--ink-3); white-space: nowrap; cursor: pointer; }
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tab .n { margin-left: 7px; padding: 1px 6px; border-radius: 3px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); font: 500 11px var(--font-mono); color: var(--ink-3); }
+main { padding-block: 24px 64px; min-height: 60vh; }
+
+/* ---------- shared bits ---------- */
+.m { display: inline-block; padding: 3px 7px 2px; border-radius: 3px; font: 600 11px/1.3 var(--font-mono); letter-spacing: 0.04em; }
+.m-get { background: var(--ok-bg); color: var(--ok); } .m-post { background: var(--accent-soft); color: var(--accent-text); }
+.m-put { background: var(--info-bg); color: var(--info); } .m-delete { background: var(--bad-bg); color: var(--bad); }
+.st { display: inline-block; padding: 3px 8px 2px; border-radius: 3px; font: 600 11px/1.3 var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+.st-todo { background: var(--surface-2); color: var(--ink-3); box-shadow: inset 0 0 0 1px var(--line-2); }
+.st-doing { background: var(--accent-soft); color: var(--accent-text); } .st-review { background: var(--info-bg); color: var(--info); } .st-done { background: var(--ok-bg); color: var(--ok); }
+.chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 3px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+.chip.warn { background: var(--warn-bg); color: var(--warn); box-shadow: none; } .chip.bad { background: var(--bad-bg); color: var(--bad); box-shadow: none; }
+.chip.ok { background: var(--ok-bg); color: var(--ok); box-shadow: none; } .chip.acc { background: var(--accent-soft); color: var(--accent-text); box-shadow: none; }
+button.chip { cursor: pointer; border: 0; font-family: inherit; }
+button.chip:hover { box-shadow: inset 0 0 0 1px var(--ink-3); }
+.code { display: inline-block; padding: 2px 6px; border-radius: 3px; background: var(--ink); color: var(--bg); font: 600 11px/1.4 var(--font-mono); }
+.size { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 3px; box-shadow: inset 0 0 0 1px var(--line-2); font: 600 11px/1 var(--font-mono); color: var(--ink-2); }
+.muted { color: var(--ink-3); }
+.eyebrow { font: 600 11px/1.3 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-text); }
+.empty { padding: 36px 16px; text-align: center; display: grid; gap: 10px; justify-items: center; color: var(--ink-2); }
+.tw { overflow-x: auto; }
+table.t { width: 100%; border-collapse: collapse; font-size: 13px; }
+.t th { text-align: left; padding: 6px 10px 6px 0; font: 600 11px/1.3 var(--font-body); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1.5px solid var(--ink); white-space: nowrap; }
+.t td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.t td:first-child { font-weight: 600; }
+.t code { font-size: 12px; overflow-wrap: anywhere; }
+.sect { display: grid; gap: 12px; }
+.sect > h3 { font-size: 18px; font-stretch: 110%; }
+.sect > p.lead { color: var(--ink-2); max-width: 70ch; }
+.grid { display: grid; gap: 14px; }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid > .panel { align-self: start; }
+@media (max-width: 860px) { .g2, .g3, .sum { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; }
+pre.json { margin: 0; padding: 12px 14px; max-height: 360px; overflow: auto; border-radius: 4px; background: var(--code-bg); color: var(--code-ink); font: 12.5px/1.55 var(--font-mono); }
+ol.rules { padding-left: 22px; display: grid; gap: 6px; }
+ul.plain { list-style: none; display: grid; gap: 5px; }
+ul.plain li { padding-left: 16px; position: relative; }
+ul.plain li::before { content: ""; position: absolute; left: 1px; top: 0.62em; width: 6px; height: 6px; border-radius: 1px; background: var(--accent); }
+ul.plain.test li::before { border-radius: 50%; background: var(--ok); }
+
+/* ---------- how it works strip ---------- */
+.how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-bottom: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.how li { list-style: none; display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; padding: 13px 16px; border-left: 1px solid var(--line); }
+.how li:first-child { border-left: 0; }
+.how b { grid-row: span 2; font: 700 22px/1 var(--font-display); font-stretch: 125%; color: var(--accent-text); }
+.how span { color: var(--ink-2); font-size: 13px; }
+@media (max-width: 760px) { .how { grid-template-columns: minmax(0, 1fr); } .how li { border-left: 0; border-top: 1px solid var(--line); } .how li:first-child { border-top: 0; } }
+.banner { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 12px 14px; margin-bottom: 14px; border-radius: 4px; background: var(--warn-bg); color: var(--warn); }
+.banner .btn { margin-left: auto; flex: none; white-space: nowrap; }
+
+/* ---------- all cards board ---------- */
+.tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
+input[type="search"], input[type="text"], select, textarea { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line-2); border-radius: 4px; padding: 7px 10px; min-height: 38px; max-width: 100%; }
+textarea { width: 100%; resize: vertical; }
+.tools input[type="search"] { flex: 1 1 220px; min-width: 0; }
+.seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 4px; overflow: hidden; }
+.seg button { appearance: none; background: var(--surface); border: 0; border-left: 1px solid var(--line-2); padding: 8px 13px; font-weight: 600; font-size: 13px; cursor: pointer; }
+.seg button:first-child { border-left: 0; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; align-items: start; }
+@media (max-width: 1180px) { .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 680px) { .cols { grid-template-columns: minmax(0, 1fr); } }
+.col { display: grid; gap: 10px; padding: 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-2); }
+.col > header { display: flex; justify-content: space-between; align-items: center; padding: 2px 2px 4px; }
+.col h3 { font: 600 12px/1 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; }
+.col h3 i { display: inline-block; width: 8px; height: 8px; margin-right: 8px; border-radius: 2px; }
+.col .count { font: 500 12px var(--font-mono); color: var(--ink-3); }
+.lane { display: grid; gap: 12px; padding: 16px; margin-bottom: 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-2); }
+.lane > header { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; justify-content: space-between; }
+.lane h3 { font-size: 16px; font-stretch: 110%; }
+.lane p { color: var(--ink-2); font-size: 13px; max-width: 70ch; }
+.lane .prog { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--ink-2); }
+.lane .prog .meter { width: 120px; margin: 0; }
+.lane .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.task { display: grid; gap: 9px; padding: 12px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface); text-align: left; cursor: pointer; min-width: 0; }
+.task:hover { border-color: var(--ink-3); box-shadow: var(--shadow); }
+.task.is-done { background: var(--surface-2); }
+.task.is-done h4 { color: var(--ink-2); }
+.task .top1 { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.task h4 { font: 600 14.5px/1.3 var(--font-body); }
+.epchips { display: grid; gap: 4px; }
+.epchip { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.epchip code { font-size: 11.5px; color: var(--ink-2); overflow-wrap: anywhere; }
+.more { font-size: 12px; color: var(--ink-3); }
+.task .foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 9px; font-size: 12.5px; }
+.who { display: inline-flex; align-items: center; gap: 7px; min-width: 0; font-weight: 600; }
+.who.none { color: var(--ink-3); font-weight: 500; }
+.late { color: var(--bad); font-weight: 600; }
+.due { color: var(--ink-3); }
+.meta2 { display: flex; gap: 6px 10px; flex-wrap: wrap; align-items: center; font-size: 12px; color: var(--ink-3); }
+
+/* ---------- drawer ---------- */
+.scrim { position: fixed; inset: 0; z-index: 50; background: var(--scrim); opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.scrim.on { opacity: 1; pointer-events: auto; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 60; width: min(840px, 100%); display: flex; flex-direction: column; background: var(--surface); box-shadow: var(--shadow); transform: translateX(102%); transition: transform 0.25s; visibility: hidden; }
+.drawer.on { transform: none; visibility: visible; }
+@media (prefers-reduced-motion: reduce) { .scrim, .drawer { transition: none; } }
+.d-head { padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 16px; border-bottom: 1px solid var(--line); display: grid; gap: 12px; background: var(--surface); }
+.d-title { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; }
+.d-title h2 { font-size: 22px; font-stretch: 110%; }
+.x { appearance: none; flex: none; width: 38px; height: 38px; border: 1px solid var(--line-2); border-radius: 4px; background: var(--surface); font-size: 20px; line-height: 1; cursor: pointer; }
+.x:hover { border-color: var(--ink-3); }
+.d-ctl { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.d-body { overflow-y: auto; padding: 22px 24px calc(60px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 28px; align-content: start; }
+.d-body h3 { font-size: 15px; font-stretch: 110%; margin-bottom: 10px; display: flex; gap: 10px; align-items: baseline; }
+.d-body h3 small { font: 500 12px var(--font-body); color: var(--ink-3); }
+.steps { list-style: none; display: grid; gap: 8px; }
+.steps label { display: grid; grid-template-columns: 20px 1fr; gap: 10px; align-items: start; cursor: pointer; }
+.steps input { width: 17px; height: 17px; margin: 2px 0 0; accent-color: var(--accent); }
+.steps input:checked + span { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--line-2); }
+.note { padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface-2); display: grid; gap: 4px; }
+.note header { display: flex; gap: 8px; align-items: center; font-size: 12.5px; color: var(--ink-3); }
+.note p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.files code { display: block; padding: 3px 0; font-size: 12.5px; overflow-wrap: anywhere; }
+
+/* ---------- endpoint spec ---------- */
+.ep { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; min-width: 0; }
+.ep > summary { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 12px 14px; cursor: pointer; }
+.ep > summary::-webkit-details-marker { display: none; }
+.ep > summary::after { content: "+"; margin-left: auto; font: 500 18px/1 var(--font-mono); color: var(--ink-3); }
+.ep[open] > summary::after { content: "\2013"; }
+.ep .route { font: 500 13px/1.4 var(--font-mono); overflow-wrap: anywhere; }
+.ep .nm { font-weight: 600; }
+.ep-body { display: grid; gap: 18px; padding: 16px; border-top: 1px solid var(--line); }
+.ep-body h4 { font: 600 11px/1.3 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
+.ep-sum { font-size: 15px; max-width: 72ch; }
+.io { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px; }
+@media (max-width: 900px) { .io { grid-template-columns: minmax(0, 1fr); } }
+.kind { display: inline-block; margin-bottom: 8px; }
+.sub { margin-top: 10px; }
+details.dto { margin-top: 10px; }
+details.dto > summary { cursor: pointer; font-weight: 600; font-size: 13px; }
+.list-ep { display: grid; gap: 8px; }
+
+/* ---------- pages tab ---------- */
+.pg { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.pg > summary { list-style: none; display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr) auto; gap: 6px 14px; align-items: center; padding: 12px 14px; cursor: pointer; }
+.pg > summary::-webkit-details-marker { display: none; }
+.pg > summary .file { font-size: 12px; color: var(--ink-3); overflow-wrap: anywhere; }
+.pg > summary .tt { display: grid; }
+.pg > summary .tt span { font-size: 12.5px; color: var(--ink-3); }
+.pg > summary::after { content: "+"; font: 500 18px/1 var(--font-mono); color: var(--ink-3); }
+.pg[open] > summary::after { content: "\2013"; }
+.pg-body { display: grid; gap: 18px; padding: 16px; border-top: 1px solid var(--line); }
+.pg-body h4 { font: 600 11px/1.3 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
+@media (max-width: 700px) { .pg > summary { grid-template-columns: minmax(0, 1fr) auto; } .pg > summary .file { grid-column: 1 / -1; } }
+.grp { display: grid; gap: 10px; margin-bottom: 22px; }
+.grp > h3 { font-size: 17px; font-stretch: 110%; display: flex; gap: 10px; align-items: baseline; }
+.grp > h3 small { font: 500 12.5px var(--font-body); color: var(--ink-3); }
+
+/* ---------- data tab ---------- */
+.ent h4 { font-size: 16px; font-stretch: 110%; }
+.ent .tbl-name { font: 500 12px var(--font-mono); color: var(--ink-3); }
+.ent p { color: var(--ink-2); font-size: 13px; margin: 4px 0 10px; }
+tr.chg td { background: var(--warn-bg); }
+tr.new td { background: var(--ok-bg); }
+.enum { display: grid; gap: 6px; }
+.enum ul { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; }
+.enum li { padding: 2px 8px; border-radius: 3px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); font: 500 12px var(--font-mono); }
+.enum li.fix { background: var(--warn-bg); color: var(--warn); box-shadow: none; }
+
+/* ---------- trello ---------- */
+.nc { display: grid; gap: 8px; }
+.nc header { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.nc h4 { font: 600 15px/1.3 var(--font-body); }
+.nc p { color: var(--ink-2); font-size: 13.5px; }
+.nc .row { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.tick { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; cursor: pointer; }
+.tick input { width: 17px; height: 17px; accent-color: var(--accent); }
+
+/* ---------- guide ---------- */
+.dec { display: grid; gap: 10px; }
+.dec h4 { font: 600 15px/1.3 var(--font-body); }
+.dec p { color: var(--ink-2); font-size: 13.5px; }
+.opts { display: grid; gap: 8px; }
+.opt { appearance: none; display: grid; grid-template-columns: 20px 1fr auto; gap: 10px; align-items: center; text-align: left; padding: 9px 12px; border: 1px solid var(--line-2); border-radius: 4px; background: var(--surface); cursor: pointer; }
+.opt .dot { width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--line-2); }
+.opt[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.opt[aria-pressed="true"] .dot { box-shadow: inset 0 0 0 5px var(--accent); }
+.cmd { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: start; }
+.cmd code { overflow-wrap: anywhere; font-size: 12.5px; }
+
+/* ---------- packages ---------- */
+.pk { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 4px; border-radius: 3px; background: var(--ink); color: var(--bg); font: 700 11px/1 var(--font-display); }
+.letter { display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 5px; background: var(--ink); color: var(--bg); font: 700 22px/1 var(--font-display); font-stretch: 125%; }
+.letter.sm { width: 26px; height: 26px; font-size: 13px; border-radius: 4px; }
+.pk-intro { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px 40px; align-items: end; margin-bottom: 20px; }
+.pk-intro h3 { font-size: 24px; font-weight: 700; font-stretch: 112%; margin-bottom: 6px; }
+.pk-intro .lead { color: var(--ink-2); max-width: 66ch; }
+@media (max-width: 860px) { .pk-intro { grid-template-columns: minmax(0, 1fr); } }
+.bal { display: grid; gap: 10px; padding: 16px 20px 14px; margin-bottom: 20px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.bal-t { display: flex; justify-content: space-between; gap: 6px 14px; flex-wrap: wrap; font: 600 11px/1.3 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+.bal-t span:last-child { letter-spacing: 0.02em; text-transform: none; font-weight: 500; }
+.bal-plot { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(6px, 2vw, 22px); height: 168px; }
+.bal-col { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; min-width: 0; }
+.bal-bar { position: relative; width: min(100%, 72px); border-radius: 4px 4px 0 0; background: var(--line-2); transition: height 0.3s; }
+.bal-bar.taken { background: var(--accent); }
+.bal-bar.done { background: var(--ok); }
+.bal-bar b { position: absolute; left: 50%; top: 7px; transform: translateX(-50%); font: 600 12px/1 var(--font-mono); color: var(--ink); white-space: nowrap; }
+.bal-bar.taken b, .bal-bar.done b { color: #fff; }
+.bal-who { max-width: 100%; font-size: 12px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bal-avg { position: absolute; left: 0; right: 0; height: 0; border-top: 1.5px dashed var(--ink-3); pointer-events: none; }
+.bal-avg span { position: absolute; left: 0; top: -19px; padding: 0 5px 0 0; background: var(--surface); font: 500 11px/1.4 var(--font-mono); color: var(--ink-3); }
+@media (prefers-reduced-motion: reduce) { .bal-bar { transition: none; } }
+.pkgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 410px), 1fr)); gap: 18px; align-items: start; margin-top: 4px; }
+.pkg { display: grid; gap: 14px; align-content: start; padding: 20px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); cursor: pointer; min-width: 0; }
+.pkg:hover { border-color: var(--line-2); box-shadow: var(--shadow); }
+.pkg.is-taken .letter { background: var(--accent); color: var(--accent-ink); }
+.pkg.is-done { background: var(--surface-2); }
+.pkg.is-done .letter { background: var(--ok); color: var(--bg); }
+.pkg.is-over { outline: 2px dashed var(--accent); outline-offset: 3px; background: var(--accent-soft); }
+.pk-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; }
+.pk-title h3 { font-size: 18px; font-stretch: 110%; }
+.pk-sub { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 12.5px; color: var(--ink-3); }
+.pk-sub b { color: var(--ink-2); font-weight: 600; font-variant-numeric: tabular-nums; }
+.pk-owner { display: flex; align-items: center; justify-self: end; }
+.pkg .goal { color: var(--ink-2); font-size: 13.5px; max-width: 62ch; }
+.pkg .pages { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12px; color: var(--ink-3); }
+.pkg .pages code, .chips code { padding: 1px 6px; border-radius: 3px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); font-size: 11.5px; color: var(--ink-2); }
+.mini-list { list-style: none; display: grid; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; background: var(--surface); }
+.mini { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto auto; gap: 10px; align-items: center; padding: 8px 10px; border-top: 1px solid var(--line); font-size: 13px; cursor: pointer; }
+.mini:first-child { border-top: 0; }
+.mini:hover { background: var(--surface-2); }
+.mini[draggable="true"] { cursor: grab; }
+.mini.is-drag { opacity: 0.4; }
+.mini.is-done { color: var(--ink-3); }
+.mini.is-done .mt { text-decoration: line-through; text-decoration-color: var(--line-2); }
+.mini .mt { min-width: 0; overflow-wrap: anywhere; }
+.mini .code { margin-right: 6px; }
+.mini .md { font: 500 11px/1 var(--font-mono); color: var(--ink-3); white-space: nowrap; }
+.no { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; font: 600 11px/1 var(--font-mono); color: var(--ink-3); box-shadow: inset 0 0 0 1.5px var(--line-2); }
+.no.s-doing { background: var(--accent); color: var(--accent-ink); box-shadow: none; }
+.no.s-review { background: var(--info); color: var(--bg); box-shadow: none; }
+.no.s-done { background: var(--ok); color: var(--bg); box-shadow: none; }
+.pk-foot { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; justify-content: space-between; }
+.pk-ready { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pk-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.pk-hint { margin: 6px 0 0; font-size: 12.5px; color: var(--ink-3); }
+details.fin { margin-top: 26px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+details.fin > summary { cursor: pointer; padding: 13px 18px; font-weight: 600; list-style: none; display: flex; gap: 10px; align-items: baseline; }
+details.fin > summary::-webkit-details-marker { display: none; }
+details.fin > summary::before { content: "+"; font: 500 18px/1 var(--font-mono); color: var(--ink-3); }
+details.fin[open] > summary::before { content: "\2013"; }
+details.fin .n { font: 500 12px var(--font-mono); color: var(--ink-3); }
+details.fin .cards2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 10px; padding: 4px 18px 18px; }
+.lbl { font: 600 11px/1.3 var(--font-body); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+.rename { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.rename input { flex: 1 1 220px; min-width: 0; }
+.tlist { list-style: none; display: grid; gap: 8px; }
+.trow { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 8px 12px; align-items: start; padding: 11px 12px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface); }
+.trow .no { margin-top: 1px; }
+.tr-main { display: grid; gap: 6px; min-width: 0; }
+.tr-title { appearance: none; background: none; border: 0; padding: 0; text-align: left; font: 600 14.5px/1.35 var(--font-body); color: var(--ink); cursor: pointer; }
+.tr-title:hover { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.tr-title .code { margin-right: 6px; }
+.mv { display: grid; gap: 3px; font: 600 10.5px/1.2 var(--font-body); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+.mv select { min-height: 32px; padding: 3px 8px; font-size: 13px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--ink); max-width: 200px; }
+@media (max-width: 560px) { .trow { grid-template-columns: 24px minmax(0, 1fr); } .trow .mv { grid-column: 2; } }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.tip { margin-top: 8px; padding: 10px 12px; border-radius: 4px; background: var(--accent-soft); color: var(--ink); font-size: 13.5px; }
+.back { margin-bottom: 8px; }
+.d-ctl .lbl { margin-right: -4px; }
+
+/* ---------- overlays ---------- */
+.modal { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 16px; background: var(--scrim); }
+.modal-card { width: min(520px, 100%); max-height: 90vh; overflow: auto; display: grid; gap: 14px; padding: 22px; border-radius: 6px; background: var(--surface); box-shadow: var(--shadow); }
+.names { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.names button { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--line-2); border-radius: 4px; background: var(--surface); font-weight: 600; cursor: pointer; text-align: left; }
+.names button:hover { border-color: var(--accent); }
+@media (max-width: 460px) { .names { grid-template-columns: minmax(0, 1fr); } }
+#toasts { position: fixed; z-index: 120; left: 0; right: 0; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); display: grid; justify-items: center; gap: 8px; pointer-events: none; padding-inline: 16px; }
+.toast { padding: 10px 16px; border-radius: 4px; background: var(--ink); color: var(--bg); font-weight: 500; box-shadow: var(--shadow); max-width: min(520px, 100%); transition: opacity 0.25s; }
+.toast.bad { background: var(--bad); color: #fff; }
+.toast.out { opacity: 0; }
+html.lock { overflow: hidden; }
+</style>
+
+<div id="app">
+  <header class="top">
+    <div class="wrap">
+      <div class="brand">
+        <svg class="plate" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 245.2 52.0" fill="none" role="img" aria-label="Wayfare"><rect x="1.5" y="1.5" width="242.2" height="49.0" rx="9.0" fill="none" stroke="#ffffff" stroke-width="3"/><path d="M10.5 1.5 H41.5 V50.5 H10.5 A9.0 9.0 0 0 1 1.5 41.5 V10.5 A9.0 9.0 0 0 1 10.5 1.5 Z" fill="#5f7cff"/><path d="M13.76 17.40 L16.83 27.64 L16.94 34.60 L14.97 34.60 L9.81 17.40Z M16.83 27.64 L19.54 17.40 L21.50 17.40 L21.50 24.79 L18.90 34.60 L16.94 34.60Z M23.46 17.40 L26.17 27.64 L26.06 34.60 L24.10 34.60 L21.50 24.79 L21.50 17.40Z M26.17 27.64 L29.24 17.40 L33.19 17.40 L28.03 34.60 L26.06 34.60Z" fill="#0c1430"/><path d="M59.59 16.00 L63.17 27.91 L63.30 36.00 L61.00 36.00 L55.00 16.00Z M63.17 27.91 L66.32 16.00 L68.60 16.00 L68.60 24.59 L65.57 36.00 L63.30 36.00Z M70.87 16.00 L74.03 27.91 L73.90 36.00 L71.62 36.00 L68.60 24.59 L68.60 16.00Z M74.03 27.91 L77.60 16.00 L82.19 16.00 L76.19 36.00 L73.90 36.00Z" fill="#ffffff"/><path d="M84.19 36.00 L95.19 16.00 L97.70 16.00 L97.70 20.57 L89.22 36.00Z M100.22 16.00 L111.22 36.00 L106.19 36.00 L97.70 20.57 L97.70 16.00Z M89.10 28.40 L106.30 28.40 L106.30 32.80 L89.10 32.80Z" fill="#ffffff"/><path d="M118.22 16.00 L127.52 26.78 L123.12 28.42 L112.42 16.00Z M127.52 26.78 L127.52 36.00 L123.12 36.00 L123.12 28.42Z M138.22 16.00 L124.90 31.46 L121.56 28.59 L132.42 16.00Z" fill="#ffffff"/><path d="M143.02 16.00 L147.42 16.00 L147.42 36.00 L143.02 36.00Z M143.02 16.00 L158.42 16.00 L158.42 20.40 L143.02 20.40Z M143.02 24.60 L155.62 24.60 L155.62 29.00 L143.02 29.00Z" fill="#ffffff"/><path d="M161.02 36.00 L172.02 16.00 L174.54 16.00 L174.54 20.57 L166.05 36.00Z M177.05 16.00 L188.05 36.00 L183.02 36.00 L174.54 20.57 L174.54 16.00Z M165.94 28.40 L183.14 28.40 L183.14 32.80 L165.94 32.80Z" fill="#ffffff"/><path d="M192.65 16.00 L197.05 16.00 L197.05 36.00 L192.65 36.00Z M192.65 16.00 L203.05 16.00 L203.05 20.40 L192.65 20.40Z M192.65 26.80 L203.05 26.80 L203.05 31.20 L192.65 31.20Z M203.05 16.00 L204.04 16.07 L205.01 16.26 L205.95 16.58 L206.85 17.02 L207.67 17.57 L208.42 18.23 L209.08 18.97 L209.63 19.80 L210.07 20.69 L210.39 21.63 L210.58 22.61 L210.65 23.60 L210.58 24.59 L210.39 25.57 L210.07 26.51 L209.63 27.40 L209.08 28.23 L208.42 28.97 L207.67 29.63 L206.85 30.18 L205.95 30.62 L205.01 30.94 L204.04 31.13 L203.05 31.20 L203.05 26.80 L203.46 26.77 L203.87 26.69 L204.27 26.56 L204.65 26.37 L204.99 26.14 L205.31 25.86 L205.58 25.55 L205.82 25.20 L206.00 24.82 L206.14 24.43 L206.22 24.02 L206.25 23.60 L206.22 23.18 L206.14 22.77 L206.00 22.38 L205.82 22.00 L205.58 21.65 L205.31 21.34 L204.99 21.06 L204.65 20.83 L204.27 20.64 L203.87 20.51 L203.46 20.43 L203.05 20.40Z M202.99 27.19 L210.57 36.00 L204.76 36.00 L199.65 30.06Z" fill="#ffffff"/><path d="M214.85 16.00 L219.25 16.00 L219.25 36.00 L214.85 36.00Z M214.85 16.00 L230.25 16.00 L230.25 20.40 L214.85 20.40Z M214.85 24.60 L227.65 24.60 L227.65 29.00 L214.85 29.00Z M214.85 31.60 L230.25 31.60 L230.25 36.00 L214.85 36.00Z" fill="#ffffff"/></svg>
+        <h1>Backend board</h1>
+      </div>
+      <span class="grow"></span>
+      <span class="live" id="live" role="status"><i></i><span>Loading</span></span>
+      <span class="me" id="me"></span>
+      <button class="btn" type="button" data-act="theme" aria-label="Switch between light and dark">Theme</button>
+    </div>
+  </header>
+
+  <div class="wrap"><section class="sum" aria-label="Progress" id="summary"></section></div>
+
+  <div class="wrap">
+    <div class="tabs" role="tablist" aria-label="Sections" id="tabs"></div>
+    <main id="view" role="tabpanel"></main>
+  </div>
+</div>
+
+<div class="scrim" id="scrim" data-act="close-drawer"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="d-title" aria-hidden="true"></aside>
+<div class="modal" id="who" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="who-t">
+    <div><h3 id="who-t">Who are you?</h3><p class="muted" style="margin-top:4px">Pick your name once. The board uses it when you take a card or leave a note.</p></div>
+    <div class="names" id="names"></div>
+    <button class="btn ghost" type="button" data-act="who-close">Not now</button>
+  </div>
+</div>
+<div class="modal" id="copybox" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-label="Copy text">
+    <p>Your browser blocked the copy button. Select the text and press Ctrl+C.</p>
+    <textarea id="copyarea" rows="10" readonly></textarea>
+    <button class="btn" type="button" data-act="copy-close">Close</button>
+  </div>
+</div>
+<div id="toasts" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+  var D = /*DATA*/null;
+  if (!D) { document.body.textContent = "The board data is missing."; return; }
+
+  /* ---------------------------------------------------------------- helpers */
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var idx = function (a) { var o = {}; a.forEach(function (x) { o[x.id] = x; }); return o; };
+  var TASKS = idx(D.tasks), EPS = idx(D.endpoints), PKG = idx(D.packages);
+  var STATUS = { todo: "To do", doing: "In progress", review: "In review", done: "Done" };
+  var ORDER = ["todo", "doing", "review", "done"];
+  var TIER = { core: "Core", needed: "Needed", optional: "Optional" };
+  var SIZE = { S: "Small: about 1 to 2 hours", M: "Medium: about half a day", L: "Large: about a full day" };
+  var pad = function (n) { return String(n).padStart(2, "0"); };
+  var now = new Date();
+  var TODAY = now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate());
+  var fd = function (iso) { return iso ? new Date(iso + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" }) : ""; };
+  var daysFrom = function (iso) { return Math.round((new Date(iso + "T00:00:00") - new Date(TODAY + "T00:00:00")) / 86400000); };
+  var initials = function (n) { return n.split(/\s+/).filter(Boolean).slice(0, 2).map(function (p) { return p[0].toUpperCase(); }).join(""); };
+  var avatar = function (n, cls) { return n ? '<span class="av av' + Math.max(0, D.team.indexOf(n)) + " " + (cls || "") + '" title="' + esc(n) + '">' + esc(initials(n)) + "</span>" : ""; };
+  var plural = function (n, w) { return n + " " + w + (n === 1 ? "" : "s"); };
+  var mchip = function (m) { return '<span class="m m-' + m.toLowerCase() + '">' + m + "</span>"; };
+  var rt = function (r) { return esc(r).replace(/\//g, "/<wbr>"); };
+  var stPill = function (s) { return '<span class="st st-' + s + '">' + STATUS[s] + "</span>"; };
+
+  /* ---------------------------------------------------------------- state */
+  var S = {
+    tab: "packages", view: "status", pf: "", f: { q: "", pkg: "", sprint: "", who: "", tier: "" },
+    openTask: null, openPkg: null, nameDraft: null, open: new Set(), draft: "", focusEp: null,
+    me: { id: null, name: "" }, db: null, canWrite: true, live: "loading",
+    tasks: {}, packages: {}, notes: [], decisions: {}, trello: {}, pending: null, lastFocus: null
+  };
+  var TABS = [
+    { id: "packages", label: "Packages" }, { id: "board", label: "All cards" }, { id: "pages", label: "Pages" }, { id: "endpoints", label: "Endpoints" },
+    { id: "data", label: "Data" }, { id: "trello", label: "Trello" }, { id: "guide", label: "Guide" }
+  ];
+
+  function eff(t) {
+    var o = S.tasks[t.id] || {};
+    return Object.assign({}, t, { pkg: o.pkg || t.pkg, status: o.status || t.base, assignee: o.assignee || null, checks: o.checks || {}, updatedAt: o.updatedAt || null, updatedBy: o.updatedBy || null });
+  }
+  var all = function () { return D.tasks.map(eff); };
+  var isLate = function (t) { return t.due && t.due < TODAY && t.status !== "done"; };
+  var waiting = function (t) { return t.depends.filter(function (d) { return eff(TASKS[d]).status !== "done"; }); };
+  function epStatus(ep) {
+    var ts = ep.tasks.map(function (id) { return eff(TASKS[id]); });
+    if (ts.every(function (t) { return t.status === "done"; })) return "done";
+    if (ts.some(function (t) { return t.status === "doing" || t.status === "review"; })) return "doing";
+    return "todo";
+  }
+
+
+  /* ---------------------------------------------------------------- package helpers */
+  var HOURS = { S: 2, M: 4, L: 8 };
+  var byDepth = function (a, b) { return a.depth - b.depth || (a.due || "9999").localeCompare(b.due || "9999") || a.code.localeCompare(b.code, "en", { numeric: true }); };
+  var realPkgs = function () { return D.packages.filter(function (p) { return p.kind === "package"; }); };
+  function pkgOf(id) {
+    var base = PKG[id] || {}, o = S.packages[id] || {};
+    return Object.assign({}, base, { name: o.name || base.name, owner: o.owner || null, renamed: !!o.name });
+  }
+  function pkgTasks(id) { return all().filter(function (t) { return t.pkg === id; }).sort(byDepth); }
+  function span(h) { var d = h / 6; return h < 5 ? h + (h === 1 ? " hour" : " hours") : d < 1.25 ? "1 day" : (Math.round(d * 2) / 2) + " days"; }
+  function pkgInfo(id) {
+    var p = pkgOf(id), ts = pkgTasks(id);
+    var open = ts.filter(function (t) { return t.status !== "done"; });
+    var ids = ts.map(function (t) { return t.id; });
+    var ext = [], letters = [];
+    open.forEach(function (t) { t.depends.forEach(function (d) { if (ids.indexOf(d) < 0 && eff(TASKS[d]).status !== "done" && ext.indexOf(d) < 0) ext.push(d); }); });
+    ext.forEach(function (d) { var l = (PKG[eff(TASKS[d]).pkg] || {}).letter; if (l && letters.indexOf(l) < 0) letters.push(l); });
+    letters.sort();
+    var first = open[0] || null;
+    var firstBlocked = !!first && first.depends.some(function (d) { return ids.indexOf(d) < 0 && eff(TASKS[d]).status !== "done"; });
+    var due = ts.reduce(function (m, t) { return t.due && (!m || t.due > m) ? t.due : m; }, "");
+    var start = ts.reduce(function (m, t) { return t.start && (!m || t.start < m) ? t.start : m; }, "");
+    var sp = ts.map(function (t) { return t.sprint; });
+    return {
+      p: p, ts: ts, open: open, done: ts.length - open.length, ext: ext, letters: letters, firstBlocked: firstBlocked,
+      hours: open.reduce(function (n, t) { return n + HOURS[t.size]; }, 0), due: due, start: start,
+      sMin: sp.length ? Math.min.apply(null, sp) : 0, sMax: sp.length ? Math.max.apply(null, sp) : 0,
+      state: !open.length ? "done" : p.owner ? "taken" : "free"
+    };
+  }
+  function pkgChip(id) {
+    var p = PKG[id];
+    return p && p.letter ? '<span class="pk" title="Package ' + p.letter + ": " + esc(pkgOf(id).name) + '">' + p.letter + "</span>" : "";
+  }
+
+  /* ---------------------------------------------------------------- toast and copy */
+  function toast(msg, bad) {
+    var el = document.createElement("div");
+    el.className = "toast" + (bad ? " bad" : "");
+    el.textContent = msg;
+    $("#toasts").appendChild(el);
+    setTimeout(function () { el.classList.add("out"); setTimeout(function () { el.remove(); }, 260); }, 3800);
+  }
+  function copyText(text, label) {
+    var fallback = function () { $("#copyarea").value = text; $("#copybox").hidden = false; $("#copyarea").focus(); $("#copyarea").select(); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { toast((label || "Text") + " copied."); }, fallback);
+    } else fallback();
+  }
+
+  /* ---------------------------------------------------------------- live data */
+  var queue = {};
+  function serial(path, fn) {
+    var prev = queue[path] || Promise.resolve();
+    var next = prev.catch(function () {}).then(fn);
+    queue[path] = next;
+    return next;
+  }
+  function guard(fn) {
+    if (!S.db) { toast("Live sharing is off in this view, so nothing is saved. Open the artifact link to work together.", true); return false; }
+    if (!S.canWrite) { toast("You can read this board but not change it. Ask the owner for Contributor access in Share.", true); return false; }
+    if (!S.me.name) { S.pending = fn; showWho(); return false; }
+    return true;
+  }
+  function save(path, data, okMsg) {
+    return serial(path, function () { return S.db.doc(path).set(data); }).then(function () { if (okMsg) toast(okMsg); }, function () { toast("Could not save that. Check your connection and try again.", true); });
+  }
+  function saveTask(id, patch, okMsg) {
+    var cur = S.tasks[id] || {};
+    var next = Object.assign({}, cur, patch, { updatedAt: new Date().toISOString(), updatedBy: S.me.name });
+    return save("tasks/" + id, next, okMsg);
+  }
+  var act = {
+    take: function (id) { if (!guard(function () { act.take(id); })) return; var t = TASKS[id]; var w = waiting(eff(t)); saveTask(id, { assignee: S.me.name, status: "doing" }, t.code + " is yours now." + (w.length ? " It waits for " + w.map(function (d) { return TASKS[d].code; }).join(", ") + "." : "")); },
+    release: function (id) { if (!guard(function () { act.release(id); })) return; saveTask(id, { assignee: null, status: "todo" }, "Released."); },
+    status: function (id, v) {
+      if (!guard(function () { act.status(id, v); })) return;
+      var patch = { status: v };
+      if (!eff(TASKS[id]).assignee && (v === "doing" || v === "review")) patch.assignee = S.me.name;
+      saveTask(id, patch, TASKS[id].code + " is now " + STATUS[v].toLowerCase() + ".");
+    },
+    assign: function (id, name) { if (!guard(function () { act.assign(id, name); })) return; saveTask(id, { assignee: name || null, status: name && eff(TASKS[id]).status === "todo" ? "doing" : eff(TASKS[id]).status }); },
+    check: function (id, i) { if (!guard(function () { act.check(id, i); })) return; var c = Object.assign({}, (S.tasks[id] || {}).checks || {}); c[i] = !c[i]; saveTask(id, { checks: c }); },
+    note: function (id, text) {
+      if (!guard(function () { act.note(id, text); })) return;
+      if (!text.trim()) return;
+      S.draft = "";
+      serial("notes", function () { return S.db.collection("notes").add({ taskId: id, by: S.me.name, at: new Date().toISOString(), text: text.trim().slice(0, 1500) }); })
+        .then(function () { toast("Note added."); }, function () { toast("Could not add the note.", true); });
+    },
+    decide: function (id, v) { if (!guard(function () { act.decide(id, v); })) return; save("decisions/" + id, { choice: v, by: S.me.name, at: new Date().toISOString() }, "Decision saved."); },
+    trello: function (key, on) { if (!guard(function () { act.trello(key, on); })) return; save("trello/" + key, { added: on, by: S.me.name, at: new Date().toISOString() }); },
+    setOwner: function (pid, name, okMsg) {
+      if (!guard(function () { act.setOwner(pid, name, okMsg); })) return false;
+      var old = (S.packages[pid] || {}).owner || null;
+      if (old === name) return true;
+      var jobs = [savePkg(pid, { owner: name || null })];
+      pkgTasks(pid).forEach(function (t) {
+        if (t.status === "done" || t.status === "review") return;
+        if (t.assignee && t.assignee !== old) return;
+        jobs.push(saveTask(t.id, { assignee: name || null, status: name ? t.status : "todo" }));
+      });
+      Promise.all(jobs).then(function () { toast(okMsg || (name ? "Package " + PKG[pid].letter + " belongs to " + name.split(" ")[0] + " now." : "Package " + PKG[pid].letter + " is free again.")); });
+      return true;
+    },
+    takePkg: function (pid) {
+      var cur = (S.packages[pid] || {}).owner;
+      if (cur && cur !== S.me.name) { toast("Package " + PKG[pid].letter + " belongs to " + cur.split(" ")[0] + " already.", true); return; }
+      if (!S.me.name) { guard(function () { act.takePkg(pid); }); return; }
+      act.setOwner(pid, S.me.name, "Package " + PKG[pid].letter + " is yours: " + pkgTasks(pid).filter(function (t) { return t.status !== "done"; }).length + " cards, in the order shown.");
+    },
+    releasePkg: function (pid) { act.setOwner(pid, null); },
+    move: function (id, pid) {
+      if (!guard(function () { act.move(id, pid); })) return false;
+      var t = eff(TASKS[id]);
+      if (t.pkg === pid || !PKG[pid] || PKG[pid].kind !== "package") return true;
+      if (t.status === "done") { toast("A finished card stays where it is.", true); return false; }
+      var owner = (S.packages[pid] || {}).owner || null;
+      var patch = { pkg: pid };
+      if (t.status !== "review") { patch.assignee = owner; if (!owner && t.status === "doing") patch.status = "todo"; }
+      saveTask(id, patch, t.code + " moved to package " + PKG[pid].letter + "." + (owner ? " It is " + owner.split(" ")[0] + "'s now." : " Nobody owns that package yet."));
+      return true;
+    },
+    renamePkg: function (pid, name) {
+      if (!guard(function () { act.renamePkg(pid, name); })) return;
+      name = String(name || "").trim().slice(0, 60);
+      S.nameDraft = null;
+      savePkg(pid, { name: name && name !== PKG[pid].name ? name : null }, name && name !== PKG[pid].name ? "Package renamed." : "Original name restored.");
+    }
+  };
+  function savePkg(pid, patch, okMsg) {
+    var cur = S.packages[pid] || {};
+    return save("packages/" + pid, Object.assign({}, cur, patch, { updatedAt: new Date().toISOString(), updatedBy: S.me.name }), okMsg);
+  }
+
+  function showWho() {
+    $("#names").innerHTML = D.team.map(function (n) { return '<button type="button" data-act="pick-me" data-name="' + esc(n) + '">' + avatar(n, "lg") + "<span>" + esc(n) + "</span></button>"; }).join("");
+    $("#who").hidden = false;
+    var b = $("#names button"); if (b) b.focus();
+  }
+  function pickMe(name) {
+    if (D.team.indexOf(name) < 0) return;
+    S.me.name = name;
+    try { localStorage.setItem("wf-me", name); } catch (e) {}
+    if (S.db && S.me.id && S.canWrite) { S.db.doc("members/" + S.me.id).set({ name: name }).catch(function () {}); }
+    $("#who").hidden = true;
+    renderAll();
+    var p = S.pending; S.pending = null;
+    if (p) p();
+  }
+
+  var raf = 0;
+  function schedule() { if (raf) return; raf = requestAnimationFrame(function () { raf = 0; renderAll(); }); }
+
+  function initLive() {
+    var c = window.claude;
+    var useCap = function (n) { return c && c.use ? c.use(n).catch(function () { return null; }) : Promise.resolve(null); };
+    return Promise.all([useCap("db"), useCap("user")]).then(function (r) {
+      var db = r[0], user = r[1];
+      S.db = db;
+      var steps = [];
+      if (user) {
+        steps.push(user.id().then(function (id) { S.me.id = id; }).catch(function () {}));
+        steps.push(user.can("data.write").then(function (w) { S.canWrite = w !== false; }).catch(function () {}));
+      }
+      return Promise.all(steps).then(function () {
+        var name = "";
+        try { name = localStorage.getItem("wf-me") || ""; } catch (e) {}
+        var done = function () { S.me.name = D.team.indexOf(name) >= 0 ? name : ""; };
+        if (db && S.me.id) {
+          return db.doc("members/" + S.me.id).get().then(function (d) { if (d.exists && d.data().name) name = d.data().name; done(); }, done);
+        }
+        done();
+      }).then(function () {
+        if (!db) { S.live = "off"; renderAll(); return; }
+        var sub = function (path, fn) {
+          db.collection(path).onSnapshot(function (snap) { fn(snap.docs); S.live = S.canWrite ? "on" : "ro"; schedule(); }, function () { S.live = "off"; schedule(); });
+        };
+        sub("tasks", function (docs) { var m = {}; docs.forEach(function (d) { m[d.id] = d.data(); }); S.tasks = m; });
+        sub("notes", function (docs) { S.notes = docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); }).sort(function (a, b) { return a.at < b.at ? -1 : 1; }); });
+        sub("decisions", function (docs) { var m = {}; docs.forEach(function (d) { m[d.id] = d.data(); }); S.decisions = m; });
+        sub("trello", function (docs) { var m = {}; docs.forEach(function (d) { m[d.id] = d.data(); }); S.trello = m; });
+        sub("packages", function (docs) { var m = {}; docs.forEach(function (d) { m[d.id] = d.data(); }); S.packages = m; });
+        S.live = S.canWrite ? "on" : "ro";
+        renderAll();
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------------- header and summary */
+  function renderHeader() {
+    var live = $("#live");
+    live.className = "live " + (S.live === "on" ? "on" : S.live === "ro" ? "ro" : "");
+    live.lastChild.textContent = { on: "Live, shared with the team", ro: "View only", off: "Offline view, changes are not saved", loading: "Connecting" }[S.live];
+    $("#me").innerHTML = S.me.name
+      ? avatar(S.me.name, "lg") + "<span>" + esc(S.me.name.split(" ")[0]) + '</span> <button class="btn mini" type="button" data-act="who">Switch</button>'
+      : '<button class="btn" type="button" data-act="who">Pick your name</button>';
+  }
+
+  function renderSummary() {
+    var ts = all().filter(function (t) { return t.tier !== "optional"; });
+    var n = ts.length, c = { todo: 0, doing: 0, review: 0, done: 0 };
+    ts.forEach(function (t) { c[t.status]++; });
+    var late = ts.filter(isLate).length;
+    var infos = realPkgs().map(function (p) { return pkgInfo(p.id); });
+    var taken = infos.filter(function (i) { return i.p.owner; }).length;
+    var pct = function (k) { return (c[k] / n * 100).toFixed(2) + "%"; };
+    var people = D.team.map(function (name) {
+      var mine = all().filter(function (t) { return t.assignee === name && t.status !== "done"; }).length;
+      var owned = infos.filter(function (i) { return i.p.owner === name; }).map(function (i) { return '<span class="pk">' + i.p.letter + "</span>"; }).join("");
+      return '<button class="person" type="button" data-act="who-filter" data-name="' + esc(name) + '" aria-pressed="' + (S.f.who === name) + '" title="Show the cards of ' + esc(name) + '">' + avatar(name) + "<span>" + esc(name.split(" ")[0]) + "</span>" + owned + "<small>" + mine + "</small></button>";
+    }).join("");
+    $("#summary").innerHTML =
+      '<div><p class="eyebrow">Car Rental Management System</p><h2>Back end, split into ' + infos.length + ' packages</h2><p class="lede">Every endpoint the 14 pages need, grouped into packages of related cards, one for each member. Take a package, build its cards in order, and move cards between packages if the split feels uneven. Trello keeps the dates, this board keeps the details.</p></div>' +
+      '<div><div class="big"><strong>' + c.done + "</strong><span>of " + n + " cards done</span></div>" +
+      '<div class="meter" role="img" aria-label="' + c.done + " done, " + c.review + " in review, " + c.doing + " in progress, " + c.todo + ' to do"><i class="m-done" style="width:' + pct("done") + '"></i><i class="m-review" style="width:' + pct("review") + '"></i><i class="m-doing" style="width:' + pct("doing") + '"></i></div>' +
+      '<ul class="counts"><li><b>' + taken + "</b> of " + infos.length + " packages taken</li><li><b>" + c.todo + "</b> to do</li><li><b>" + c.doing + "</b> in progress</li><li><b>" + c.review + "</b> in review</li><li class=\"late\"><b>" + late + "</b> late</li></ul>" +
+      '<div class="people" aria-label="Who is on what">' + people + "</div></div>";
+  }
+
+  function renderTabs() {
+    var counts = { packages: realPkgs().length, pages: D.pages.length - 1, endpoints: D.endpoints.length, trello: Object.keys(D.newCards).length || 0 };
+    $("#tabs").innerHTML = TABS.map(function (t) {
+      return '<button class="tab" role="tab" id="tab-' + t.id + '" aria-selected="' + (S.tab === t.id) + '" aria-controls="view" data-act="tab" data-id="' + t.id + '">' + t.label + (counts[t.id] ? '<span class="n">' + counts[t.id] + "</span>" : "") + "</button>";
+    }).join("");
+  }
+
+  /* ---------------------------------------------------------------- board */
+  function pass(t) {
+    var f = S.f;
+    if (f.pkg && t.pkg !== f.pkg) return false;
+    if (f.sprint && String(t.sprint) !== f.sprint) return false;
+    if (f.tier && t.tier !== f.tier) return false;
+    if (f.who === "me") { if (t.assignee !== S.me.name) return false; }
+    else if (f.who === "none") { if (t.assignee) return false; }
+    else if (f.who && t.assignee !== f.who) return false;
+    if (f.q) {
+      var hay = (t.code + " " + t.title + " " + t.summary + " " + t.endpoints.map(function (e) { return EPS[e].route + " " + EPS[e].name; }).join(" ")).toLowerCase();
+      if (hay.indexOf(f.q.toLowerCase()) < 0) return false;
+    }
+    return true;
+  }
+  var byOrder = function (a, b) { return a.sprint - b.sprint || (a.due || "9999").localeCompare(b.due || "9999") || a.code.localeCompare(b.code, "en", { numeric: true }); };
+
+  function cardHTML(t) {
+    var done = t.status === "done";
+    var eps = t.endpoints.map(function (e) { return EPS[e]; });
+    var chips = done ? "" : eps.slice(0, 2).map(function (e) { return '<span class="epchip">' + mchip(e.method) + "<code>" + rt(e.route) + "</code></span>"; }).join("") + (eps.length > 2 ? '<span class="more">+' + (eps.length - 2) + " more</span>" : "");
+    var late = isLate(t);
+    var due = done ? "" : late ? '<span class="late">Late by ' + plural(-daysFrom(t.due), "day") + "</span>" : t.due ? '<span class="due">Due ' + fd(t.due) + "</span>" : "";
+    var tr = t.cards.length ? t.cards.map(function (c) { return "#" + c.n; }).join(" ") : t.newCard ? "New card" : "";
+    var wt = waiting(t);
+    var take = !done && !t.assignee && t.status === "todo" ? '<button class="btn mini primary" type="button" data-act="take" data-id="' + t.id + '">Take it</button>' : "";
+    var who = t.assignee ? '<span class="who">' + avatar(t.assignee) + "<span>" + esc(t.assignee.split(" ")[0]) + "</span></span>" : done ? '<span class="who none">Finished</span>' : '<span class="who none">Unclaimed</span>';
+    return '<article class="task' + (done ? " is-done" : "") + '" tabindex="0" role="button" data-act="open-task" data-id="' + t.id + '" aria-label="' + esc(t.code + " " + t.title) + '">' +
+      '<div class="top1"><span class="code">' + esc(t.code) + "</span>" + pkgChip(t.pkg) + '<span class="chip">Sprint ' + t.sprint + '</span><span class="size" title="' + SIZE[t.size] + '">' + t.size + "</span>" + (t.tier !== "core" ? '<span class="chip ' + (t.tier === "optional" ? "" : "acc") + '">' + TIER[t.tier] + "</span>" : "") + "</div>" +
+      "<h4>" + esc(t.title) + "</h4>" +
+      (chips ? '<div class="epchips">' + chips + "</div>" : "") +
+      (!done && wt.length ? '<div class="meta2"><span class="chip warn">Waits for ' + wt.map(function (d) { return esc(TASKS[d].code); }).join(", ") + "</span></div>" : "") +
+      '<div class="foot">' + who + (take || due) + '</div>' +
+      '<div class="meta2"><span>' + (tr ? "Trello " + esc(tr) : "") + "</span>" + (take && due ? due : "") + "</div></article>";
+  }
+
+  function buildBoardTools() {
+    var opt = function (list, val) { return list.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (String(o[0]) === String(val) ? " selected" : "") + ">" + esc(o[1]) + "</option>"; }).join(""); };
+    var sprints = [["", "All sprints"]].concat([3, 4, 5, 6, 7, 8].map(function (n) { return [String(n), "Sprint " + n]; }));
+    var wsl = [["", "All packages"]].concat(realPkgs().map(function (p) { return [p.id, p.letter + " \u00b7 " + pkgOf(p.id).name]; }));
+    var who = [["", "Everyone"], ["me", "Mine"], ["none", "Unclaimed"]].concat(D.team.map(function (n) { return [n, n]; }));
+    var tiers = [["", "Any priority"], ["core", "Core"], ["needed", "Needed"], ["optional", "Optional"]];
+    $("#boardTools").innerHTML =
+      '<input type="search" id="fq" placeholder="Search cards, routes or codes" aria-label="Search cards" value="' + esc(S.f.q) + '">' +
+      '<select id="fpkg" aria-label="Package">' + opt(wsl, S.f.pkg) + "</select>" +
+      '<select id="fsp" aria-label="Sprint">' + opt(sprints, S.f.sprint) + "</select>" +
+      '<select id="fwho" aria-label="Person">' + opt(who, S.f.who) + "</select>" +
+      '<select id="ftier" aria-label="Priority">' + opt(tiers, S.f.tier) + "</select>" +
+      '<span class="seg" role="group" aria-label="Group cards by"><button type="button" data-act="view" data-v="status" aria-pressed="' + (S.view === "status") + '">By status</button><button type="button" data-act="view" data-v="pkg" aria-pressed="' + (S.view === "pkg") + '">By package</button></span>';
+  }
+
+  function renderBoardList() {
+    var box = $("#boardList"); if (!box) return;
+    var list = all().filter(pass).sort(byOrder);
+    if (!list.length) { box.innerHTML = '<div class="empty"><h3>No cards match</h3><p>Clear the filters to see the whole board.</p><button class="btn" type="button" data-act="clear-filters">Clear filters</button></div>'; return; }
+    if (S.view !== "pkg") {
+      var color = { todo: "var(--ink-3)", doing: "var(--accent)", review: "var(--info)", done: "var(--ok)" };
+      box.innerHTML = '<div class="cols">' + ORDER.map(function (s) {
+        var items = list.filter(function (t) { return t.status === s; });
+        return '<section class="col" aria-label="' + STATUS[s] + '"><header><h3><i style="background:' + color[s] + '"></i>' + STATUS[s] + '</h3><span class="count">' + items.length + "</span></header>" + (items.map(cardHTML).join("") || '<p class="muted" style="padding:6px 4px">Nothing here.</p>') + "</section>";
+      }).join("") + "</div>";
+    } else {
+      box.innerHTML = D.packages.map(function (p) {
+        var items = list.filter(function (t) { return t.pkg === p.id; });
+        if (!items.length) return "";
+        var done = items.filter(function (t) { return t.status === "done"; }).length;
+        var q = pkgOf(p.id);
+        return '<section class="lane" aria-label="' + esc(q.name) + '"><header><div><h3>' + (p.letter ? "Package " + p.letter + " &middot; " : "") + esc(q.name) + "</h3><p>" + esc(p.goal) + '</p></div><div class="prog"><span>' + done + " of " + items.length + ' done</span><div class="meter"><i class="m-done" style="width:' + (done / items.length * 100) + '%"></i></div></div></header><div class="cards">' + items.map(cardHTML).join("") + "</div></section>";
+      }).join("");
+    }
+  }
+
+  function renderBoard() {
+    var v = $("#view");
+    if (!$("#boardList")) {
+      v.innerHTML =
+        '<ol class="how"><li><b>1</b><strong>Own a package</strong><span>Open the Packages tab. This tab lists every card.</span></li><li><b>2</b><strong>Work through its cards</strong><span>Move a card to In progress when you start it.</span></li><li><b>3</b><strong>Ask for a review</strong><span>Another member reviews, then you move it to Done.</span></li></ol>' +
+        '<div id="boardBanner"></div><div class="tools" id="boardTools"></div><div id="boardList"></div>';
+      buildBoardTools();
+    }
+    var b = "";
+    if (S.live === "off") b = '<div class="banner"><span>Shared saving is off in this view, so you can read everything but changes will not stick. Open the artifact link while signed in to work together.</span></div>';
+    else if (S.live === "ro") b = '<div class="banner"><span>You can read this board but not change it. Ask the owner to share it with you as a Contributor.</span></div>';
+    else if (!S.me.name && S.live === "on") b = '<div class="banner"><span>Pick your name so the board knows who takes each card.</span><button class="btn mini" type="button" data-act="who">Pick your name</button></div>';
+    $("#boardBanner").innerHTML = b;
+    renderBoardList();
+  }
+
+
+  /* ---------------------------------------------------------------- packages tab */
+  function ownerChip(p) {
+    return p.owner ? '<span class="who">' + avatar(p.owner) + "<span>" + esc(p.owner.split(" ")[0]) + (p.owner === S.me.name ? " (you)" : "") + "</span></span>" : '<span class="st st-todo">Free</span>';
+  }
+  function readyChip(i) {
+    if (!i.open.length) return "";
+    if (!i.ext.length) return '<span class="chip ok" title="Every card this package needs is done.">Nothing blocks you</span>';
+    var names = i.ext.map(function (d) { var x = eff(TASKS[d]); return x.code + " " + x.title + " (package " + ((PKG[x.pkg] || {}).letter || "") + ")"; }).join("\n");
+    if (i.firstBlocked) return '<span class="chip bad" title="' + esc(names) + '">Waits for ' + i.letters.join(", ") + "</span>";
+    return '<span class="chip warn" title="' + esc(names) + '">Start now, later cards wait for ' + i.letters.join(", ") + "</span>";
+  }
+  function miniRow(t, n) {
+    var done = t.status === "done";
+    var moved = t.pkg !== TASKS[t.id].pkg;
+    return '<li class="mini' + (done ? " is-done" : "") + '" data-act="open-task" data-id="' + t.id + '" data-from="' + t.pkg + '"' + (done ? "" : ' draggable="true" data-drag="' + t.id + '" title="Drag onto another package to move this card"') + ">" +
+      '<span class="no s-' + t.status + '" title="' + STATUS[t.status] + '">' + (done ? "&#10003;" : n + 1) + "</span>" +
+      '<span class="mt"><b class="code">' + esc(t.code) + "</b>" + esc(t.title) + (moved ? ' <span class="chip acc">moved here</span>' : "") + "</span>" +
+      '<span class="size" title="' + SIZE[t.size] + '">' + t.size + '</span><span class="md">' + (t.due ? fd(t.due) : "") + "</span></li>";
+  }
+  function pkgCardHTML(id) {
+    var i = pkgInfo(id), p = i.p, mine = p.owner && p.owner === S.me.name;
+    var cls = "pkg" + (i.state === "done" ? " is-done" : i.state === "taken" ? " is-taken" : "");
+    var pages = p.pages.length ? '<div class="pages"><span>Makes these pages work</span>' + p.pages.map(function (x) { return "<code>" + esc(x) + "</code>"; }).join("") + "</div>" : "";
+    var take = i.state === "done" ? "" : !p.owner ? '<button class="btn primary" type="button" data-act="take-pkg" data-id="' + id + '">Take this package</button>' : mine ? '<button class="btn ghost" type="button" data-act="release-pkg" data-id="' + id + '">Give it back</button>' : "";
+    var tags = (p.tags || []).map(function (x) { return '<span class="chip acc">' + esc(x) + "</span>"; }).join("");
+    return '<article class="' + cls + '" data-pkg="' + id + '" tabindex="0" role="button" data-act="open-pkg" data-id="' + id + '" aria-label="Package ' + p.letter + ", " + esc(p.name) + '">' +
+      '<header class="pk-head"><span class="letter">' + p.letter + '</span><div class="pk-title"><h3>' + esc(p.name) + '</h3><div class="pk-sub"><span><b>' + i.ts.length + "</b> cards</span>" + (i.hours ? "<span><b>" + i.hours + " h</b> left</span>" : "") + "<span>" + (i.sMin === i.sMax ? "Sprint " + i.sMin : "Sprints " + i.sMin + " to " + i.sMax) + "</span>" + (i.done ? "<span><b>" + i.done + "</b> done</span>" : "") + '</div></div><div class="pk-owner">' + ownerChip(p) + "</div></header>" +
+      '<p class="goal">' + esc(p.goal) + "</p>" + pages +
+      '<ol class="mini-list" aria-label="Cards in package ' + p.letter + '">' + (i.ts.map(function (t, n) { return miniRow(t, n); }).join("") || '<li class="mini"><span></span><span class="muted">No cards. Drag one here.</span></li>') + "</ol>" +
+      '<footer class="pk-foot"><div class="pk-ready">' + readyChip(i) + tags + '</div><div class="pk-actions">' + take + '<button class="btn" type="button" data-act="open-pkg" data-id="' + id + '">Details</button></div></footer></article>';
+  }
+  function workloadHTML() {
+    var infos = realPkgs().map(function (p) { return pkgInfo(p.id); });
+    var total = infos.reduce(function (n, i) { return n + i.hours; }, 0);
+    var max = Math.max.apply(null, infos.map(function (i) { return i.hours; }).concat([1]));
+    var avg = total / infos.length;
+    var BASE = 54, MAXH = 92;
+    return '<div class="bal" role="group" aria-label="Hours of work left in each package"><div class="bal-t"><span>Work left in each package</span><span>' + total + " hours in all. Drag a card to another package to even it out.</span></div>" +
+      '<div class="bal-plot">' + infos.map(function (i) {
+        var h = i.hours ? Math.max(6, i.hours / max * MAXH) : 3;
+        return '<div class="bal-col" title="' + esc(i.p.name) + '"><div class="bal-bar ' + (i.state === "done" ? "done" : i.p.owner ? "taken" : "") + '" style="height:' + h.toFixed(1) + 'px"><b>' + i.hours + ' h</b></div><span class="letter sm">' + i.p.letter + '</span><span class="bal-who">' + (i.p.owner ? esc(i.p.owner.split(" ")[0]) : "Free") + "</span></div>";
+      }).join("") + '<div class="bal-avg" style="bottom:' + (BASE + avg / max * MAXH).toFixed(1) + 'px"><span>average ' + Math.round(avg) + " h</span></div></div></div>";
+  }
+  function renderPackages() {
+    var infos = realPkgs().map(function (p) { return pkgInfo(p.id); });
+    var c = { all: infos.length, free: 0, taken: 0, done: 0, mine: 0 };
+    infos.forEach(function (i) { c[i.state]++; if (i.p.owner && i.p.owner === S.me.name) c.mine++; });
+    var f = S.pf;
+    var shown = infos.filter(function (i) { return !f || (f === "mine" ? i.p.owner === S.me.name : i.state === f); });
+    var seg = [["", "All", c.all], ["free", "Free", c.free], ["taken", "Taken", c.taken], ["mine", "Mine", c.mine], ["done", "Done", c.done]].map(function (s) {
+      return '<button type="button" data-act="pkg-filter" data-v="' + s[0] + '" aria-pressed="' + (f === s[0]) + '">' + s[1] + ' <span class="muted">' + s[2] + "</span></button>";
+    }).join("");
+    var fin = D.packages.filter(function (p) { return p.kind === "done"; })[0];
+    var finCards = fin ? pkgTasks(fin.id).map(cardHTML).join("") : "";
+    var b = "";
+    if (S.live === "off") b = '<div class="banner"><span>Shared saving is off in this view, so changes will not stick. Open the artifact link while signed in to work together.</span></div>';
+    else if (S.live === "ro") b = '<div class="banner"><span>You can read this board but not change it. Ask the owner to share it with you as a Contributor.</span></div>';
+    else if (!S.me.name && S.live === "on") b = '<div class="banner"><span>Pick your name so the board knows who owns each package.</span><button class="btn mini" type="button" data-act="who">Pick your name</button></div>';
+    $("#view").innerHTML = b +
+      '<div class="pk-intro"><div><h3>One package for each member</h3><p class="lead">A package is a set of related cards, listed in the order to build them. Take a free package, or open a package and give it to someone. If the split feels uneven, drag a card onto another package, or open the package and change the Package of a card. The card goes to the owner of the package it lands in.</p></div>' +
+      '<ol class="how" style="margin:0"><li><b>1</b><strong>Take one</strong><span>You own all its cards.</span></li><li><b>2</b><strong>Build in order</strong><span>Top card first.</span></li><li><b>3</b><strong>Rebalance</strong><span>Drag cards between packages.</span></li></ol></div>' +
+      workloadHTML() +
+      '<div class="tools"><span class="seg" role="group" aria-label="Show packages">' + seg + "</span></div>" +
+      '<div class="pkgs">' + (shown.map(function (i) { return pkgCardHTML(i.p.id); }).join("") || '<div class="empty"><h3>No package matches</h3><button class="btn" type="button" data-act="pkg-filter" data-v="">Show all packages</button></div>') + "</div>" +
+      (fin ? '<details class="fin" data-key="fin"' + (S.open.has("fin") ? " open" : "") + "><summary>" + esc(fin.name) + ' <span class="n">' + fin.tasks.length + ' cards, all done</span></summary><div class="cards2">' + finCards + "</div></details>" : "");
+  }
+
+  function pkgDrawerHTML(id) {
+    var i = pkgInfo(id), p = i.p, mine = p.owner && p.owner === S.me.name;
+    var ownerOpts = '<option value="">Free</option>' + D.team.map(function (n) { return '<option value="' + esc(n) + '"' + (p.owner === n ? " selected" : "") + ">" + esc(n) + "</option>"; }).join("");
+    var pkgOpts = function (cur) { return realPkgs().map(function (q) { return '<option value="' + q.id + '"' + (q.id === cur ? " selected" : "") + ">" + q.letter + " &middot; " + esc(pkgOf(q.id).name) + "</option>"; }).join(""); };
+    var rows = i.ts.map(function (t, n) {
+      var wt = waiting(t);
+      return '<li class="trow"><span class="no s-' + t.status + '">' + (t.status === "done" ? "&#10003;" : n + 1) + '</span><div class="tr-main"><button type="button" class="tr-title" data-act="open-task" data-id="' + t.id + '" data-from="' + id + '"><b class="code">' + esc(t.code) + "</b>" + esc(t.title) + "</button>" +
+        '<div class="meta2"><span class="size" title="' + SIZE[t.size] + '">' + t.size + "</span><span>Sprint " + t.sprint + "</span>" + (t.due ? "<span>Due " + fd(t.due) + "</span>" : "") + stPill(t.status) + (t.assignee ? '<span class="who">' + avatar(t.assignee) + "<span>" + esc(t.assignee.split(" ")[0]) + "</span></span>" : "") + "</div>" +
+        (t.status !== "done" && wt.length ? '<div class="meta2"><span class="chip warn">Waits for ' + wt.map(function (d) { return esc(TASKS[d].code); }).join(", ") + "</span></div>" : "") + "</div>" +
+        (t.status === "done" ? "" : '<label class="mv">Package<select data-act="move" data-id="' + t.id + '" aria-label="Package of ' + esc(t.code) + '">' + pkgOpts(t.pkg) + "</select></label>") + "</li>";
+    }).join("");
+    var ext = i.ext.map(function (d) { var x = eff(TASKS[d]); return '<button class="chip warn" type="button" data-act="open-task" data-id="' + d + '" data-from="' + id + '"><b>' + esc(x.code) + "</b> " + esc(x.title) + " (package " + esc((PKG[x.pkg] || {}).letter || "") + ")</button>"; }).join(" ");
+    var draft = S.nameDraft != null && S.nameDraft.id === id ? S.nameDraft.v : p.name;
+    return '<div class="d-head"><div class="d-title"><div><div class="top1" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px"><span class="letter sm">' + p.letter + '</span><span class="chip">' + plural(i.ts.length, "card") + '</span><span class="chip">' + (i.hours ? span(i.hours) + " left" : "All done") + '</span><span class="chip">' + (i.sMin === i.sMax ? "Sprint " + i.sMin : "Sprints " + i.sMin + " to " + i.sMax) + "</span>" + (i.start ? '<span class="chip">' + fd(i.start) + " to " + fd(i.due) + "</span>" : "") + (p.level ? '<span class="chip">' + esc(p.level) + "</span>" : "") + (p.tags || []).map(function (x) { return '<span class="chip acc">' + esc(x) + "</span>"; }).join("") + '</div><h2 id="d-title">Package ' + p.letter + " &middot; " + esc(p.name) + '</h2></div><button class="x" type="button" data-act="close-drawer" aria-label="Close">&times;</button></div>' +
+      '<div class="d-ctl"><label class="lbl" for="pkgOwner">Owner</label><select id="pkgOwner" data-id="' + id + '">' + ownerOpts + "</select>" +
+      (!p.owner && i.state !== "done" ? '<button class="btn primary" type="button" data-act="take-pkg" data-id="' + id + '">Take this package</button>' : "") + (mine ? '<button class="btn ghost" type="button" data-act="release-pkg" data-id="' + id + '">Give it back</button>' : "") + "</div>" +
+      '<form class="rename" id="renameForm" data-id="' + id + '"><label class="sr-only" for="pkgName">Package name</label><input type="text" id="pkgName" maxlength="60" value="' + esc(draft) + '"><button class="btn mini" type="submit">Rename</button>' + (p.renamed ? '<button class="btn mini ghost" type="button" data-act="rename-reset" data-id="' + id + '">Use the first name</button>' : "") + "</form></div>" +
+      '<div class="d-body">' +
+      '<section><h3>What you will have at the end</h3><p style="max-width:70ch">' + esc(p.goal) + "</p>" + (p.pages.length ? '<div class="chips" style="margin-top:10px"><span class="muted" style="font-size:12.5px">Pages</span>' + p.pages.map(function (x) { return "<code>" + esc(x) + "</code>"; }).join("") + "</div>" : "") + "</section>" +
+      (p.why ? '<section><h3>Why these cards go together</h3><p style="max-width:70ch">' + esc(p.why) + "</p></section>" : "") +
+      (p.first ? '<section><h3>Start here</h3><p style="max-width:70ch">' + esc(p.first) + "</p>" + (p.tip ? '<p class="tip">' + esc(p.tip) + "</p>" : "") + "</section>" : "") +
+      "<section><h3>Cards, in the order to build them <small>" + i.done + " of " + i.ts.length + " done</small></h3>" + (rows ? '<ol class="tlist">' + rows + "</ol>" : '<p class="muted">No cards in this package. Move one here from another package.</p>') + '<p class="pk-hint">Changing the Package of a card gives it to the owner of that package. The order follows what each card needs first.</p></section>' +
+      (ext ? "<section><h3>Needs these first <small>cards in other packages</small></h3><div class=\"chips\">" + ext + "</div></section>" : "") +
+      (p.skills.length ? '<section><h3>Skills you will use</h3><div class="chips">' + p.skills.map(function (x) { return '<span class="chip">' + esc(x) + "</span>"; }).join("") + "</div></section>" : "") +
+      "</div>";
+  }
+
+  /* ---------------------------------------------------------------- endpoint spec */
+  function table(cols, rows) {
+    if (!rows.length) return "";
+    return '<div class="tw"><table class="t"><thead><tr>' + cols.map(function (c) { return "<th>" + c + "</th>"; }).join("") + "</tr></thead><tbody>" + rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + c + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>";
+  }
+  function paramRows(list) { return list.map(function (p) { return [esc(p.name), "<code>" + esc(p.type) + "</code>", p.req ? "Yes" : "No", esc(p.rules), p.sample == null ? "" : "<code>" + esc(typeof p.sample === "object" ? JSON.stringify(p.sample) : p.sample) + "</code>"]; }); }
+  function dtoHTML(name) {
+    var d = D.dtos[name]; if (!d) return "";
+    return '<details class="dto" data-key="dto:' + esc(name) + '"' + (S.open.has("dto:" + name) ? " open" : "") + "><summary>Fields of " + esc(name) + "</summary><p class=\"muted sub\">" + esc(d.note) + "</p>" + table(["Field", "Type", "Notes"], d.fields.map(function (f) { return [esc(f.name), "<code>" + esc(f.type) + "</code>", esc(f.note)]; })) + "</details>";
+  }
+  function bodySample(ep) {
+    var o = {};
+    ep.request.body.forEach(function (p) { o[p.name] = p.sample; });
+    return o;
+  }
+  function epBody(ep) {
+    var r = ep.request, res = ep.response;
+    var kind = { json: "JSON body", multipart: "multipart/form-data", none: "No body" }[r.kind];
+    var req = '<span class="chip kind">' + kind + "</span>";
+    if (r.params.length) req += '<h4 class="sub">Address</h4>' + table(["Name", "Type", "Required", "Rules", "Example"], paramRows(r.params));
+    if (r.query.length) req += '<h4 class="sub">Query string</h4>' + table(["Name", "Type", "Required", "Rules", "Example"], paramRows(r.query));
+    if (r.body.length) req += '<h4 class="sub">' + (r.kind === "multipart" ? "Form fields" : "Body") + "</h4>" + table(["Field", "Type", "Required", "Rules", "Example"], paramRows(r.body));
+    var sample = "";
+    if (res.dto) { var s = D.dtos[res.dto].sample; sample = '<pre class="json">' + esc(JSON.stringify(res.list ? [s] : s, null, 2)) + "</pre>"; }
+    var resp = '<span class="chip ok kind">' + res.status + (res.status === 201 ? " Created" : res.status === 204 ? " No Content" : " OK") + "</span> " + (res.dto ? "<code>" + esc(res.dto) + (res.list ? "[]" : "") + "</code>" : '<span class="muted">No body</span>') + (sample ? '<div class="sub">' + sample + "</div>" + dtoHTML(res.dto) : "");
+    var errs = table(["Status", "When"], ep.errors.map(function (e) { return ["<code>" + e[0] + "</code>", esc(e[1])]; }));
+    return '<p class="ep-sum">' + esc(ep.summary) + "</p>" +
+      '<div class="io"><div><h4>Request</h4>' + req + "</div><div><h4>Response</h4>" + resp + "</div></div>" +
+      (errs ? "<div><h4>Errors</h4>" + errs + "</div>" : "") +
+      '<div><h4>Rules to implement</h4><ol class="rules">' + ep.rules.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ol></div>" +
+      '<div class="g2 grid"><div><h4>Reads and writes</h4><ul class="plain">' + ep.touches.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul></div><div><h4>The front end calls it from</h4><ul class="plain">' + ep.frontend.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div></div>" +
+      '<div><h4>Test cases</h4><ul class="plain test">' + ep.tests.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>" +
+      '<div class="files"><h4>Suggested files</h4>' + ep.files.map(function (f) { return "<code>" + esc(f) + "</code>"; }).join("") + "</div>" +
+      '<div><button class="btn mini" type="button" data-act="copy-http" data-id="' + ep.id + '">Copy as .http request</button> <span class="muted" style="font-size:12.5px">Paste it into wayfare-backend.http and fix the id.</span></div>';
+  }
+  function epHTML(ep, ctx, openDefault) {
+    var key = ctx + ":" + ep.id;
+    var open = S.open.has(key) || (openDefault && !S.open.has("closed:" + key));
+    var tasks = ep.tasks.map(function (id) { var t = eff(TASKS[id]); return '<span class="chip">' + esc(t.code) + "</span>"; }).join(" ");
+    return '<details class="ep" data-ep="' + ep.id + '" data-key="' + key + '"' + (open ? " open" : "") + "><summary>" + mchip(ep.method) + '<code class="route">' + rt(ep.route) + '</code><span class="nm">' + esc(ep.name) + '</span><span class="chip">' + esc(ep.role) + '</span><span class="chip ' + (ep.tier === "core" ? "" : ep.tier === "needed" ? "acc" : "warn") + '">' + TIER[ep.tier] + "</span>" + (ctx === "tab" ? stPill(epStatus(ep)) + tasks : "") + '</summary><div class="ep-body">' + epBody(ep) + "</div></details>";
+  }
+  function toHttp(ep) {
+    var r = ep.request, L = [];
+    var route = ep.route.replace(/\{id\}/g, "1");
+    var q = r.query.slice(0, 2).filter(function (p) { return p.sample != null; }).map(function (p) { return p.name + "=" + encodeURIComponent(p.sample); }).join("&");
+    L.push("### " + ep.name);
+    L.push(ep.method + " {{host}}" + route + (q ? "?" + q : ""));
+    if (ep.role !== "Anonymous") L.push("Authorization: Bearer {{" + (ep.role === "Admin" ? "adminToken" : "customerToken") + "}}");
+    if (r.kind === "json") { L.push("Content-Type: application/json", "", JSON.stringify(bodySample(ep), null, 2)); }
+    if (r.kind === "multipart") {
+      L.push("Content-Type: multipart/form-data; boundary=wf", "");
+      r.body.forEach(function (p) {
+        var vals = Array.isArray(p.sample) ? p.sample : [p.sample];
+        if (p.type === "int[]") vals = [p.sample, Number(p.sample) + 1];
+        vals.forEach(function (v) {
+          L.push("--wf");
+          if (p.type.indexOf("file") === 0) { L.push('Content-Disposition: form-data; name="' + p.name + '"; filename="' + v + '"', "Content-Type: image/jpeg", "", "< ./samples/" + v); }
+          else { L.push('Content-Disposition: form-data; name="' + p.name + '"', "", String(v)); }
+        });
+      });
+      L.push("--wf--");
+    }
+    L.push("");
+    return L.join("\n");
+  }
+
+  /* ---------------------------------------------------------------- drawer */
+  function renderDrawer() {
+    var dr = $("#drawer"), sc = $("#scrim");
+    var t = S.openTask ? TASKS[S.openTask] : null;
+    var pk = !t && S.openPkg ? PKG[S.openPkg] : null;
+    if (!t && !pk) { S.sig = null; dr.classList.remove("on"); sc.classList.remove("on"); dr.setAttribute("aria-hidden", "true"); document.documentElement.classList.remove("lock"); return; }
+    var ae = document.activeElement, keepId = ae && (ae.id === "noteText" || ae.id === "pkgName") ? ae.id : null;
+    var keep = keepId ? [ae.selectionStart, ae.selectionEnd] : null;
+    var prevScroll = $(".d-body", dr) ? $(".d-body", dr).scrollTop : 0;
+    if (pk) {
+      var pi = pkgInfo(pk.id);
+      var psig = JSON.stringify(["p", pk.id, pi.ts.map(function (x) { return [x.id, x.status, x.assignee, x.pkg, x.updatedAt]; }), pi.p.owner, pi.p.name, S.me.name, S.canWrite, S.nameDraft]);
+      if (dr.classList.contains("on") && S.sig === psig) return;
+      S.sig = psig;
+      dr.innerHTML = pkgDrawerHTML(pk.id);
+    } else {
+      var e = eff(t);
+      var ns = S.notes.filter(function (n) { return n.taskId === t.id; });
+      var wt = waiting(e);
+      var sig = JSON.stringify(["t", t.id, e.status, e.pkg, e.assignee, e.checks, e.updatedAt, ns.map(function (n) { return n.id; }), wt, S.me.name, S.canWrite, S.openPkg, pkgOf(e.pkg).name]);
+      if (dr.classList.contains("on") && S.sig === sig) return;
+      S.sig = sig;
+      var late = isLate(e);
+      var checks = e.checks;
+      var steps = t.steps.map(function (s, i) { return '<li><label><input type="checkbox" data-act="check" data-id="' + t.id + '" data-i="' + i + '"' + (checks[i] ? " checked" : "") + "><span>" + esc(s) + "</span></label></li>"; }).join("");
+      var doneSteps = t.steps.filter(function (s, i) { return checks[i]; }).length;
+      var trello = t.cards.map(function (c) { return '<a class="chip' + (c.done ? " ok" : "") + '" href="' + esc(c.url) + '" target="_blank" rel="noopener">Trello #' + c.n + (c.done ? " done" : "") + "</a>"; }).join(" ");
+      if (t.newCard) { var nc = D.newCards[t.newCard]; trello += ' <button class="chip warn" type="button" data-act="nav" data-tab="trello" data-id="' + t.newCard + '">New card to add: ' + esc(nc.title) + "</button>"; }
+      var eps = t.endpoints.map(function (id, i) { return epHTML(EPS[id], "drw", i === 0); }).join("");
+      var statusBtns = ORDER.map(function (s) { return '<button type="button" data-act="status" data-id="' + t.id + '" data-v="' + s + '" aria-pressed="' + (e.status === s) + '">' + STATUS[s] + "</button>"; }).join("");
+      var assignOpts = '<option value="">Unclaimed</option>' + D.team.map(function (n) { return '<option value="' + esc(n) + '"' + (e.assignee === n ? " selected" : "") + ">" + esc(n) + "</option>"; }).join("");
+      var home = PKG[e.pkg] || {};
+      var pkgSel = home.kind === "package" && e.status !== "done" ? '<label class="sr-only" for="taskPkg">Package</label><select id="taskPkg" data-id="' + t.id + '">' + realPkgs().map(function (q) { return '<option value="' + q.id + '"' + (q.id === e.pkg ? " selected" : "") + ">Package " + q.letter + " &middot; " + esc(pkgOf(q.id).name) + "</option>"; }).join("") + "</select>" : "";
+      var back = S.openPkg && PKG[S.openPkg] ? '<button class="btn mini ghost back" type="button" data-act="back-pkg">&larr; Package ' + esc(PKG[S.openPkg].letter) + "</button>" : "";
+      dr.innerHTML =
+        '<div class="d-head"><div class="d-title"><div>' + back + '<div class="top1" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px"><span class="code">' + esc(t.code) + "</span>" + (home.letter ? '<button class="chip" type="button" data-act="open-pkg" data-id="' + e.pkg + '">' + pkgChip(e.pkg) + " " + esc(pkgOf(e.pkg).name) + "</button>" : '<span class="chip">' + esc(home.name || "") + "</span>") + '<span class="chip">Sprint ' + t.sprint + '</span><span class="size" title="' + SIZE[t.size] + '">' + t.size + '</span><span class="chip ' + (t.tier === "core" ? "" : t.tier === "needed" ? "acc" : "warn") + '">' + TIER[t.tier] + '</span></div><h2 id="d-title">' + esc(t.title) + '</h2></div><button class="x" type="button" data-act="close-drawer" aria-label="Close">&times;</button></div>' +
+        '<div class="d-ctl"><span class="seg" role="group" aria-label="Status">' + statusBtns + '</span><label class="sr-only" for="assignee">Assigned to</label><select id="assignee" data-id="' + t.id + '">' + assignOpts + "</select>" + pkgSel +
+        (!e.assignee && e.status !== "done" ? '<button class="btn primary" type="button" data-act="take" data-id="' + t.id + '">Take it</button>' : "") +
+        (e.assignee === S.me.name && e.status !== "done" ? '<button class="btn ghost" type="button" data-act="release" data-id="' + t.id + '">Give it back</button>' : "") + "</div>" +
+        '<div class="meta2"><span>' + (t.start ? fd(t.start) + " to " + fd(t.due) : "No dates yet") + "</span>" + (late ? '<span class="late">Late by ' + plural(-daysFrom(t.due), "day") + "</span>" : "") + (e.updatedBy ? "<span>Last change by " + esc(e.updatedBy.split(" ")[0]) + "</span>" : "") + "</div></div>" +
+        '<div class="d-body">' +
+        '<section><h3>What to build</h3><p style="max-width:70ch">' + esc(t.summary) + "</p>" + (t.notes.length ? '<ul class="plain" style="margin-top:8px">' + t.notes.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul>" : "") + "</section>" +
+        "<section><h3>Trello</h3><div>" + (trello || '<span class="muted">No Trello card.</span>') + "</div></section>" +
+        (t.depends.length ? "<section><h3>Needs these first</h3><div>" + t.depends.map(function (d) { var x = eff(TASKS[d]); return '<button class="chip ' + (x.status === "done" ? "ok" : "warn") + '" type="button" data-act="open-task" data-id="' + d + '">' + esc(x.code) + " " + esc(x.title) + (x.status === "done" ? " (done)" : "") + "</button>"; }).join(" ") + "</div></section>" : "") +
+        (t.steps.length ? "<section><h3>Steps <small>" + doneSteps + " of " + t.steps.length + ' ticked</small></h3><ul class="steps">' + steps + "</ul></section>" : "") +
+        (eps ? "<section><h3>Endpoint spec <small>" + plural(t.endpoints.length, "endpoint") + "</small></h3><div class=\"list-ep\">" + eps + "</div></section>" : "") +
+        (!t.endpoints.length && t.accept.length ? '<section><h3>Done when</h3><ul class="plain test">' + t.accept.map(function (a) { return "<li>" + esc(a) + "</li>"; }).join("") + "</ul></section>" : "") +
+        (!t.endpoints.length && t.files.length ? '<section class="files"><h3>Files</h3>' + t.files.map(function (f) { return "<code>" + esc(f) + "</code>"; }).join("") + "</section>" : "") +
+        '<section><h3>Notes <small>' + ns.length + '</small></h3><div class="grid" style="gap:8px">' + (ns.map(function (n) { return '<div class="note"><header>' + avatar(n.by) + "<strong>" + esc(n.by) + "</strong><span>" + esc(new Date(n.at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })) + "</span></header><p>" + esc(n.text) + "</p></div>"; }).join("") || '<p class="muted">No notes yet. Leave one when you hit a question or finish a part.</p>') + '</div><form id="noteForm" data-id="' + t.id + '" style="display:grid;gap:8px;margin-top:10px"><label class="sr-only" for="noteText">Add a note</label><textarea id="noteText" rows="3" maxlength="1500" placeholder="Add a note for the team"></textarea><div><button class="btn dark" type="submit">Add note</button></div></form></section>' +
+        "</div>";
+      var ta = $("#noteText", dr); if (ta) ta.value = S.draft;
+    }
+    sc.classList.add("on"); dr.classList.add("on"); dr.setAttribute("aria-hidden", "false"); document.documentElement.classList.add("lock");
+    $(".d-body", dr).scrollTop = prevScroll;
+    if (keep && keepId) { var fe = $("#" + keepId, dr); if (fe) { fe.focus(); try { fe.setSelectionRange(keep[0], keep[1]); } catch (x) {} } }
+  }
+  function openTask(id, from) {
+    if (!S.openTask && !S.openPkg) S.lastFocus = document.activeElement;
+    var fresh = S.openTask !== id;
+    S.openPkg = from ? from : (S.openTask ? S.openPkg : null);
+    S.openTask = id; if (fresh) S.draft = "";
+    renderDrawer();
+    if (fresh) { $("#drawer .d-body").scrollTop = 0; var x = $("#drawer .x"); if (x) x.focus(); }
+  }
+  function openPackage(id) {
+    if (!S.openTask && !S.openPkg) S.lastFocus = document.activeElement;
+    var fresh = S.openPkg !== id || S.openTask;
+    S.openTask = null; S.openPkg = id; S.nameDraft = null;
+    renderDrawer();
+    if (fresh) { $("#drawer .d-body").scrollTop = 0; var x = $("#drawer .x"); if (x) x.focus(); }
+  }
+  function closeDrawer() { S.openTask = null; S.openPkg = null; renderDrawer(); if (S.lastFocus && S.lastFocus.focus) { try { S.lastFocus.focus(); } catch (e) {} } }
+
+  /* ---------------------------------------------------------------- pages tab */
+  function epBtn(id) { var e = EPS[id]; return '<button class="chip" type="button" data-act="nav" data-tab="endpoints" data-id="' + id + '" title="' + esc(e.name) + '">' + mchip(e.method) + " " + rt(e.route) + "</button>"; }
+  function pageHTML(p) {
+    var eps = []; p.calls.forEach(function (c) { c.eps.forEach(function (e) { if (eps.indexOf(e) < 0) eps.push(e); }); });
+    var ts = D.tasks.filter(function (t) { return t.endpoints.some(function (e) { return eps.indexOf(e) >= 0; }); }).map(eff);
+    var key = "pg:" + p.id;
+    return '<details class="pg" data-key="' + key + '"' + (S.open.has(key) ? " open" : "") + "><summary><span class=\"file mono\">" + esc(p.file) + '</span><span class="tt"><strong>' + esc(p.title) + "</strong><span>" + esc(p.who) + "</span></span><span>" + (eps.length ? plural(eps.length, "endpoint") : "no endpoint") + "</span></summary>" +
+      '<div class="pg-body"><p style="max-width:72ch">' + esc(p.purpose) + "</p>" +
+      "<div><h4>What the page asks the back end</h4>" + table(["When", "Endpoint", "What the back end must do"], p.calls.map(function (c) { return [esc(c.when), c.eps.length ? c.eps.map(epBtn).join(" ") : '<span class="muted">none</span>', esc(c.backend)]; })) + "</div>" +
+      "<div><h4>Edge cases to handle</h4><ul class=\"plain\">" + p.edge.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>" +
+      (ts.length ? "<div><h4>Cards behind this page</h4><div style=\"display:flex;flex-wrap:wrap;gap:6px\">" + ts.map(function (t) { return '<button class="chip" type="button" data-act="open-task" data-id="' + t.id + '"><b>' + esc(t.code) + "</b> " + esc(t.title) + " " + stPill(t.status) + "</button>"; }).join("") + "</div></div>" : "") + "</div></details>";
+  }
+  function renderPages() {
+    var groups = [["all", "Every page", "Rules that apply everywhere"], ["customer", "Customer site", "7 pages"], ["staff", "Staff console", "7 pages"]];
+    $("#view").innerHTML = '<div class="sect" style="margin-bottom:18px"><h3>Walk through every page</h3><p class="lead">For each screen: what it asks the back end for, what the back end must do, and the edge cases the screen already handles. Open a page, then follow an endpoint chip to its full spec.</p></div>' +
+      groups.map(function (g) { return '<div class="grp"><h3>' + g[1] + " <small>" + g[2] + "</small></h3>" + D.pages.filter(function (p) { return p.site === g[0]; }).map(pageHTML).join("") + "</div>"; }).join("");
+  }
+
+  /* ---------------------------------------------------------------- endpoints tab */
+  function renderEndpoints() {
+    var area = S.epArea || "";
+    var q = (S.epQ || "").toLowerCase();
+    var core = D.endpoints.filter(function (e) { return e.tier === "core"; }).length;
+    var needed = D.endpoints.filter(function (e) { return e.tier === "needed"; }).length;
+    var opt = D.endpoints.filter(function (e) { return e.tier === "optional"; }).length;
+    var list = D.endpoints.filter(function (e) { return (!area || e.area === area) && (!q || (e.route + " " + e.name + " " + e.summary).toLowerCase().indexOf(q) >= 0); });
+    var areas = [["", "All"]].concat(Object.keys(D.areas).map(function (k) { return [k, D.areas[k]]; }));
+    if (!$("#epList")) {
+      $("#view").innerHTML =
+        '<div class="sect" style="margin-bottom:16px"><h3>Every endpoint, in full</h3><p class="lead">' + core + " are on the team's endpoint list. " + needed + " more are needed by the screens" + (D.newCards && Object.keys(D.newCards).length ? " and are missing from Trello" : " and now have Trello cards") + "." + (opt ? " " + opt + " are optional." : "") + " Routes keep the team's names, with a slash before {id}. Each spec has the request, the response, the rules, the data it touches and test cases.</p></div>" +
+        '<div class="tools"><input type="search" id="epq" placeholder="Search routes and names" aria-label="Search endpoints" value="' + esc(S.epQ || "") + '">' + '<span class="seg" role="group" aria-label="Area" id="epAreas"></span></div><div class="list-ep" id="epList"></div>';
+    }
+    $("#epAreas").innerHTML = areas.map(function (a) { return '<button type="button" data-act="ep-area" data-v="' + a[0] + '" aria-pressed="' + (area === a[0]) + '">' + esc(a[1]) + "</button>"; }).join("");
+    $("#epList").innerHTML = list.map(function (e) { return epHTML(e, "tab", false); }).join("") || '<div class="empty"><h3>No endpoint matches</h3></div>';
+  }
+
+  /* ---------------------------------------------------------------- data tab */
+  function renderData() {
+    var ent = D.entities.map(function (e) {
+      return '<div class="panel ent"><div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap"><h4>' + esc(e.name) + '</h4><span class="tbl-name">' + esc(e.table) + "</span></div><p>" + esc(e.note) + "</p>" +
+        '<div class="tw"><table class="t"><thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead><tbody>' + e.fields.map(function (f) { return '<tr class="' + (f.state === "change" ? "chg" : f.state === "new" ? "new" : "") + '"><td>' + esc(f.name) + "</td><td><code>" + esc(f.type) + "</code></td><td>" + esc(f.note) + (f.state === "change" ? ' <span class="chip warn">fix</span>' : f.state === "new" ? ' <span class="chip ok">new</span>' : "") + "</td></tr>"; }).join("") + "</tbody></table></div></div>";
+    }).join("");
+    var enums = D.enums.map(function (e) { return '<div class="enum"><strong>' + esc(e.name) + "</strong><ul>" + e.values.map(function (v) { return '<li class="' + (/->|\+/.test(v) ? "fix" : "") + '">' + esc(v) + "</li>"; }).join("") + '</ul><span class="muted" style="font-size:12.5px">' + esc(e.note) + "</span></div>"; }).join("");
+    var changes = table(["", "Change", "Why", "Card"], D.changes.map(function (c) { return ['<span class="chip ' + (c.kind === "Fix" ? "warn" : c.kind === "Add" ? "ok" : "") + '">' + c.kind + "</span>", esc(c.text), esc(c.why), c.task ? '<button class="chip" type="button" data-act="open-task" data-id="' + c.task + '">' + esc(TASKS[c.task].code) + "</button>" : ""]; }));
+    var dtos = Object.keys(D.dtos).map(function (k) { var d = D.dtos[k]; return '<details class="ep" data-key="dtoc:' + k + '"' + (S.open.has("dtoc:" + k) ? " open" : "") + "><summary><code class=\"route\">" + esc(k) + '</code><span class="muted" style="font-size:13px">' + esc(d.note) + '</span></summary><div class="ep-body">' + table(["Field", "Type", "Notes"], d.fields.map(function (f) { return [esc(f.name), "<code>" + esc(f.type) + "</code>", esc(f.note)]; })) + '<pre class="json">' + esc(JSON.stringify(d.sample, null, 2)) + "</pre></div></details>"; }).join("");
+    $("#view").innerHTML =
+      '<div class="sect" style="margin-bottom:22px"><h3>Data model, as it is in the repository</h3><p class="lead">Six entities, taken from wayfare-backend/Models and the ERD document. Highlighted rows need a change, and card F1 makes them all in one migration. Enums are stored as text, so fix names before real data exists.</p></div>' +
+      '<div class="grid g2" style="margin-bottom:28px">' + ent + "</div>" +
+      '<div class="sect" style="margin-bottom:28px"><h3>Enums</h3><div class="grid g2">' + enums + "</div></div>" +
+      '<div class="sect" style="margin-bottom:28px"><h3>What changes, and what already matches</h3>' + changes + "</div>" +
+      '<div class="sect" style="margin-bottom:28px"><h3>DTOs the endpoints return</h3><p class="lead">JSON names are camelCase. Money is a decimal with two places. Open one to see its fields and a sample.</p><div class="list-ep">' + dtos + "</div></div>" +
+      '<div class="sect"><h3>Front end names and their API names</h3><p class="lead">The front end keeps its own names in assets/js/data.js. When api.js is wired to fetch, it translates with this table. Back end code only needs the right column.</p>' + table(["Front end", "API"], D.fieldMap.map(function (r) { return ["<code>" + esc(r[0]) + "</code>", "<code>" + esc(r[1]) + "</code>"]; })) + "</div>";
+  }
+
+  /* ---------------------------------------------------------------- trello tab */
+  function renderTrello() {
+    var keys = Object.keys(D.newCards);
+    var added = keys.filter(function (k) { return S.trello[k] && S.trello[k].added; }).length;
+    var cards = keys.map(function (k) {
+      var c = D.newCards[k], flag = S.trello[k] || {};
+      var task = D.tasks.filter(function (t) { return t.newCard === k; })[0];
+      return '<article class="panel nc"><header><span class="chip acc">' + esc(c.list) + "</span>" + c.labels.map(function (l) { return '<span class="chip">' + esc(l) + "</span>"; }).join("") + "<span class=\"muted\" style=\"font-size:12.5px\">" + fd(c.start) + (c.start !== c.due ? " to " + fd(c.due) : "") + "</span></header><h4>" + esc(c.title) + "</h4><p>" + esc(c.desc) + '</p><div class="row"><label class="tick"><input type="checkbox" data-act="trello-flag" data-key="' + k + '"' + (flag.added ? " checked" : "") + "> Added on Trello</label>" + (flag.added && flag.by ? '<span class="muted" style="font-size:12.5px">by ' + esc(flag.by.split(" ")[0]) + "</span>" : "") +
+        '<button class="btn mini" type="button" data-act="copy-card" data-key="' + k + '">Copy card text</button>' + (task ? '<button class="chip" type="button" data-act="open-task" data-id="' + task.id + '"><b>' + esc(task.code) + "</b> " + esc(task.title) + "</button>" : "") + "</div></article>";
+    }).join("");
+    var rows = D.trelloCards.map(function (c) {
+      var ts = D.tasks.filter(function (t) { return t.trello.indexOf(c.n) >= 0; }).map(eff);
+      var isNew = (D.addedCards || []).some(function (a) { return a.n === c.n; });
+      return ['<a href="' + esc(c.url) + '" target="_blank" rel="noopener">#' + c.n + "</a>", esc(c.name) + (isNew ? ' <span class="chip acc">Added from this board</span>' : ""), esc(c.list), c.due ? fd(c.due) : "", c.done ? '<span class="chip ok">Done</span>' : '<span class="chip">Open</span>', ts.map(function (t) { return '<button class="chip" type="button" data-act="open-task" data-id="' + t.id + '"><b>' + esc(t.code) + "</b> " + STATUS[t.status] + "</button>"; }).join(" ") || '<span class="muted">none</span>'];
+    });
+    $("#view").innerHTML =
+      (keys.length
+        ? '<div class="sect" style="margin-bottom:20px"><h3>Trello stays the plan</h3><p class="lead">The board has no card for ' + keys.length + " pieces of work this spec needs. Add them, then tick them here. Dates follow the sprint rhythm already on the board. " + added + " of " + keys.length + ' added so far.</p><p><a class="btn" href="' + esc(D.boardUrl) + '" target="_blank" rel="noopener">Open the Trello board</a></p></div>' + '<div class="grid g2" style="margin-bottom:30px">' + cards + "</div>"
+        : '<div class="sect" style="margin-bottom:24px"><h3>Trello matches this board</h3><p class="lead">The ' + (D.addedCards || []).length + " cards this spec needed are on Trello now. Each sits at the bottom of its sprint list with a due date and a label. The planned start date is in the card text, because the connector can only set a due date. Move a card up or down the list as you like.</p><p><a class=\"btn\" href=\"" + esc(D.boardUrl) + '" target="_blank" rel="noopener">Open the Trello board</a></p></div>') +
+      '<div class="sect"><h3>Cards that are on the board now</h3><p class="lead">Read from Trello on ' + esc(new Date(D.generatedAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })) + ". Every open card belongs to a task here.</p>" + table(["Card", "Title", "Sprint", "Due", "On Trello", "Task here"], rows) + "</div>";
+  }
+
+  /* ---------------------------------------------------------------- guide tab */
+  function renderGuide() {
+    var dec = D.decisions.map(function (d) {
+      var cur = S.decisions[d.id];
+      return '<article class="panel dec"><h4>' + esc(d.title) + "</h4><p>" + esc(d.why) + '</p><div class="opts" role="group" aria-label="' + esc(d.title) + '">' + d.options.map(function (o) { return '<button class="opt" type="button" data-act="decide" data-id="' + d.id + '" data-v="' + o.key + '" aria-pressed="' + (cur && cur.choice === o.key) + '"><span class="dot"></span><span>' + esc(o.text) + "</span>" + (o.rec ? '<span class="chip acc">Suggested</span>' : "") + "</button>"; }).join("") + "</div>" + (cur ? '<span class="muted" style="font-size:12.5px">Chosen by ' + esc((cur.by || "").split(" ")[0]) + " on " + esc(new Date(cur.at).toLocaleDateString("en-US", { month: "short", day: "numeric" })) + "</span>" : '<span class="muted" style="font-size:12.5px">Not decided yet. The spec uses the suggested answer.</span>') + "</article>";
+    }).join("");
+    var setup = D.setup.map(function (s) { return [esc(s[0]), '<div class="cmd"><code>' + esc(s[1]) + '</code><button class="btn mini" type="button" data-act="copy-text" data-text="' + esc(s[1]) + '">Copy</button></div>']; });
+    $("#view").innerHTML =
+      '<div class="grid g2" style="margin-bottom:28px"><div class="panel sect"><h3>How the team uses this board</h3><ul class="plain"><li>Open Packages and take one that is free. You own all its cards, listed in the order to build them.</li><li>If the split feels uneven, drag a card onto another package, or open the package and change the Package of a card. The card goes to the owner of that package.</li><li>Build each card on its own branch, open a pull request, and ask a second member to review it. No code reaches main before that.</li><li>Move the card to In review when the pull request is open, and to Done after the merge. Then tick the Trello card.</li><li>Stuck for more than a day? Leave a note on the card and say it in the mid-week check-in.</li><li>A card that Waits for another needs it first. You can still read its spec and write the DTO and the mapper while you wait.</li></ul></div>' +
+      '<div class="panel sect"><h3>Done means</h3><ul class="plain test">' + D.doneDef.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul><h3 style="margin-top:6px">Card sizes</h3><ul class="plain"><li><b>S</b> about 1 to 2 hours</li><li><b>M</b> about half a day</li><li><b>L</b> about a full day</li></ul></div></div>' +
+      '<div class="sect" style="margin-bottom:28px"><h3>Getting started</h3>' + table(["Step", "Do this"], setup) + "</div>" +
+      '<div class="sect" style="margin-bottom:28px"><h3>Words used on this board</h3>' + table(["Word", "Meaning"], (D.glossary || []).map(function (g) { return [esc(g[0]), esc(g[1])]; })) + "</div>" +
+      '<div class="sect" style="margin-bottom:28px"><h3>API conventions</h3><p class="lead">Decide these once so every endpoint looks the same to the front end.</p>' + table(["Topic", "Convention"], D.conventions.map(function (c) { return [esc(c[0]), esc(c[1])]; })) + "</div>" +
+      '<div class="sect"><h3>Decisions for the team</h3><p class="lead">The spec already uses the suggested answer in each case. Pick another one here if the team disagrees, and the person who builds that card will see it.</p><div class="grid g2">' + dec + "</div></div>";
+  }
+
+  /* ---------------------------------------------------------------- render */
+  function renderView() {
+    $("#view").setAttribute("aria-labelledby", "tab-" + S.tab);
+    ({ packages: renderPackages, board: renderBoard, pages: renderPages, endpoints: renderEndpoints, data: renderData, trello: renderTrello, guide: renderGuide })[S.tab]();
+    if (S.focusEp) {
+      var el = $('#view [data-ep="' + S.focusEp + '"]') || $('#view [data-key="' + S.focusEp + '"]');
+      S.focusEp = null;
+      if (el) { if (el.tagName === "DETAILS") { el.open = true; S.open.add(el.dataset.key); } el.scrollIntoView({ block: "start" }); }
+    }
+  }
+  function renderAll() {
+    renderHeader(); renderSummary(); renderTabs();
+    if (S.tab === "board") { renderBoard(); } else if (!S.skipView) { renderView(); }
+    renderDrawer();
+  }
+  function setTab(id, focus) {
+    S.tab = id; S.focusEp = focus || null;
+    var v = $("#view"); v.innerHTML = "";
+    renderAll();
+    try { history.replaceState(null, "", "#" + id); } catch (e) {}
+    if (!focus) window.scrollTo(0, 0);
+  }
+
+  /* ---------------------------------------------------------------- events */
+  document.addEventListener("click", function (ev) {
+    var el = ev.target.closest("[data-act]");
+    if (!el) return;
+    var a = el.dataset.act, id = el.dataset.id;
+    if (el.tagName === "INPUT" || el.tagName === "SELECT") return;
+    if (a === "tab") return setTab(id);
+    if (a === "open-task") { if (ev.target.closest("button[data-act='take']")) return; return openTask(id, el.dataset.from); }
+    if (a === "open-pkg") return openPackage(id);
+    if (a === "take-pkg") { ev.stopPropagation(); return act.takePkg(id); }
+    if (a === "release-pkg") { ev.stopPropagation(); return act.releasePkg(id); }
+    if (a === "pkg-filter") { S.pf = el.dataset.v || ""; return renderPackages(); }
+    if (a === "back-pkg") { var bk = S.openPkg; S.openTask = null; S.openPkg = bk; return renderDrawer(); }
+    if (a === "rename-reset") return act.renamePkg(id, "");
+    if (a === "close-drawer") return closeDrawer();
+    if (a === "take") { ev.stopPropagation(); return act.take(id); }
+    if (a === "release") return act.release(id);
+    if (a === "status") return act.status(id, el.dataset.v);
+    if (a === "nav") { if (S.openTask) { S.openTask = null; renderDrawer(); } if (el.dataset.tab === "endpoints") { S.epArea = ""; S.epQ = ""; } return setTab(el.dataset.tab, el.dataset.tab === "endpoints" ? id : null); }
+    if (a === "view") { S.view = el.dataset.v; var bl = $("#boardList"); if (bl) { buildBoardTools(); renderBoardList(); } return; }
+    if (a === "clear-filters") { S.f = { q: "", pkg: "", sprint: "", who: "", tier: "" }; buildBoardTools(); renderBoardList(); renderSummary(); return; }
+    if (a === "who-filter") { S.f.who = S.f.who === el.dataset.name ? "" : el.dataset.name; if (S.tab !== "board") return setTab("board"); buildBoardTools(); renderBoardList(); renderSummary(); return; }
+    if (a === "who") return showWho();
+    if (a === "who-close") { $("#who").hidden = true; S.pending = null; return; }
+    if (a === "pick-me") return pickMe(el.dataset.name);
+    if (a === "copy-http") return copyText(toHttp(EPS[id]), "Request");
+    if (a === "copy-text") return copyText(el.dataset.text, "Command");
+    if (a === "copy-close") { $("#copybox").hidden = true; return; }
+    if (a === "copy-card") { var c = D.newCards[el.dataset.key]; return copyText(c.title + "\nList: " + c.list + "\nStart: " + c.start + "\nDue: " + c.due + "\nLabels: " + c.labels.join(", ") + "\n\n" + c.desc, "Card text"); }
+    if (a === "decide") return act.decide(id, el.dataset.v);
+    if (a === "ep-area") { S.epArea = el.dataset.v; return renderEndpoints(); }
+    if (a === "theme") {
+      var dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = dark ? "light" : "dark";
+      try { localStorage.setItem("wf-theme", document.documentElement.dataset.theme); } catch (e) {}
+      return;
+    }
+  });
+  document.addEventListener("change", function (ev) {
+    var el = ev.target;
+    if (el.id === "fpkg") { S.f.pkg = el.value; renderBoardList(); }
+    else if (el.dataset && el.dataset.act === "move") { if (act.move(el.dataset.id, el.value) === false) { S.sig = null; renderDrawer(); } }
+    else if (el.id === "taskPkg") { if (act.move(el.dataset.id, el.value) === false) { S.sig = null; renderDrawer(); } }
+    else if (el.id === "pkgOwner") { if (act.setOwner(el.dataset.id, el.value || null) === false) { S.sig = null; renderDrawer(); } }
+    else if (el.id === "fsp") { S.f.sprint = el.value; renderBoardList(); }
+    else if (el.id === "fwho") { S.f.who = el.value; renderBoardList(); renderSummary(); }
+    else if (el.id === "ftier") { S.f.tier = el.value; renderBoardList(); }
+    else if (el.id === "assignee") { act.assign(el.dataset.id, el.value); }
+    else if (el.dataset && el.dataset.act === "check") { el.checked = !el.checked; act.check(el.dataset.id, el.dataset.i); }
+    else if (el.dataset && el.dataset.act === "trello-flag") { var on = el.checked; el.checked = !on; act.trello(el.dataset.key, on); }
+  });
+  document.addEventListener("input", function (ev) {
+    var el = ev.target;
+    if (el.id === "fq") { S.f.q = el.value; renderBoardList(); }
+    else if (el.id === "epq") { S.epQ = el.value; var l = $("#epList"); if (l) { var q = el.value.toLowerCase(); var list = D.endpoints.filter(function (e) { return (!S.epArea || e.area === S.epArea) && (!q || (e.route + " " + e.name + " " + e.summary).toLowerCase().indexOf(q) >= 0); }); l.innerHTML = list.map(function (e) { return epHTML(e, "tab", false); }).join("") || '<div class="empty"><h3>No endpoint matches</h3></div>'; } }
+    else if (el.id === "noteText") { S.draft = el.value; }
+    else if (el.id === "pkgName") { S.nameDraft = { id: el.closest("form").dataset.id, v: el.value }; }
+  });
+  document.addEventListener("submit", function (ev) {
+    if (ev.target.id === "noteForm") { ev.preventDefault(); act.note(ev.target.dataset.id, $("#noteText").value); $("#noteText").value = ""; }
+    else if (ev.target.id === "renameForm") { ev.preventDefault(); act.renamePkg(ev.target.dataset.id, $("#pkgName").value); }
+  });
+  document.addEventListener("toggle", function (ev) {
+    var d = ev.target;
+    if (!d.dataset || !d.dataset.key) return;
+    if (d.open) { S.open.add(d.dataset.key); S.open.delete("closed:" + d.dataset.key); } else { S.open.delete(d.dataset.key); S.open.add("closed:" + d.dataset.key); }
+  }, true);
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape") {
+      if (!$("#copybox").hidden) { $("#copybox").hidden = true; return; }
+      if (!$("#who").hidden) { $("#who").hidden = true; S.pending = null; return; }
+      if (S.openTask) closeDrawer();
+      return;
+    }
+    if ((ev.key === "Enter" || ev.key === " ") && ev.target.matches && ev.target.matches("article.task")) { ev.preventDefault(); openTask(ev.target.dataset.id); return; }
+    if ((ev.key === "Enter" || ev.key === " ") && ev.target.matches && ev.target.matches("article.pkg")) { ev.preventDefault(); openPackage(ev.target.dataset.id); return; }
+    if (ev.key === "Tab" && S.openTask) {
+      var f = $$("#drawer button, #drawer select, #drawer textarea, #drawer input, #drawer a[href], #drawer summary").filter(function (x) { return !x.disabled && x.offsetParent !== null; });
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (!$("#drawer").contains(document.activeElement)) { ev.preventDefault(); first.focus(); }
+      else if (ev.shiftKey && document.activeElement === first) { ev.preventDefault(); last.focus(); }
+      else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
+    }
+  });
+
+
+  /* ---------------------------------------------------------------- drag a card onto another package */
+  var dragId = null;
+  var clearDrag = function () { $$(".is-drag, .is-over").forEach(function (x) { x.classList.remove("is-drag", "is-over"); }); };
+  document.addEventListener("dragstart", function (ev) {
+    var li = ev.target.closest ? ev.target.closest("[data-drag]") : null;
+    if (!li) return;
+    dragId = li.dataset.drag;
+    try { ev.dataTransfer.setData("text/plain", dragId); ev.dataTransfer.effectAllowed = "move"; } catch (e) {}
+    li.classList.add("is-drag");
+  });
+  document.addEventListener("dragend", function () { dragId = null; clearDrag(); });
+  document.addEventListener("dragover", function (ev) {
+    var box = ev.target.closest ? ev.target.closest("[data-pkg]") : null;
+    if (!box || !dragId) return;
+    ev.preventDefault();
+    try { ev.dataTransfer.dropEffect = "move"; } catch (e) {}
+    $$(".is-over").forEach(function (x) { if (x !== box) x.classList.remove("is-over"); });
+    box.classList.add("is-over");
+  });
+  document.addEventListener("drop", function (ev) {
+    var box = ev.target.closest ? ev.target.closest("[data-pkg]") : null;
+    if (!box || !dragId) return;
+    ev.preventDefault();
+    var id = dragId; dragId = null; clearDrag();
+    if (eff(TASKS[id]).pkg !== box.dataset.pkg) act.move(id, box.dataset.pkg);
+  });
+
+  /* ---------------------------------------------------------------- start */
+  try { var th = localStorage.getItem("wf-theme"); if (th) document.documentElement.dataset.theme = th; } catch (e) {}
+  var h = (location.hash || "").replace("#", "");
+  if (TABS.some(function (t) { return t.id === h; })) S.tab = h;
+  try { var nm = localStorage.getItem("wf-me"); if (nm && D.team.indexOf(nm) >= 0) S.me.name = nm; } catch (e) {}
+  S.live = window.claude && window.claude.use ? "loading" : "off";
+  renderAll();
+  initLive().catch(function () { S.live = "off"; renderAll(); });
+})();
+</script>
