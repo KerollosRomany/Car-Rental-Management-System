@@ -139,7 +139,7 @@ span.flatpickr-weekday {
 .flatpickr-day.flatpickr-disabled:hover,
 .flatpickr-day.prevMonthDay,
 .flatpickr-day.nextMonthDay {
-  color: var(--obs-400);
+  color: var(--ink-400);
   background: transparent;
 }
 
@@ -150,7 +150,7 @@ span.flatpickr-weekday {
 
 .flatpickr-day.is-booked,
 .flatpickr-day.is-booked:hover {
-  color: var(--obs-400);
+  color: var(--ink-400);
   background: repeating-linear-gradient(135deg, var(--surface-3) 0 3px, transparent 3px 7px);
   text-decoration: line-through;
   cursor: not-allowed;
@@ -189,5 +189,5 @@ input.flatpickr-input.input[readonly] {
 }
 
 .range-legend i.booked {
-  background: repeating-linear-gradient(135deg, var(--obs-400) 0 2px, var(--surface-3) 2px 5px);
+  background: repeating-linear-gradient(135deg, var(--ink-400) 0 2px, var(--surface-3) 2px 5px);
 }

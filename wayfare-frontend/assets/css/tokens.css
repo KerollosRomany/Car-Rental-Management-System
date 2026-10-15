@@ -1,84 +1,94 @@
 /* ==========================================================================
-   Wayfare design tokens
-   Obsidian = the dark base (customer site, sidebar, footer)
-   Cognac   = the one accent. It means "do this" and nothing else.
-   Pearl    = text on dark.
-   Stitch   = the signature detail: a dashed seam, like leather stitching or a
-              road marking. Used for dividers and progress lines.
+   Wayfare design tokens: Cloud Cobalt
+   Cloud  = the page and its white panels.
+   Ink    = deep navy: text, and every dark panel (footer, photo hero, sidebar).
+   Cobalt = the one accent. It means "do this" and nothing else.
+   Stitch = the signature detail: a dashed seam, like a road marking.
 
-   Two themes share the same token names:
-   - default (dark):  the customer site and auth screens
-   - .theme-light:    the staff console (set on <body>)
-   Components only use the semantic tokens below, never raw palette steps.
+   One light theme serves the customer site and the staff console. Dark panels
+   (footer, hero, call-to-action, sign-in photo, staff sidebar) redefine the same
+   semantic names below, so components never need raw palette steps.
    ========================================================================== */
 
 :root {
   /* Raw palette */
-  --obs-950: #0a0c0e;
-  --obs-900: #0f1215;
-  --obs-850: #14181b;
-  --obs-800: #1a1e22;
-  --obs-700: #22272c;
-  --obs-600: #2c3238;
-  --obs-500: #3a4148;
-  --obs-400: #5b646e;
-  --obs-300: #8a929b;
-  --obs-200: #b3b9c0;
-  --obs-100: #d9dce0;
-  --pearl: #f2efe9;
-  --cognac-300: #e0ae7c;
-  --cognac-400: #d6955a;
-  --cognac-500: #d18a4c;
-  --cognac-600: #b9702f;
-  --cognac-700: #8f5220;
+  --ink-950: #060c22;
+  --ink-900: #0a1230;
+  --ink-850: #0e183c;
+  --ink-800: #131f4a;
+  --ink-700: #1b2a5c;
+  --ink-600: #263870;
+  --ink-500: #36498a;
+  --ink-400: #6674a6;
+  --ink-300: #96a1c6;
+  --ink-200: #bcc4de;
+  --ink-100: #dde1ee;
+  --cloud: #f2f5ff;
+  --cobalt-300: #8aa0ff;
+  --cobalt-400: #6b86ff;
+  --cobalt-500: #2447f0;
+  --cobalt-600: #1c3bd0;
+  --cobalt-700: #142a9a;
 
-  /* Semantic: dark theme (default) */
-  --bg: var(--obs-900);
-  --bg-deep: var(--obs-950);
-  --surface: var(--obs-850);
-  --surface-2: var(--obs-800);
-  --surface-3: var(--obs-700);
-  --line: var(--obs-600);
-  --line-strong: var(--obs-500);
-  --text: var(--pearl);
-  --text-2: var(--obs-200);
-  --text-3: var(--obs-300);
-  --field: var(--obs-800);
+  /* Page and surfaces */
+  --bg: #f3f6fb;
+  --bg-deep: var(--ink-950);
+  --surface: #ffffff;
+  --surface-2: #ebf0f9;
+  --surface-3: #dfe6f3;
+  --line: #dae1ef;
+  --line-strong: #c3cde2;
+  --text: #0c1430;
+  --text-2: #3b4666;
+  --text-3: #5a6586;
+  --field: #ffffff;
 
-  --accent: var(--cognac-500);
-  --accent-hover: #de9b5f;
-  --accent-press: #c07a3c;
-  --accent-ink: #1a1108; /* text on an accent fill */
-  --accent-text: #e3a56a; /* accent used as text on dark */
-  --accent-soft: rgba(209, 138, 76, 0.14);
-  --accent-line: rgba(209, 138, 76, 0.5);
+  /* The one accent */
+  --accent: var(--cobalt-500);
+  --accent-hover: #3a5cf8;
+  --accent-press: var(--cobalt-600);
+  --accent-ink: #ffffff; /* text on an accent fill */
+  --accent-text: var(--cobalt-600); /* accent used as text */
+  --accent-soft: rgba(36, 71, 240, 0.1);
+  --accent-line: rgba(36, 71, 240, 0.5);
 
-  --inverse-bg: var(--pearl); /* solid neutral button */
-  --inverse-text: var(--obs-900);
-  --inverse-hover: #ffffff;
+  --inverse-bg: var(--ink-900); /* solid neutral button */
+  --inverse-text: var(--cloud);
+  --inverse-hover: var(--ink-700);
 
-  --focus: var(--cognac-400);
-  --scrim: rgba(4, 6, 8, 0.72);
+  --focus: var(--cobalt-500);
+  --scrim: rgba(6, 12, 34, 0.55);
   --on-photo: #ffffff;
 
-  /* Status pairs, tuned for each theme */
-  --ok-bg: rgba(86, 190, 137, 0.14);
-  --ok-text: #86d9ab;
-  --info-bg: rgba(100, 148, 224, 0.16);
-  --info-text: #a3c1f5;
-  --warn-bg: rgba(222, 170, 70, 0.16);
-  --warn-text: #ebc274;
-  --danger-bg: rgba(228, 96, 76, 0.16);
-  --danger-text: #f5a193;
-  --danger-line: #e4604c;
-  --live-bg: rgba(209, 138, 76, 0.16);
-  --live-text: #e8ac74;
-  --neutral-bg: rgba(255, 255, 255, 0.07);
-  --neutral-text: #b6bcc3;
+  /* The Wayfare plate, which follows the colours around it */
+  --logo-fill: #ffffff;
+  --logo-band: var(--cobalt-500);
+  --logo-band-ink: #ffffff;
+
+  /* Glass and photo overlays, as r, g, b so they follow the palette */
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --search-bg: rgba(255, 255, 255, 0.97);
+  --shade-1: 6, 12, 34;
+  --shade-2: 8, 14, 38;
+
+  /* Status pairs */
+  --ok-bg: #e2f3ea;
+  --ok-text: #12603a;
+  --info-bg: #e3ebfa;
+  --info-text: #1d4c99;
+  --warn-bg: #fbf0d6;
+  --warn-text: #7a5200;
+  --danger-bg: #fbe4e0;
+  --danger-text: #a12c1e;
+  --danger-line: #d6402c;
+  --live-bg: rgba(36, 71, 240, 0.1);
+  --live-text: var(--cobalt-600);
+  --neutral-bg: #e8ecf5;
+  --neutral-text: #4b5575;
 
   /* Chart (validated against the light surface; see README) */
-  --chart-1: #b9702f;
-  --chart-1-hover: #9c5c24;
+  --chart-1: var(--cobalt-600);
+  --chart-1-hover: var(--cobalt-700);
 
   /* Type: Archivo drawn wide for display, Geist for reading */
   --font-display: "Archivo", "Geist", system-ui, sans-serif;
@@ -94,10 +104,10 @@
   --r-pill: 2px;
 
   /* Depth is mostly hairlines. Shadows are for floating things only. */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 28px 70px rgba(0, 0, 0, 0.55);
-  --ring: 0 0 0 3px rgba(209, 138, 76, 0.28);
+  --shadow-sm: 0 1px 2px rgba(12, 20, 48, 0.06);
+  --shadow-md: 0 12px 30px rgba(12, 20, 48, 0.12);
+  --shadow-lg: 0 28px 60px rgba(12, 20, 48, 0.22);
+  --ring: 0 0 0 3px rgba(36, 71, 240, 0.28);
 
   /* The stitch */
   --stitch: repeating-linear-gradient(90deg, var(--accent) 0 7px, transparent 7px 13px);
@@ -121,51 +131,69 @@
   --header-h: 78px;
 }
 
-/* Staff console: light "ledger" theme. Same names, different values. */
-.theme-light {
-  --bg: #f3f4f5;
-  --bg-deep: var(--obs-950);
+/* Dark panels inside the light pages. Same names, different values. */
+.on-dark,
+.site-footer,
+.cta-banner,
+.hero,
+.auth-visual,
+.sidebar {
+  --bg: var(--ink-900);
+  --surface: var(--ink-850);
+  --surface-2: var(--ink-800);
+  --surface-3: var(--ink-700);
+  --line: var(--ink-600);
+  --line-strong: var(--ink-500);
+  --text: var(--cloud);
+  --text-2: var(--ink-200);
+  --text-3: var(--ink-300);
+  --field: var(--ink-800);
+
+  --accent: var(--cobalt-500);
+  --accent-hover: var(--cobalt-400);
+  --accent-press: var(--cobalt-600);
+  --accent-ink: #ffffff;
+  --accent-text: var(--cobalt-300);
+  --accent-soft: rgba(107, 134, 255, 0.18);
+  --accent-line: rgba(138, 160, 255, 0.55);
+
+  --logo-fill: transparent;
+  --logo-band: var(--cobalt-400);
+  --logo-band-ink: var(--ink-900);
+
+  --focus: var(--cobalt-400);
+  --live-bg: rgba(107, 134, 255, 0.18);
+  --live-text: var(--cobalt-300);
+  --neutral-bg: rgba(255, 255, 255, 0.08);
+  --neutral-text: var(--ink-200);
+  --ok-bg: rgba(86, 190, 137, 0.14);
+  --ok-text: #86d9ab;
+  --info-bg: rgba(100, 148, 224, 0.16);
+  --info-text: #a3c1f5;
+  --warn-bg: rgba(222, 170, 70, 0.16);
+  --warn-text: #ebc274;
+  --danger-bg: rgba(228, 96, 76, 0.16);
+  --danger-text: #f5a193;
+}
+
+/* The search card sits on the hero but is a light panel */
+.search-card {
+  --bg: #f3f6fb;
   --surface: #ffffff;
-  --surface-2: #f0f1f3;
-  --surface-3: #e6e8eb;
-  --line: #e2e5e8;
-  --line-strong: #cdd2d7;
-  --text: #14171a;
-  --text-2: #454c54;
-  --text-3: #66707a;
+  --surface-2: #ebf0f9;
+  --surface-3: #dfe6f3;
+  --line: #dae1ef;
+  --line-strong: #c3cde2;
+  --text: #0c1430;
+  --text-2: #3b4666;
+  --text-3: #5a6586;
   --field: #ffffff;
-
-  --accent: #c9823f;
-  --accent-hover: #d58f4c;
-  --accent-press: #b87332;
-  --accent-ink: #1a1108;
-  --accent-text: #8f5220;
-  --accent-soft: rgba(201, 130, 63, 0.12);
-  --accent-line: rgba(201, 130, 63, 0.5);
-
-  --inverse-bg: var(--obs-900);
-  --inverse-text: #f2efe9;
-  --inverse-hover: #232a30;
-
-  --focus: #b9702f;
-  --scrim: rgba(10, 12, 14, 0.55);
-
-  --ok-bg: #e2f3ea;
-  --ok-text: #12603a;
-  --info-bg: #e3ebfa;
-  --info-text: #1d4c99;
-  --warn-bg: #fbf0d6;
-  --warn-text: #7a5200;
-  --danger-bg: #fbe4e0;
-  --danger-text: #a12c1e;
-  --danger-line: #d6402c;
-  --live-bg: #f8e9db;
-  --live-text: #8a4a18;
-  --neutral-bg: #eceef0;
-  --neutral-text: #4b535b;
-
-  --shadow-sm: 0 1px 2px rgba(20, 23, 26, 0.06);
-  --shadow-md: 0 12px 30px rgba(20, 23, 26, 0.12);
-  --shadow-lg: 0 28px 60px rgba(20, 23, 26, 0.22);
-  --ring: 0 0 0 3px rgba(185, 112, 47, 0.25);
+  --accent: var(--cobalt-500);
+  --accent-hover: #3a5cf8;
+  --accent-press: var(--cobalt-600);
+  --accent-ink: #ffffff;
+  --accent-text: var(--cobalt-600);
+  --accent-soft: rgba(36, 71, 240, 0.1);
+  --accent-line: rgba(36, 71, 240, 0.5);
+  --focus: var(--cobalt-500);
 }

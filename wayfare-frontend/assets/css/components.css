@@ -238,7 +238,7 @@
 .input:hover,
 .select:hover,
 .textarea:hover {
-  border-color: var(--obs-400);
+  border-color: var(--ink-400);
 }
 
 .theme-light .input:hover,
@@ -1267,9 +1267,9 @@ dialog.drawer[open] {
 }
 
 .theme-light .toast {
-  background: var(--obs-900);
-  color: var(--pearl);
-  border-color: var(--obs-600);
+  background: var(--ink-900);
+  color: var(--cloud);
+  border-color: var(--ink-600);
   border-left-color: var(--accent);
 }
 
