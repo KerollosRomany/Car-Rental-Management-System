@@ -82,7 +82,7 @@
 
     /* ----- Cars ----- */
 
-    // GET /api/cars?from=2026-10-02&to=2026-10-05&type=SUV&fuel=Hybrid&transmission=Automatic&seats=5&maxPrice=100&sort=price-asc
+    // GET /api/customer/cars?from=2026-10-02&to=2026-10-05&type=suv&fuel=hybrid&transmission=automatic&seats=5&maxPrice=100&sort=price-asc
     // Customers only get cars they can book: without dates, cars that are available now.
     async getCars(filters = {}) {
       await wait();
@@ -114,7 +114,7 @@
       return copy(DB.cars);
     },
 
-    // GET /api/cars/:id   (includes bookedRanges so the calendar can grey out days)
+    // GET /api/customer/cars/:id   (includes bookedRanges so the calendar can grey out days)
     async getCar(id) {
       await wait(160);
       const car = findCar(id);
@@ -122,7 +122,7 @@
       return { ...copy(car), bookedRanges: bookedRanges(id) };
     },
 
-    // POST /api/admin/cars  or  PUT /api/admin/cars/:id   (staff only, multipart form data)
+    // POST /api/admin/newcar  or  PUT /api/admin/editcar/:id   (staff only, multipart form data)
     // images: the first one is the main photo, the rest keep their order.
     async saveCar(data) {
       await wait();
@@ -139,7 +139,7 @@
       return copy(car);
     },
 
-    // DELETE /api/admin/cars/:id   (staff only)
+    // DELETE /api/admin/deletecar/:id   (staff only). A car with rental history answers 409.
     async deleteCar(id) {
       await wait();
       const i = DB.cars.findIndex((c) => c.id === id);
@@ -149,7 +149,7 @@
 
     /* ----- Rentals ----- */
 
-    // POST /api/rentals   body: { carId, pickupDate, returnDate, pickupLocation }
+    // POST /api/customer/rentcar/:carId   body: { startDate, endDate, branchId }
     // The server charges the total here (paidAmount) and stores the request as pending.
     async createRental({ carId, pickupDate, returnDate, pickupLocation }) {
       await wait(500);
@@ -178,7 +178,7 @@
       return withRelations(rental);
     },
 
-    // Customers: GET /api/rentals/my        Staff: GET /api/admin/rentals?status=pending
+    // Customers: GET /api/customer/rentals     Staff: GET /api/admin/rentals?status=pending
     async getRentals({ customerId, status } = {}) {
       await wait();
       let list = DB.rentals.slice();
@@ -190,8 +190,9 @@
     // Shown in the cancel dialog before the customer confirms.
     cancelQuote,
 
-    // PUT /api/rentals/:id/cancel   (customer, own rental only)
-    // pending -> cancelled with a full refund; approved -> refused, 10% kept.
+    // pending:  PUT /api/customer/cancelrental/:id   (full refund)
+    // approved: PUT /api/customer/refuserental/:id   (10% kept, 90% refunded)
+    // Customers can only cancel their own rentals.
     async cancelRental(id) {
       await wait(350);
       const r = findRental(id);
@@ -203,10 +204,10 @@
     },
 
     // Staff actions, one endpoint each:
-    // PUT /api/admin/rentals/:id/approve
-    // PUT /api/admin/rentals/:id/reject     body: { reason }
-    // PUT /api/admin/rentals/:id/handover
-    // PUT /api/admin/rentals/:id/return     body: { returnedAt, notes }
+    // PUT /api/admin/approve/:id
+    // PUT /api/admin/reject/:id          body: { reason }
+    // PUT /api/admin/handoverkeys/:id
+    // PUT /api/admin/return/:id          body: { returnedAt, notes }
     async setRentalStatus(id, status, extra = {}) {
       await wait(350);
       const r = findRental(id);
@@ -240,32 +241,25 @@
       }));
     },
 
-    // Walk-in customers and edits: POST /api/admin/customers  or  PUT /api/admin/customers/:id
-    // License check only:          PUT /api/admin/customers/:id/license   body: { verified }
-    async saveCustomer(data) {
+    // PUT /api/admin/customers/:id/license   body: { verified }
+    // Customers are never added by staff: they appear when they register.
+    async setLicenseVerified(id, verified) {
       await wait();
-      if (data.id) {
-        Object.assign(findCustomer(data.id), data);
-        return copy(findCustomer(data.id));
-      }
-      const customer = {
-        licenseVerified: false, joined: DB.today, licenseExpiry: "", licensePhoto: "", ...data,
-        id: `u${String(nextNumber(DB.customers)).padStart(2, "0")}`,
-      };
-      DB.customers.unshift(customer);
-      return copy(customer);
+      const c = findCustomer(id);
+      c.licenseVerified = Boolean(verified);
+      return copy(c);
     },
 
     /* ----- Profile (customers and staff) ----- */
 
-    // PUT /api/profile   body: { name, email, phone }
+    // PUT /api/customer/profile   body: { fullName, email, phone }
     async updateProfile(data) {
       await wait(400);
       Object.assign(DB.me, data);
       return copy(DB.me);
     },
 
-    // PUT /api/profile/license   (customer, multipart: licensePhoto file and licenseExpiry)
+    // PUT /api/customer/profile/license   (multipart: licensePhoto file and licenseExpiry)
     // A new photo or date resets the staff check.
     async updateLicense(data) {
       await wait(400);
@@ -273,14 +267,14 @@
       return copy(DB.me);
     },
 
-    // PUT /api/profile   (signed-in staff member, same endpoint as customers)
+    // PUT /api/admin/profile   body: { fullName, email, phone }
     async updateStaffProfile(data) {
       await wait(400);
       Object.assign(DB.staff, data);
       return copy(DB.staff);
     },
 
-    // PUT /api/profile/password   body: { currentPassword, newPassword }
+    // PUT /api/authentication/change-password   body: { currentPassword, newPassword }   (customers and staff)
     async changePassword() {
       await wait(500);
       return true;
@@ -311,7 +305,8 @@
 
     /* ----- Dashboard ----- */
 
-    // GET /api/admin/dashboard   (staff only)
+    // No endpoint of its own: the dashboard works these numbers out from the staff lists
+    // (cars, rentals, payments, customers). Replace the body with those four calls.
     async getDashboard() {
       await wait(200);
       const since = DB.helpers.day(-30);
