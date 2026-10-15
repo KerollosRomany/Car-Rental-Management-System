@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Profile | Wayfare</title>
-  <meta name="description" content="Update your contact details, driving license and password.">
+  <meta name="description" content="Update your contact details, driving license photo and password.">
   <link rel="icon" href="assets/img/logo-mark.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,12 +50,17 @@
         </form>
 
         <form class="card form-card" id="form-license" novalidate>
-          <div class="card-head"><div><h3>Driving license</h3><p>Staff check this against your physical license at pick-up.</p></div></div>
+          <div class="card-head"><div><h3>Driving license</h3><p>Staff check the photo against your physical license at pick-up.</p></div></div>
           <div class="card-body">
             <div class="form-grid">
-              <div class="field">
-                <label class="label" for="p-license">License number</label>
-                <input class="input mono" id="p-license" name="licenseNumber" type="text" required>
+              <div class="field span-2">
+                <label class="label" for="p-photo">License photo</label>
+                <label class="upload" for="p-photo">
+                  <span class="upload-thumb"><i class="ph ph-identification-card" aria-hidden="true"></i><img alt=""></span>
+                  <span class="upload-text"><strong data-upload-title>Upload a photo of your license</strong><span>Click to replace it. JPG, PNG or WebP, up to 5 MB.</span></span>
+                  <span class="btn btn-secondary btn-sm" aria-hidden="true">Browse</span>
+                  <input class="sr-only" id="p-photo" name="licensePhoto" type="file" accept="image/jpeg,image/png,image/webp" data-max-mb="5" required data-msg-required="Upload a photo of your driving license.">
+                </label>
               </div>
               <div class="field">
                 <label class="label" for="p-expiry">Expiry date</label>

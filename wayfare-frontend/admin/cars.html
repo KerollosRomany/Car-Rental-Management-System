@@ -81,13 +81,12 @@
               <option value="maintenance">Maintenance</option>
             </select></div>
 
-          <div class="field span-2">
-            <span class="label">Photo</span>
-            <label class="dropzone" id="dz" for="c-photo">
-              <span class="dz-preview" id="dz-preview" role="img" aria-label="Photo preview" hidden></span>
-              <span class="dz-empty" id="dz-empty"><i class="ph ph-upload-simple" aria-hidden="true"></i><strong>Drop a photo here or browse</strong><span>JPG or PNG. Landscape photos look best.</span></span>
-              <input class="sr-only" id="c-photo" type="file" accept="image/*">
-            </label>
+          <div class="field span-2" id="photos-field">
+            <span class="label" id="photos-label">Photos</span>
+            <div class="photo-grid" id="photo-grid" role="group" aria-labelledby="photos-label"></div>
+            <input class="sr-only" id="c-photos" type="file" accept="image/jpeg,image/png,image/webp" multiple tabindex="-1">
+            <p class="hint">Add up to 8 photos at once. The first is the main photo on listings; use the star to change it. JPG, PNG or WebP, up to 5 MB each.</p>
+            <p class="error-msg" id="photos-error">Add at least one photo of the car.</p>
           </div>
 
           <div class="field span-2"><label class="label" for="c-desc">Description</label><textarea class="textarea" id="c-desc" name="description" rows="3" placeholder="Two sentences about what makes this car a good pick."></textarea></div>

@@ -49,7 +49,7 @@
           "reject-dialog",
           `
           <div class="dialog-head">
-            <div><h3>Reject request ${esc(r.id)}?</h3><p>${esc(r.customer.name)} asked for the ${esc(carName(r))} from ${fmt.range(r.pickupDate, r.returnDate)}. They will see your reason.</p></div>
+            <div><h3>Reject request ${esc(r.id)}?</h3><p>${esc(r.customer.name)} asked for the ${esc(carName(r))} from ${fmt.range(r.pickupDate, r.returnDate)}. They will see your reason and get the full ${fmt.money(r.paidAmount)} back.</p></div>
             <button class="icon-btn" type="button" data-close aria-label="Close">${icon("x")}</button>
           </div>
           <div class="dialog-body stack" style="--stack-gap:16px">
@@ -91,7 +91,8 @@
     async pickup(r) {
       const ok = await App.confirm({
         title: "Hand over the keys?",
-        body: `Check the driving license first: ${r.customer.licenseNumber}, valid until ${fmt.date(r.customer.licenseExpiry)}. The ${carName(r)} will be marked as rented.`,
+        body: `Compare ${first(r)}'s physical driving license with the photo on file. It must be valid until ${fmt.date(r.returnDate)}; it expires ${fmt.date(r.customer.licenseExpiry)}. The ${carName(r)} will be marked as rented.`,
+        details: App.licensePhoto(r.customer, "lg"),
         confirmLabel: "Hand over keys",
         cancelLabel: "Not yet",
       });
@@ -112,26 +113,15 @@
             <button class="icon-btn" type="button" data-close aria-label="Close">${icon("x")}</button>
           </div>
           <div class="dialog-body stack" style="--stack-gap:18px">
-            ${overdue > 0 ? `<div class="notice is-warn">${icon("warning")}<div>This rental is ${fmt.plural(overdue, "day")} overdue. Add a late fee under extra charges if it applies.</div></div>` : ""}
+            ${overdue > 0 ? `<div class="notice is-warn">${icon("warning")}<div>This rental is ${fmt.plural(overdue, "day")} overdue. Write it in the notes.</div></div>` : ""}
             <div class="form-grid">
-              <div class="field">
-                <label class="label" for="rt-date">Returned on</label>
-                <input class="input" id="rt-date" type="date" value="${DB.today}" max="${DB.today}">
-              </div>
-              <div class="field">
-                <label class="label" for="rt-cond">Condition</label>
-                <select class="select" id="rt-cond">
-                  <option>Good</option><option>Needs cleaning</option><option>Minor scratch</option><option>Damage to report</option>
-                </select>
-              </div>
               <div class="field span-2">
-                <label class="label" for="rt-extra">Extra charges (USD)</label>
-                <input class="input" id="rt-extra" type="number" min="0" step="1" value="0" inputmode="numeric">
-                <p class="hint">Late fees, cleaning or damage. Added to the rental total of ${fmt.money(r.total)}.</p>
+                <label class="label" for="rt-date">Returned on</label>
+                <input class="input" id="rt-date" type="date" value="${DB.today}" min="${r.pickedUpAt || r.pickupDate}" max="${DB.today}">
               </div>
               <div class="field span-2">
                 <label class="label" for="rt-notes">Notes <span class="muted">(optional)</span></label>
-                <textarea class="textarea" id="rt-notes" rows="2"></textarea>
+                <textarea class="textarea" id="rt-notes" rows="3" placeholder="Condition, fuel level, anything to fix before the next rental."></textarea>
               </div>
             </div>
           </div>
@@ -144,12 +134,7 @@
         $("#rt-confirm", d).onclick = async (e) => {
           const date = $("#rt-date", d).value || DB.today;
           App.setLoading(e.currentTarget, true);
-          await Api.setRentalStatus(r.id, "completed", {
-            returnedAt: date,
-            condition: $("#rt-cond", d).value,
-            extraCharge: Number($("#rt-extra", d).value) || 0,
-            notes: $("#rt-notes", d).value.trim(),
-          });
+          await Api.setRentalStatus(r.id, "completed", { returnedAt: date, notes: $("#rt-notes", d).value.trim() });
           changed = true;
           d.close();
           App.toast(`Return recorded. ${carName(r)} is available again.`);

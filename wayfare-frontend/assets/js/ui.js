@@ -123,7 +123,8 @@
     }
   });
 
-  App.confirm = ({ title, body, confirmLabel = "Confirm", cancelLabel = "Cancel", danger = false }) =>
+  // `details` is optional trusted markup (build it with App.esc) shown under the body.
+  App.confirm = ({ title, body, details = "", confirmLabel = "Confirm", cancelLabel = "Cancel", danger = false }) =>
     new Promise((resolve) => {
       let dlg = $("#confirm-dialog");
       if (!dlg) {
@@ -135,6 +136,7 @@
       }
       dlg.innerHTML = `
         <div class="dialog-head"><div><h3>${App.esc(title)}</h3><p>${App.esc(body)}</p></div></div>
+        ${details ? `<div class="dialog-body" style="padding-top:0">${details}</div>` : ""}
         <div class="dialog-foot" style="margin-top:16px">
           <button class="btn btn-secondary" type="button" data-act="no">${App.esc(cancelLabel)}</button>
           <button class="btn ${danger ? "btn-danger-solid" : "btn-dark"}" type="button" data-act="yes">${App.esc(confirmLabel)}</button>
@@ -186,6 +188,16 @@
 
     if (control.type === "checkbox") {
       return control.required && !control.checked ? control.dataset.msg || "Tick this box to continue." : "";
+    }
+    if (control.type === "file") {
+      const file = control.files && control.files[0];
+      const kept = control.closest(".upload") && control.closest(".upload").classList.contains("has-file");
+      if (control.required && !file && !kept) return control.dataset.msgRequired || `${label} is required.`;
+      if (!file) return "";
+      if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return "Choose a JPG, PNG or WebP image.";
+      const maxMb = Number(control.dataset.maxMb) || 5;
+      if (file.size > maxMb * 1024 * 1024) return `Choose an image under ${maxMb} MB.`;
+      return "";
     }
     if (control.required && !value) return control.dataset.msgRequired || `${label} is required.`;
     if (!value) return "";
@@ -248,6 +260,43 @@
     input.type = show ? "text" : "password";
     t.innerHTML = App.icon(show ? "eye-slash" : "eye");
     t.setAttribute("aria-label", show ? "Hide password" : "Show password");
+  });
+
+  /* ---------- Single image upload (.upload) ----------
+     A label holding a thumbnail, a title, a hint and a hidden file input.
+     App.setUpload(box, src) shows a photo that is already saved, so the input
+     can stay empty when the person keeps it. */
+  App.setUpload = (box, src, title) => {
+    const img = $(".upload-thumb img", box);
+    const t = $("[data-upload-title]", box);
+    box.classList.toggle("has-file", Boolean(src));
+    if (img) img.src = src || "";
+    if (t) {
+      if (!t.dataset.empty) t.dataset.empty = t.textContent;
+      t.textContent = src ? title || "Current photo" : t.dataset.empty;
+    }
+  };
+
+  App.readImage = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+  document.addEventListener("change", async (e) => {
+    const input = e.target;
+    const box = input instanceof HTMLInputElement && input.type === "file" ? input.closest(".upload") : null;
+    if (!box || !input.files || !input.files[0]) return;
+    const field = input.closest(".field");
+    const message = checkControl(input, input.form);
+    if (field) setError(field, input, message);
+    if (message) {
+      input.value = "";
+      return;
+    }
+    App.setUpload(box, await App.readImage(input.files[0]), input.files[0].name);
   });
 
   App.setLoading = (btn, loading) => {
@@ -365,7 +414,7 @@
                 <li><a href="${l("cars.html")}">All cars</a></li>
                 <li><a href="${l("cars.html?category=SUV")}">SUVs</a></li>
                 <li><a href="${l("cars.html?category=Luxury")}">Luxury</a></li>
-                <li><a href="${l("cars.html?category=Electric")}">Electric</a></li>
+                <li><a href="${l("cars.html?category=Van")}">Vans</a></li>
               </ul>
             </div>
             <div>
@@ -414,7 +463,7 @@
         ${link("admin/customers.html", "customers", "users-three", "Customers")}
       </nav>
       <div class="side-foot">
-        <a class="side-link" href="${l("index.html")}">${App.icon("arrow-up-right")}View customer site</a>
+        ${link("admin/profile.html", "profile", "user-circle", "My profile")}
         <a class="side-link" href="${l("admin/login.html")}">${App.icon("sign-out")}Log out</a>
       </div>`;
   }
@@ -433,7 +482,7 @@
         </button>
         <div class="menu" role="menu" hidden>
           <div class="menu-head"><strong>${App.esc(user.name)}</strong><span>${App.esc(user.role)}</span></div>
-          <a role="menuitem" href="${l("index.html")}">${App.icon("arrow-up-right")}View customer site</a>
+          <a role="menuitem" href="${l("admin/profile.html")}">${App.icon("user-circle")}My profile</a>
           <a role="menuitem" class="danger" href="${l("admin/login.html")}">${App.icon("sign-out")}Log out</a>
         </div>
       </div>`;
