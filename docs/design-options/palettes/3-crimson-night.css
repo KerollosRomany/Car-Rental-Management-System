@@ -1,0 +1,36 @@
+/* Crimson Night: Aubergine and crimson */
+:root {
+  --obs-950: #0c0407;
+  --obs-900: #14080d;
+  --obs-850: #1b0d13;
+  --obs-800: #24131b;
+  --obs-700: #321c27;
+  --obs-600: #432734;
+  --obs-500: #5a3646;
+  --obs-400: #8b6575;
+  --obs-300: #b08d9b;
+  --obs-200: #d0b8c2;
+  --obs-100: #eddfe5;
+  --pearl: #faf0f2;
+  --cognac-300: #ff9db0;
+  --cognac-400: #f2607a;
+  --cognac-500: #dd2f4e;
+  --cognac-600: #bf2341;
+  --cognac-700: #8f1a31;
+  --accent: #dd2f4e; --accent-hover: #e8445f; --accent-press: #c92846;
+  --accent-ink: #ffffff; --accent-text: #ff8aa0;
+  --accent-soft: rgba(221, 47, 78, 0.16); --accent-line: rgba(221, 47, 78, 0.5);
+  --focus: #f2607a; --ring: 0 0 0 3px rgba(221, 47, 78, 0.3);
+  --live-bg: rgba(221, 47, 78, 0.16); --live-text: #ff8aa0;
+  --chart-1: #bf2341; --chart-1-hover: #8f1a31;
+  --stitch: repeating-linear-gradient(90deg, #dd2f4e 0 7px, transparent 7px 13px);
+}
+.theme-light {
+  --bg: #f8f3f4; --bg-deep: #0c0407; --surface: #ffffff; --surface-2: #f1e9ec; --surface-3: #e8dce1;
+  --line: #e9dfe3; --line-strong: #d3c1c9; --text: #1d0a11; --text-2: #50313c; --text-3: #745663; --field: #ffffff;
+  --accent: #c9253f; --accent-hover: #d83a53; --accent-press: #b01f37; --accent-ink: #ffffff; --accent-text: #a31c34;
+  --accent-soft: rgba(201, 37, 63, 0.12); --accent-line: rgba(201, 37, 63, 0.5); --inverse-bg: #14080d; --inverse-text: #faf0f2; --inverse-hover: #321c27;
+  --focus: #a31c34; --scrim: rgba(12, 4, 7, 0.55); --live-bg: rgba(201, 37, 63, 0.14); --live-text: #a31c34;
+  --neutral-bg: #e8dce1; --neutral-text: #50313c; --ring: 0 0 0 3px rgba(201, 37, 63, 0.28);
+  --shadow-sm: 0 1px 2px rgba(20, 8, 13, 0.08); --shadow-md: 0 12px 30px rgba(20, 8, 13, 0.14); --shadow-lg: 0 28px 60px rgba(20, 8, 13, 0.24);
+}

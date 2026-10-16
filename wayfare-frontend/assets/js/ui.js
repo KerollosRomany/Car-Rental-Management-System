@@ -123,7 +123,8 @@
     }
   });
 
-  App.confirm = ({ title, body, confirmLabel = "Confirm", cancelLabel = "Cancel", danger = false }) =>
+  // `details` is optional trusted markup (build it with App.esc) shown under the body.
+  App.confirm = ({ title, body, details = "", confirmLabel = "Confirm", cancelLabel = "Cancel", danger = false }) =>
     new Promise((resolve) => {
       let dlg = $("#confirm-dialog");
       if (!dlg) {
@@ -135,6 +136,7 @@
       }
       dlg.innerHTML = `
         <div class="dialog-head"><div><h3>${App.esc(title)}</h3><p>${App.esc(body)}</p></div></div>
+        ${details ? `<div class="dialog-body" style="padding-top:0">${details}</div>` : ""}
         <div class="dialog-foot" style="margin-top:16px">
           <button class="btn btn-secondary" type="button" data-act="no">${App.esc(cancelLabel)}</button>
           <button class="btn ${danger ? "btn-danger-solid" : "btn-dark"}" type="button" data-act="yes">${App.esc(confirmLabel)}</button>
@@ -186,6 +188,16 @@
 
     if (control.type === "checkbox") {
       return control.required && !control.checked ? control.dataset.msg || "Tick this box to continue." : "";
+    }
+    if (control.type === "file") {
+      const file = control.files && control.files[0];
+      const kept = control.closest(".upload") && control.closest(".upload").classList.contains("has-file");
+      if (control.required && !file && !kept) return control.dataset.msgRequired || `${label} is required.`;
+      if (!file) return "";
+      if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return "Choose a JPG, PNG or WebP image.";
+      const maxMb = Number(control.dataset.maxMb) || 5;
+      if (file.size > maxMb * 1024 * 1024) return `Choose an image under ${maxMb} MB.`;
+      return "";
     }
     if (control.required && !value) return control.dataset.msgRequired || `${label} is required.`;
     if (!value) return "";
@@ -250,6 +262,43 @@
     t.setAttribute("aria-label", show ? "Hide password" : "Show password");
   });
 
+  /* ---------- Single image upload (.upload) ----------
+     A label holding a thumbnail, a title, a hint and a hidden file input.
+     App.setUpload(box, src) shows a photo that is already saved, so the input
+     can stay empty when the person keeps it. */
+  App.setUpload = (box, src, title) => {
+    const img = $(".upload-thumb img", box);
+    const t = $("[data-upload-title]", box);
+    box.classList.toggle("has-file", Boolean(src));
+    if (img) img.src = src || "";
+    if (t) {
+      if (!t.dataset.empty) t.dataset.empty = t.textContent;
+      t.textContent = src ? title || "Current photo" : t.dataset.empty;
+    }
+  };
+
+  App.readImage = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+  document.addEventListener("change", async (e) => {
+    const input = e.target;
+    const box = input instanceof HTMLInputElement && input.type === "file" ? input.closest(".upload") : null;
+    if (!box || !input.files || !input.files[0]) return;
+    const field = input.closest(".field");
+    const message = checkControl(input, input.form);
+    if (field) setError(field, input, message);
+    if (message) {
+      input.value = "";
+      return;
+    }
+    App.setUpload(box, await App.readImage(input.files[0]), input.files[0].name);
+  });
+
   App.setLoading = (btn, loading) => {
     btn.classList.toggle("is-loading", loading);
     btn.disabled = loading;
@@ -299,11 +348,13 @@
   /* ---------- Layout ---------- */
   const l = (href) => App.base + href;
 
-  const brand = (href) => `
-    <a class="brand" href="${href}" aria-label="${App.brand} home">
-      <img class="brand-mark" src="${l("assets/img/logo-mark.svg")}" alt="" width="36" height="36">
-      <span class="brand-word">${App.brand}</span>
-    </a>`;
+  // The Wayfare plate. Its colours come from the CSS tokens (see .logo-plate in layout.css).
+  App.logo = `<svg class="logo-plate" viewBox="0 0 245.2 52" fill="none" role="img" aria-label="Wayfare"><rect class="lp-rim" x="1.5" y="1.5" width="242.2" height="49" rx="9" stroke-width="3"/><path class="lp-band" d="M10.5 1.5 H41.5 V50.5 H10.5 A9.0 9.0 0 0 1 1.5 41.5 V10.5 A9.0 9.0 0 0 1 10.5 1.5 Z"/><path class="lp-w" d="M13.8 17.4 L16.8 27.6 L16.9 34.6 L15.0 34.6 L9.8 17.4Z M16.8 27.6 L19.5 17.4 L21.5 17.4 L21.5 24.8 L18.9 34.6 L16.9 34.6Z M23.5 17.4 L26.2 27.6 L26.1 34.6 L24.1 34.6 L21.5 24.8 L21.5 17.4Z M26.2 27.6 L29.2 17.4 L33.2 17.4 L28.0 34.6 L26.1 34.6Z"/><path class="lp-text" d="M59.6 16.0 L63.2 27.9 L63.3 36.0 L61.0 36.0 L55.0 16.0Z M63.2 27.9 L66.3 16.0 L68.6 16.0 L68.6 24.6 L65.6 36.0 L63.3 36.0Z M70.9 16.0 L74.0 27.9 L73.9 36.0 L71.6 36.0 L68.6 24.6 L68.6 16.0Z M74.0 27.9 L77.6 16.0 L82.2 16.0 L76.2 36.0 L73.9 36.0Z M84.2 36.0 L95.2 16.0 L97.7 16.0 L97.7 20.6 L89.2 36.0Z M100.2 16.0 L111.2 36.0 L106.2 36.0 L97.7 20.6 L97.7 16.0Z M89.1 28.4 L106.3 28.4 L106.3 32.8 L89.1 32.8Z M118.2 16.0 L127.5 26.8 L123.1 28.4 L112.4 16.0Z M127.5 26.8 L127.5 36.0 L123.1 36.0 L123.1 28.4Z M138.2 16.0 L124.9 31.5 L121.6 28.6 L132.4 16.0Z M143.0 16.0 L147.4 16.0 L147.4 36.0 L143.0 36.0Z M143.0 16.0 L158.4 16.0 L158.4 20.4 L143.0 20.4Z M143.0 24.6 L155.6 24.6 L155.6 29.0 L143.0 29.0Z M161.0 36.0 L172.0 16.0 L174.5 16.0 L174.5 20.6 L166.0 36.0Z M177.0 16.0 L188.0 36.0 L183.0 36.0 L174.5 20.6 L174.5 16.0Z M165.9 28.4 L183.1 28.4 L183.1 32.8 L165.9 32.8Z M192.6 16.0 L197.0 16.0 L197.0 36.0 L192.6 36.0Z M192.6 16.0 L203.0 16.0 L203.0 20.4 L192.6 20.4Z M192.6 26.8 L203.0 26.8 L203.0 31.2 L192.6 31.2Z M203.0 16.0 L204.0 16.1 L205.0 16.3 L206.0 16.6 L206.8 17.0 L207.7 17.6 L208.4 18.2 L209.1 19.0 L209.6 19.8 L210.1 20.7 L210.4 21.6 L210.6 22.6 L210.6 23.6 L210.6 24.6 L210.4 25.6 L210.1 26.5 L209.6 27.4 L209.1 28.2 L208.4 29.0 L207.7 29.6 L206.8 30.2 L206.0 30.6 L205.0 30.9 L204.0 31.1 L203.0 31.2 L203.0 26.8 L203.5 26.8 L203.9 26.7 L204.3 26.6 L204.6 26.4 L205.0 26.1 L205.3 25.9 L205.6 25.5 L205.8 25.2 L206.0 24.8 L206.1 24.4 L206.2 24.0 L206.2 23.6 L206.2 23.2 L206.1 22.8 L206.0 22.4 L205.8 22.0 L205.6 21.7 L205.3 21.3 L205.0 21.1 L204.6 20.8 L204.3 20.6 L203.9 20.5 L203.5 20.4 L203.0 20.4Z M203.0 27.2 L210.6 36.0 L204.8 36.0 L199.7 30.1Z M214.8 16.0 L219.2 16.0 L219.2 36.0 L214.8 36.0Z M214.8 16.0 L230.2 16.0 L230.2 20.4 L214.8 20.4Z M214.8 24.6 L227.6 24.6 L227.6 29.0 L214.8 29.0Z M214.8 31.6 L230.2 31.6 L230.2 36.0 L214.8 36.0Z"/></svg>`;
+
+  const brand = (href) => `<a class="brand" href="${href}" aria-label="${App.brand} home">${App.logo}</a>`;
+
+  // Static pages (sign in, register) mark where the plate goes with <span data-logo></span>
+  const fillLogos = () => document.querySelectorAll("[data-logo]").forEach((el) => { el.outerHTML = App.logo; });
 
   function userMenu(user) {
     return `
@@ -365,7 +416,7 @@
                 <li><a href="${l("cars.html")}">All cars</a></li>
                 <li><a href="${l("cars.html?category=SUV")}">SUVs</a></li>
                 <li><a href="${l("cars.html?category=Luxury")}">Luxury</a></li>
-                <li><a href="${l("cars.html?category=Electric")}">Electric</a></li>
+                <li><a href="${l("cars.html?category=Van")}">Vans</a></li>
               </ul>
             </div>
             <div>
@@ -414,7 +465,7 @@
         ${link("admin/customers.html", "customers", "users-three", "Customers")}
       </nav>
       <div class="side-foot">
-        <a class="side-link" href="${l("index.html")}">${App.icon("arrow-up-right")}View customer site</a>
+        ${link("admin/profile.html", "profile", "user-circle", "My profile")}
         <a class="side-link" href="${l("admin/login.html")}">${App.icon("sign-out")}Log out</a>
       </div>`;
   }
@@ -433,7 +484,7 @@
         </button>
         <div class="menu" role="menu" hidden>
           <div class="menu-head"><strong>${App.esc(user.name)}</strong><span>${App.esc(user.role)}</span></div>
-          <a role="menuitem" href="${l("index.html")}">${App.icon("arrow-up-right")}View customer site</a>
+          <a role="menuitem" href="${l("admin/profile.html")}">${App.icon("user-circle")}My profile</a>
           <a role="menuitem" class="danger" href="${l("admin/login.html")}">${App.icon("sign-out")}Log out</a>
         </div>
       </div>`;
@@ -497,5 +548,6 @@
     else fn();
   };
 
+  App.ready(fillLogos);
   mountLayout();
 })();

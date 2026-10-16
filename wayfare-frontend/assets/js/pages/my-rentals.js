@@ -11,7 +11,7 @@ App.ready(async () => {
     { key: "upcoming", label: "Upcoming", match: (r) => r.status === "approved" },
     { key: "active", label: "Active", match: (r) => r.status === "active" },
     { key: "past", label: "Past", match: (r) => r.status === "completed" },
-    { key: "closed", label: "Closed", match: (r) => r.status === "rejected" || r.status === "cancelled" },
+    { key: "closed", label: "Closed", match: (r) => ["rejected", "cancelled", "refused"].includes(r.status) },
   ];
   const EMPTY = {
     all: ["You have no rentals yet", "Pick a car and your dates to send your first request.", { label: "Browse cars", href: "cars.html" }],
@@ -22,7 +22,7 @@ App.ready(async () => {
     closed: ["Nothing here", "Rejected and cancelled requests are listed here."],
   };
 
-  const order = { active: 0, pending: 1, approved: 2, completed: 3, rejected: 4, cancelled: 5 };
+  const order = { active: 0, pending: 1, approved: 2, completed: 3, rejected: 4, cancelled: 5, refused: 6 };
   let rentals = [];
   let tab = "all";
 
@@ -149,22 +149,28 @@ App.ready(async () => {
         variant: "btn-danger",
         icon: "x-circle",
         onClick: async (close) => {
+          // Approved bookings cost 10% to cancel; the server decides the final amounts.
+          const quote = Api.cancelQuote(r);
+          const details = quote.lateCancel
+            ? `<div class="notice is-warn">${icon("warning")}<div><strong>10% of the amount will be charged.</strong> This booking is already approved, so we keep ${fmt.money2(quote.fee)} and refund the other ${fmt.money2(quote.refund)} of the ${fmt.money2(r.paidAmount)} you paid.</div></div>`
+            : `<div class="notice">${icon("arrow-counter-clockwise")}<div>It is not approved yet, so you get the full ${fmt.money2(quote.refund)} back.</div></div>`;
           const ok = await App.confirm({
-            title: r.status === "pending" ? "Cancel this request?" : "Cancel this booking?",
+            title: quote.lateCancel ? "Cancel this booking?" : "Cancel this request?",
             body: `${r.car.brand} ${r.car.model}, ${fmt.range(r.pickupDate, r.returnDate)}. The car will be free for other customers.`,
-            confirmLabel: "Cancel rental",
+            details,
+            confirmLabel: quote.lateCancel ? `Cancel and refund ${fmt.money2(quote.refund)}` : "Cancel rental",
             cancelLabel: "Keep it",
             danger: true,
           });
           if (!ok) return;
-          await Api.setRentalStatus(r.id, "cancelled");
+          await Api.cancelRental(r.id);
           close();
-          App.toast("Rental cancelled.");
+          App.toast(quote.lateCancel ? `Booking cancelled. ${fmt.money2(quote.refund)} is on its way back.` : "Request cancelled. You get the full amount back.");
           load();
         },
       });
     }
-    if (r.status === "completed" || r.status === "rejected" || r.status === "cancelled") {
+    if (["completed", "rejected", "cancelled", "refused"].includes(r.status)) {
       actions.push({
         label: "Rent this car again",
         variant: "btn-dark",

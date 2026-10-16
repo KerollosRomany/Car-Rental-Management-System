@@ -6,23 +6,32 @@
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
   color: var(--text);
 }
 
-.brand-mark {
-  width: 36px;
-  height: 36px;
+/* The Wayfare plate. It reads its colours from the tokens, so one SVG works on light and dark panels. */
+.logo-plate {
+  display: block;
+  width: auto;
+  height: 34px;
+  overflow: visible;
 }
 
-.brand-word {
-  font-family: var(--font-display);
-  font-stretch: 125%;
-  font-weight: 600;
-  font-size: 0.8125rem;
-  line-height: 1;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
+.logo-plate .lp-rim {
+  fill: var(--logo-fill);
+  stroke: currentColor;
+}
+
+.logo-plate .lp-band {
+  fill: var(--logo-band);
+}
+
+.logo-plate .lp-w {
+  fill: var(--logo-band-ink);
+}
+
+.logo-plate .lp-text {
+  fill: currentColor;
 }
 
 /* ---------- Public header ---------- */
@@ -30,7 +39,7 @@
   position: sticky;
   top: 0;
   z-index: var(--z-header);
-  background: rgba(15, 18, 21, 0.86);
+  background: var(--header-bg);
   backdrop-filter: saturate(1.2) blur(16px);
   -webkit-backdrop-filter: saturate(1.2) blur(16px);
   border-bottom: 1px solid var(--line);
@@ -286,7 +295,7 @@
   justify-content: space-between;
   gap: 32px;
   padding: clamp(28px, 4vw, 52px);
-  background-color: var(--obs-950);
+  background-color: var(--ink-950);
   background-size: cover;
   background-position: center;
   color: var(--on-photo);
@@ -298,7 +307,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(180deg, rgba(8, 10, 12, 0.7) 0%, rgba(8, 10, 12, 0.15) 38%, rgba(8, 10, 12, 0.92) 100%);
+  background: linear-gradient(180deg, rgba(var(--shade-1), 0.7) 0%, rgba(var(--shade-1), 0.15) 38%, rgba(var(--shade-1), 0.92) 100%);
 }
 
 /* Copy sits under the logo, for photos whose subject is low in the frame */
@@ -312,7 +321,7 @@
 }
 
 .auth-visual.is-top::before {
-  background: linear-gradient(180deg, rgba(8, 10, 12, 0.85) 0%, rgba(8, 10, 12, 0.55) 40%, rgba(8, 10, 12, 0.08) 64%, rgba(8, 10, 12, 0.8) 100%);
+  background: linear-gradient(180deg, rgba(var(--shade-1), 0.85) 0%, rgba(var(--shade-1), 0.55) 40%, rgba(var(--shade-1), 0.08) 64%, rgba(var(--shade-1), 0.8) 100%);
 }
 
 .auth-visual .brand {
@@ -329,7 +338,7 @@
 
 .auth-visual h1 em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .auth-visual p {
@@ -359,7 +368,7 @@
 
 .perk-list i {
   font-size: 22px;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .auth-panel {
@@ -431,14 +440,7 @@
 }
 
 .sidebar {
-  /* The sidebar stays obsidian even though the console is light */
-  --text: var(--pearl);
-  --text-2: var(--obs-200);
-  --text-3: var(--obs-300);
-  --line: var(--obs-600);
-  --accent: var(--cognac-500);
-  --accent-ink: #1a1108;
-  --accent-text: #e3a56a;
+  /* The sidebar stays dark navy even though the console is light (see tokens.css) */
   position: sticky;
   top: 0;
   z-index: var(--z-sidebar);
@@ -449,13 +451,13 @@
   padding: 24px 14px 16px;
   overflow-y: auto;
   background: var(--bg-deep);
-  border-right: 1px solid var(--obs-700);
-  color: var(--obs-200);
+  border-right: 1px solid var(--ink-700);
+  color: var(--ink-200);
 }
 
 .sidebar .brand {
   padding: 4px 10px 0;
-  color: var(--pearl);
+  color: var(--cloud);
 }
 
 .side-tag {
@@ -463,7 +465,7 @@
   font: 600 0.625rem/1 var(--font-body);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--obs-300);
+  color: var(--ink-300);
 }
 
 .side-label {
@@ -471,7 +473,7 @@
   font: 600 0.625rem/1 var(--font-body);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--obs-400);
+  color: var(--ink-400);
 }
 
 .side-nav {
@@ -491,29 +493,29 @@
   background: none;
   font: 500 0.9375rem/1 var(--font-body);
   text-align: left;
-  color: var(--obs-200);
+  color: var(--ink-200);
   transition: background-color var(--dur-1), color var(--dur-1);
 }
 
 .side-link i {
   font-size: 20px;
-  color: var(--obs-300);
+  color: var(--ink-300);
   transition: color var(--dur-1);
 }
 
 .side-link:hover {
   background: rgba(255, 255, 255, 0.05);
-  color: var(--pearl);
+  color: var(--cloud);
 }
 
 .side-link[aria-current="page"] {
   background: rgba(255, 255, 255, 0.07);
-  color: var(--pearl);
+  color: var(--cloud);
   font-weight: 600;
 }
 
 .side-link[aria-current="page"] i {
-  color: var(--cognac-500);
+  color: var(--cobalt-500);
 }
 
 .side-link[aria-current="page"]::before {
@@ -523,7 +525,7 @@
   top: 8px;
   bottom: 8px;
   width: 3px;
-  background: var(--cognac-500);
+  background: var(--cobalt-500);
 }
 
 .side-link .count-badge {
@@ -535,7 +537,7 @@
   display: grid;
   gap: 2px;
   padding-top: 16px;
-  border-top: 1px solid var(--obs-700);
+  border-top: 1px solid var(--ink-700);
 }
 
 .admin-main {

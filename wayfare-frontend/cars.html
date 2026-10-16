@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cars | Wayfare</title>
   <meta name="description" content="Browse every car in the Wayfare fleet and filter by type, price, seats and fuel.">
-  <link rel="icon" href="assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/logo-icon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
@@ -14,14 +14,14 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
   <link rel="stylesheet" href="assets/css/app.css">
 </head>
-<body data-layout="site" data-page="cars">
+<body class="theme-light" data-layout="site" data-page="cars">
   <div id="site-header"></div>
 
   <main id="main" class="container page-pad">
     <div class="page-head">
       <div>
         <h1>Available cars</h1>
-        <p id="result-summary">Pick your dates to see what is free.</p>
+        <p id="result-summary">Pick your dates to see what is free for them.</p>
       </div>
       <div class="row">
         <button class="btn btn-secondary filters-open" type="button" data-filters-open><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Filters</button>
@@ -53,8 +53,6 @@
         </div>
       </div>
       <button class="btn btn-ghost" type="button" id="clear-dates" hidden>Clear dates</button>
-      <span class="spacer"></span>
-      <label class="check plan-switch"><input class="switch" type="checkbox" id="f-available" role="switch"><span>Show available only</span></label>
     </div>
 
     <div class="listing">

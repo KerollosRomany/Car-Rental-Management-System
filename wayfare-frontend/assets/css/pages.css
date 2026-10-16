@@ -60,7 +60,7 @@
   position: absolute;
   inset: auto 0 0 0;
   height: 38%;
-  background: linear-gradient(180deg, transparent, rgba(10, 12, 14, 0.5));
+  background: linear-gradient(180deg, transparent, rgba(var(--shade-2), 0.5));
   pointer-events: none;
 }
 
@@ -79,7 +79,7 @@
   z-index: 1;
   padding: 7px 10px 6px;
   border-radius: var(--r-md);
-  background: rgba(10, 12, 14, 0.82);
+  background: rgba(var(--shade-2), 0.82);
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: #fff;
   font: 600 0.65625rem/1.2 var(--font-body);
@@ -190,7 +190,7 @@
   flex-direction: column;
   /* Tall enough to feel cinematic, short enough that the search console stays above the fold */
   min-height: clamp(560px, calc(100dvh - var(--header-h) - 64px), 780px);
-  background: var(--obs-950) var(--hero-img) center 58% / cover no-repeat;
+  background: var(--ink-950) var(--hero-img) center 58% / cover no-repeat;
   color: var(--on-photo);
 }
 
@@ -199,8 +199,8 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(90deg, rgba(8, 10, 12, 0.9) 0%, rgba(8, 10, 12, 0.55) 46%, rgba(8, 10, 12, 0.1) 100%),
-    linear-gradient(180deg, rgba(8, 10, 12, 0.35) 0%, rgba(8, 10, 12, 0) 36%, rgba(8, 10, 12, 0.88) 100%);
+  background: linear-gradient(90deg, rgba(var(--shade-1), 0.9) 0%, rgba(var(--shade-1), 0.55) 46%, rgba(var(--shade-1), 0.1) 100%),
+    linear-gradient(180deg, rgba(var(--shade-1), 0.35) 0%, rgba(var(--shade-1), 0) 36%, rgba(var(--shade-1), 0.88) 100%);
 }
 
 .hero-inner {
@@ -227,7 +227,7 @@
 
 .hero-copy h1 em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .hero-copy p {
@@ -275,7 +275,7 @@
   padding: 8px;
   border: 1px solid var(--line-strong);
   border-radius: var(--r-lg);
-  background: rgba(19, 23, 26, 0.94);
+  background: var(--search-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: var(--shadow-lg);
@@ -409,7 +409,7 @@
   }
 
   .hero::before {
-    background: linear-gradient(180deg, rgba(8, 10, 12, 0.86) 0%, rgba(8, 10, 12, 0.6) 52%, rgba(8, 10, 12, 0.92) 100%);
+    background: linear-gradient(180deg, rgba(var(--shade-1), 0.86) 0%, rgba(var(--shade-1), 0.6) 52%, rgba(var(--shade-1), 0.92) 100%);
   }
 
   .search-card {
@@ -593,7 +593,7 @@
   padding: clamp(40px, 7vw, 96px);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  background: var(--obs-950) var(--cta-img) center / cover no-repeat;
+  background: var(--ink-950) var(--cta-img) center / cover no-repeat;
   color: #fff;
 }
 
@@ -602,7 +602,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(90deg, rgba(8, 10, 12, 0.92) 0%, rgba(8, 10, 12, 0.6) 55%, rgba(8, 10, 12, 0.2) 100%);
+  background: linear-gradient(90deg, rgba(var(--shade-1), 0.92) 0%, rgba(var(--shade-1), 0.6) 55%, rgba(var(--shade-1), 0.2) 100%);
 }
 
 .cta-banner h2 {
@@ -1815,7 +1815,7 @@
   bottom: 12px;
   padding: 7px 12px;
   border-radius: var(--r-md);
-  background: rgba(10, 12, 14, 0.82);
+  background: rgba(var(--shade-2), 0.82);
   color: #fff;
   font: 600 0.75rem/1.2 var(--font-body);
 }
@@ -1846,4 +1846,124 @@
 .mini-row small {
   font-size: 0.8125rem;
   color: var(--text-3);
+}
+
+/* ---------- Car photos (staff add and edit car) ---------- */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.photo-tile {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+}
+
+.photo-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-tile.is-main {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.photo-badge {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  padding: 3px 7px 2px;
+  border-radius: var(--r-sm);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: 600 0.625rem/1.3 var(--font-body);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.photo-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 4px;
+}
+
+.photo-actions button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: rgba(var(--shade-2), 0.74);
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.photo-actions button:hover {
+  background: rgba(var(--shade-2), 0.92);
+}
+
+.photo-actions button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.photo-add {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 4px;
+  aspect-ratio: 4 / 3;
+  padding: 8px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  color: var(--text-3);
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--dur-1), background-color var(--dur-1);
+}
+
+.photo-add strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.photo-add i {
+  font-size: 22px;
+  color: var(--accent-text);
+}
+
+.photo-add:hover,
+.photo-grid.is-over .photo-add {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.photo-add:focus-within {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.field.has-error .photo-add {
+  border-color: var(--danger-line);
+}
+
+@media (max-width: 560px) {
+  .photo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
