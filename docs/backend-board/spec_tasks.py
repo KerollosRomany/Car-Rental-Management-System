@@ -17,13 +17,13 @@ def Pk(**k):
 # Six packages for six members. Each one is a set of related cards that one person can own.
 # The lists below are the starting split. The team can move cards between packages on the board.
 PACKAGES = [
-    Pk(id="a", letter="A", name="Foundation and sign in", level="Hard", tags=["Critical path", "Start first"],
+    Pk(id="a", letter="A", name="Foundation and sign in", level="Hard", tags=["Start first"],
        skills=["EF Core migration", "ASP.NET Core setup", "JWT and Identity", "Seeding data"],
        tasks=["t10", "t11", "t12", "t14", "t15", "t70", "t71"], pages=["login.html", "admin/login.html"],
        goal="The API runs and people can log in. The database has the right enums and fields and fills itself with roles, an admin, 12 cars and demo rentals. Everyone else tests against this.",
        why="One chain: fix the data, set up the API, add tokens, add the login endpoint, then the file everyone uses to test it. One person keeps the whole chain in their head.",
        first="Open Enums/CarEnums/Fuel.cs, rename Disel to Diesel, then search the solution for the other two typos (card F1). Tell the group chat when the migration is merged.",
-       tip="Critical path: the other packages need login and the seed data to test. Aim to finish login in about two days. To get the others testing sooner, move card F3 (seed data) to a member who is waiting."),
+       tip="Every other package needs login and the seed data to test, so this package decides when the rest can start. The Schedule tab shows the exact date. To get the others testing sooner, move card F3 (seed data) to a member who is waiting."),
     Pk(id="b", letter="B", name="Accounts and profiles", level="Medium", skills=["File upload", "Identity", "Update endpoints"],
        tasks=["t13", "t16", "t17", "t60", "t61", "t64"], pages=["register.html", "profile.html", "admin/profile.html"],
        goal="People sign up with a license photo, see and edit their profile and license, and change their password. Staff do the same for their own profile.",
@@ -102,6 +102,7 @@ T = []
 
 def task(**k):
     k.setdefault("base", "todo")
+    k.setdefault("test", False)
     k.setdefault("tier", "core")
     k.setdefault("endpoints", [])
     k.setdefault("trello", [])
@@ -309,6 +310,7 @@ _TEST_AFTER = {
 for _t in T:
     if _t["id"] in _TEST_AFTER:
         _t["depends"] = _TEST_AFTER[_t["id"]]
+        _t["test"] = True
         _t["notes"] = ["The owner of this card leads the test. Everyone who built an endpoint for it helps, and fixes the bugs found in their own endpoint."]
 
 # ---------------------------------------------------------------------------------------------
@@ -323,6 +325,10 @@ GLOSSARY = [
     ("JWT", "A signed text token. The login endpoint returns one and the front end sends it on every request."),
     ("Overlap", "Two rentals of the same car whose dates cross. The system must never allow it."),
     ("ProblemDetails", "The standard JSON shape of an error: a status, a title and a plain sentence in detail."),
+    ("Plan", "The dates this board works out. A package starts when the cards it needs are finished, and its owner builds one card at a time. Trello keeps the deadlines."),
+    ("Pace", "How many hours a day each member works on the project. The board owner picks it and every date follows from it."),
+    ("Critical path", "The chain of packages that decides the end date. If one of them slips a day, the whole project ends a day later."),
+    ("Room", "How many days a package can slip without moving the end date. A package with no room is on the critical path."),
 ]
 
 DECISIONS = [
