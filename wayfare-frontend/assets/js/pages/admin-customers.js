@@ -1,4 +1,4 @@
-/* Staff: customers. Search, license checks, history, add and edit. */
+/* Staff: customers. Search, license checks and rental history. Customers are added when they register. */
 App.ready(async () => {
   const { $, icon, fmt, esc } = App;
   const state = { q: "", license: "" };
@@ -27,7 +27,7 @@ App.ready(async () => {
     return customers.filter((c) => {
       const d = daysLeft(c);
       return (
-        (!q || `${c.name} ${c.email} ${c.phone} ${c.licenseNumber}`.toLowerCase().includes(q)) &&
+        (!q || `${c.name} ${c.email} ${c.phone}`.toLowerCase().includes(q)) &&
         (state.license !== "unchecked" || !c.licenseVerified) &&
         (state.license !== "expiring" || (d !== null && d <= 90))
       );
@@ -53,7 +53,7 @@ App.ready(async () => {
             <tr data-id="${esc(c.id)}" class="is-clickable">
               <td><div class="cell-main">${App.avatar(c.name)}<div><strong>${esc(c.name)}</strong><small>${esc(c.email)}</small></div></div></td>
               <td data-label="Phone" class="num">${esc(c.phone)}</td>
-              <td data-label="Driving license"><span class="mono">${esc(c.licenseNumber)}</span><small class="muted" style="display:block">${c.licenseExpiry ? "Valid until " + fmt.date(c.licenseExpiry) : "No expiry added"}</small></td>
+              <td data-label="Driving license"><div class="cell-main">${App.licensePhoto(c, "xs")}<small class="muted">${c.licenseExpiry ? "Valid until " + fmt.date(c.licenseExpiry) : "No expiry added"}</small></div></td>
               <td data-label="License status">${licenseBadge(c)}</td>
               <td data-label="Rentals" class="num" style="text-align:right;font-weight:600">${c.rentalCount}</td>
               <td data-label="Joined" class="muted">${fmt.date(c.joined)}</td>
@@ -101,14 +101,14 @@ App.ready(async () => {
 
         <div>
           <h4 style="margin-bottom:12px">Driving license</h4>
-          <dl class="kv">
-            <div><dt>Number</dt><dd class="mono">${esc(c.licenseNumber)}</dd></div>
+          ${App.licensePhoto(c, "lg")}
+          <dl class="kv" style="margin-top:14px">
             <div><dt>Expiry</dt><dd>${c.licenseExpiry ? fmt.date(c.licenseExpiry) : "Not added"}</dd></div>
             <div><dt>Status</dt><dd>${licenseBadge(c)}</dd></div>
           </dl>
           <label class="check" style="margin-top:16px;align-items:center;gap:12px">
             <input class="switch" type="checkbox" id="d-verified" role="switch" ${c.licenseVerified ? "checked" : ""}>
-            <span>I checked this license against the original</span>
+            <span>I checked this photo against the original license</span>
           </label>
         </div>
 
@@ -132,17 +132,12 @@ App.ready(async () => {
       </div>
       <div class="dialog-foot">
         <button class="btn btn-secondary" type="button" data-close>Close</button>
-        <button class="btn btn-dark" type="button" id="d-edit">${icon("pencil-simple")}Edit details</button>
       </div>`;
     $("#d-verified", dlg).addEventListener("change", async (e) => {
-      await Api.saveCustomer({ id: c.id, licenseVerified: e.target.checked });
+      await Api.setLicenseVerified(c.id, e.target.checked);
       App.toast(e.target.checked ? `${c.name}'s license marked as checked.` : "License check removed.");
       await load();
       openDrawerRefresh(c.id);
-    });
-    $("#d-edit", dlg).addEventListener("click", () => {
-      dlg.close();
-      openForm(c);
     });
     App.openDialog(dlg);
   }
@@ -153,53 +148,6 @@ App.ready(async () => {
     const dlg = $("#customer-drawer");
     if (c && dlg && dlg.open) openDrawer(c);
   }
-
-  /* ---------- Add / edit ---------- */
-  const dlg = $("#customer-dialog");
-  const form = $("#customer-form");
-  let editing = null;
-
-  function openForm(c) {
-    editing = c || null;
-    form.reset();
-    App.$$(".field", form).forEach((f) => f.classList.remove("has-error"));
-    $("#customer-dialog-title").textContent = c ? "Edit customer" : "Add customer";
-    if (c) {
-      form.elements.name.value = c.name;
-      form.elements.email.value = c.email;
-      form.elements.phone.value = c.phone;
-      form.elements.licenseNumber.value = c.licenseNumber;
-      form.elements.licenseExpiry.value = c.licenseExpiry || "";
-      form.elements.licenseVerified.checked = Boolean(c.licenseVerified);
-    }
-    App.openDialog(dlg);
-  }
-  $("#add-customer").addEventListener("click", () => openForm());
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!App.validate(form)) return;
-    const f = form.elements;
-    const data = {
-      name: f.name.value.trim(),
-      email: f.email.value.trim(),
-      phone: f.phone.value.trim(),
-      licenseNumber: f.licenseNumber.value.trim(),
-      licenseExpiry: f.licenseExpiry.value,
-      licenseVerified: f.licenseVerified.checked,
-    };
-    if (editing) data.id = editing.id;
-    const btn = $("#customer-save");
-    App.setLoading(btn, true);
-    try {
-      await Api.saveCustomer(data);
-      App.closeDialog(dlg);
-      App.toast(editing ? `${data.name} updated.` : `${data.name} added.`);
-      await load();
-    } finally {
-      App.setLoading(btn, false);
-    }
-  });
 
   await load();
 });
