@@ -177,6 +177,7 @@ ul.plain.test li::before { border-radius: 50%; background: var(--ok); }
 @media (max-width: 760px) { .how { grid-template-columns: minmax(0, 1fr); } .how li { border-left: 0; border-top: 1px solid var(--line); } .how li:first-child { border-top: 0; } }
 .banner { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 12px 14px; margin-bottom: 14px; border-radius: 4px; background: var(--warn-bg); color: var(--warn); }
 .banner .btn { margin-left: auto; flex: none; white-space: nowrap; }
+.banner.info { background: var(--accent-soft); color: var(--ink); }
 
 /* ---------- all cards board ---------- */
 .tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
@@ -391,6 +392,132 @@ details.fin .cards2 { display: grid; grid-template-columns: repeat(auto-fill, mi
 .back { margin-bottom: 8px; }
 .d-ctl .lbl { margin-right: -4px; }
 
+/* ---------- ownership ---------- */
+.ic { flex: none; }
+.padlock { display: inline-flex; margin-left: 6px; color: var(--ink-3); }
+.lockline { display: flex; gap: 8px; align-items: center; margin: -2px 0 0; font-size: 12.5px; color: var(--ink-3); }
+.lockbar { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 4px; background: var(--warn-bg); color: var(--ink); font-size: 13.5px; }
+.lockbar .ic { margin-top: 3px; }
+.lockbar .btn { margin-left: auto; flex: none; }
+.lockbar.mine { background: var(--accent-soft); }
+.lockbar.free { background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); }
+.pkg.is-locked .mini { cursor: pointer; }
+.d-ctl select[disabled], .mv select[disabled] { opacity: 0.6; cursor: not-allowed; }
+.steps input[disabled] { cursor: not-allowed; }
+.seg button[disabled] { opacity: 0.55; cursor: not-allowed; }
+.rename input[disabled] { opacity: 0.6; }
+
+/* ---------- schedule ---------- */
+:root { --g-crit: #d03d2c; --g-crit-ink: #ffffff; --g-bar-ink: #ffffff; }
+.chip.crit { background: var(--bad-bg); color: var(--bad); box-shadow: none; font-weight: 600; }
+.pk-when { display: grid; gap: 8px; padding: 11px 13px; border-radius: 5px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); }
+.w-dates { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px 14px; }
+.w-dates > div { display: grid; gap: 2px; }
+.w-dates span { font: 600 10.5px/1.2 var(--font-body); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+.w-dates b { font: 600 15px/1.25 var(--font-body); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.w-dates i { font-style: normal; color: var(--ink-3); font-size: 16px; line-height: 1.2; padding-bottom: 1px; }
+.w-dates .w-len { margin-left: auto; text-align: right; }
+.pk-when p { font-size: 12.5px; line-height: 1.45; color: var(--ink-2); }
+.pk-when p b { color: var(--ink); font-weight: 600; }
+.plan-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 13px 16px; margin-bottom: 18px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.plan-strip p { flex: 1 1 340px; color: var(--ink-2); font-size: 14px; }
+.plan-strip b { color: var(--ink); }
+.stat { display: grid; gap: 3px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface-2); min-width: 0; align-content: start; }
+.stat span { font: 600 10.5px/1.2 var(--font-body); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+.stat b { font: 700 19px/1.2 var(--font-display); font-stretch: 112%; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.stat small { color: var(--ink-3); font-size: 12px; }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.sch-dates { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
+@media (max-width: 760px) { .stats, .sch-dates { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.sch .why { margin-bottom: 12px; font-size: 14px; color: var(--ink-2); max-width: 72ch; }
+.sch .why b { color: var(--ink); }
+.pace-box { display: grid; gap: 14px; }
+.pace-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.pace { appearance: none; display: grid; gap: 3px; justify-items: start; text-align: left; padding: 10px 12px; border: 1px solid var(--line-2); border-radius: 5px; background: var(--surface); cursor: pointer; min-width: 0; }
+.pace b { font: 700 16px/1.1 var(--font-display); font-stretch: 112%; }
+.pace span { font-size: 12px; color: var(--ink-3); }
+.pace:hover:not([disabled]) { border-color: var(--ink-3); }
+.pace[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.pace[aria-pressed="true"] span { color: var(--accent-text); }
+.pace[disabled] { cursor: default; }
+@media (max-width: 560px) { .pace-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* mini timeline in the package window */
+.mg { display: grid; gap: 6px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface-2); }
+.mg-row { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: center; }
+.mg-l { display: flex; align-items: center; }
+.mg-t { position: relative; height: 22px; }
+.mg-t::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; border-left: 2px solid var(--accent); }
+.mg-b { position: absolute; top: 3px; height: 16px; border-radius: 3px; background: var(--ink-3); opacity: 0.5; }
+.mg-row.own .mg-b { background: var(--accent); opacity: 1; }
+.mg-t em { position: absolute; top: 4px; font: 500 11.5px/14px var(--font-mono); font-style: normal; color: var(--ink-2); white-space: nowrap; }
+.mg-row.own .mg-t em.in { color: var(--accent-ink); }
+.mg-axis { display: flex; justify-content: space-between; margin-left: 40px; font: 500 11px var(--font-mono); color: var(--ink-3); }
+
+/* gantt chart */
+.gantt { display: grid; gap: 12px; }
+.g-tools { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; }
+.g-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--ink-3); align-items: center; }
+.g-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.g-legend i { display: inline-block; width: 18px; height: 10px; border-radius: 2px; background: var(--accent); }
+.g-legend i.crit { background: var(--g-crit); }
+.g-legend i.test { background: var(--ink-2); }
+.g-legend i.wait { background: repeating-linear-gradient(135deg, var(--accent-soft) 0 3px, transparent 3px 7px); box-shadow: inset 0 0 0 1px var(--accent-line); }
+.g-legend i.today { width: 2px; height: 12px; border-radius: 0; }
+.g-legend i.endl { width: 0; height: 12px; border-radius: 0; border-left: 2px dashed var(--ink); background: none; }
+.g-legend i.dia { width: 9px; height: 9px; border-radius: 1px; transform: rotate(45deg); background: var(--ink); }
+.g-scroll { --lw: 190px; overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); max-width: 100%; }
+@media (max-width: 640px) { .g-scroll { --lw: 104px; } }
+.g-inner { position: relative; width: calc(var(--lw) + var(--tw)); }
+.g-row { display: flex; border-top: 1px solid var(--line); }
+.g-head .g-row:first-child { border-top: 0; }
+.g-label { position: sticky; left: 0; z-index: 4; flex: 0 0 var(--lw); width: var(--lw); display: flex; align-items: center; gap: 8px; padding: 0 10px; background: var(--surface); border-right: 1px solid var(--line-2); min-width: 0; }
+.g-head .g-label { font: 600 11px/1.3 var(--font-body); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+.g-track { position: relative; flex: 0 0 var(--tw); width: var(--tw); background-image: linear-gradient(to right, var(--line) 1px, transparent 1px); background-size: var(--dw) 100%; }
+.g-axis { height: 24px; background-image: none; }
+.g-mo, .g-dy { position: absolute; top: 0; height: 100%; display: flex; align-items: center; font-size: 11px; color: var(--ink-3); white-space: nowrap; overflow: hidden; }
+.g-mo { padding-left: 6px; font-weight: 600; letter-spacing: 0.04em; border-left: 1px solid var(--line-2); color: var(--ink-2); }
+.g-dy { justify-content: center; font: 500 10.5px var(--font-mono); border-left: 1px solid var(--line); }
+.g-dy.now { background: var(--accent); color: var(--accent-ink); font-weight: 600; border-left-color: var(--accent); }
+.g-name { appearance: none; display: flex; align-items: center; gap: 8px; min-width: 0; width: 100%; padding: 0; border: 0; background: none; text-align: left; cursor: pointer; color: inherit; }
+.g-name .gn { display: grid; min-width: 0; line-height: 1.25; }
+.g-name .gn b { font: 600 13px/1.25 var(--font-body); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.g-name .gn small { font-size: 11.5px; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.g-name:hover .gn b { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.g-name .code, .g-name .letter { flex: none; }
+.g-span { position: absolute; border-radius: 4px; background: repeating-linear-gradient(135deg, var(--accent-soft) 0 3px, transparent 3px 7px); box-shadow: inset 0 0 0 1px var(--accent-line); }
+.g-span.brief { background: var(--ink-3); box-shadow: none; opacity: 0.5; border-radius: 2px; }
+.g-seg { position: absolute; z-index: 3; display: flex; align-items: center; justify-content: center; min-width: 3px; padding: 0 3px; border: 0; border-radius: 3px; background: var(--accent); color: var(--g-bar-ink); font: 600 10.5px/1 var(--font-mono); cursor: pointer; overflow: hidden; white-space: nowrap; }
+.g-seg:hover { outline: 2px solid var(--ink); outline-offset: 1px; }
+.g-seg.test { background: var(--ink-2); color: var(--bg); }
+.g-seg.crit { background: var(--g-crit); color: var(--g-crit-ink); }
+.g-seg.doing { box-shadow: inset 0 -3px 0 rgba(255, 255, 255, 0.55); }
+.g-note { position: absolute; font: 500 11.5px/1 var(--font-mono); color: var(--ink-2); white-space: nowrap; pointer-events: none; }
+.g-base { position: absolute; height: 5px; border-radius: 3px; background: var(--ink-3); opacity: 0.5; }
+.g-dia { position: absolute; width: 10px; height: 10px; margin-left: -5px; background: var(--ink); transform: rotate(45deg); border-radius: 1px; }
+.g-dia.late { background: var(--g-crit); }
+.g-body { position: relative; }
+.g-links { position: absolute; left: var(--lw); top: 0; z-index: 2; pointer-events: none; overflow: visible; }
+.g-l { fill: none; stroke: var(--ink-3); stroke-width: 1.3; }
+.g-l.crit { stroke: var(--g-crit); stroke-width: 1.9; }
+.g-ah { fill: var(--ink-3); }
+.g-ah.crit { fill: var(--g-crit); }
+.g-line { position: absolute; top: 0; bottom: 0; z-index: 2; pointer-events: none; }
+.g-line.today { width: 2px; margin-left: -1px; background: var(--accent); }
+.g-line.end { width: 0; border-left: 2px dashed var(--ink); opacity: 0.7; }
+
+/* critical path */
+.chain { list-style: none; display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; }
+.chain li { display: flex; align-items: center; }
+.ch-arrow { color: var(--ink-3); font-size: 22px; padding: 0 2px; }
+.ch-node { appearance: none; display: flex; align-items: center; gap: 10px; padding: 10px 14px 10px 10px; border: 1px solid var(--g-crit); border-radius: 6px; background: var(--bad-bg); text-align: left; cursor: pointer; min-width: 0; color: var(--ink); }
+.ch-node:hover { box-shadow: var(--shadow); }
+.ch-node .letter { background: var(--g-crit); color: #fff; }
+.ch-t { display: grid; gap: 2px; min-width: 0; }
+.ch-t b { font: 600 13.5px/1.25 var(--font-body); }
+.ch-t span { font-size: 12.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.ch-t .cc { font: 500 11.5px var(--font-mono); color: var(--ink-3); }
+
 /* ---------- overlays ---------- */
 .modal { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 16px; background: var(--scrim); }
 .modal-card { width: min(520px, 100%); max-height: 90vh; overflow: auto; display: grid; gap: 14px; padding: 22px; border-radius: 6px; background: var(--surface); box-shadow: var(--shadow); }
@@ -477,11 +604,11 @@ html.lock { overflow: hidden; }
   var S = {
     tab: "packages", view: "status", pf: "", f: { q: "", pkg: "", sprint: "", who: "", tier: "" },
     openTask: null, openPkg: null, nameDraft: null, open: new Set(), draft: "", focusEp: null,
-    me: { id: null, name: "" }, db: null, canWrite: true, live: "loading",
-    tasks: {}, packages: {}, notes: [], decisions: {}, trello: {}, pending: null, lastFocus: null
+    me: { id: null, name: "" }, db: null, canWrite: true, denied: false, isOwner: false, hintGone: false, live: "loading",
+    tasks: {}, packages: {}, members: {}, settings: {}, gv: { mode: "pkg", trello: false }, notes: [], decisions: {}, trello: {}, pending: null, lastFocus: null
   };
   var TABS = [
-    { id: "packages", label: "Packages" }, { id: "board", label: "All cards" }, { id: "pages", label: "Pages" }, { id: "endpoints", label: "Endpoints" },
+    { id: "packages", label: "Packages" }, { id: "schedule", label: "Schedule" }, { id: "board", label: "All cards" }, { id: "pages", label: "Pages" }, { id: "endpoints", label: "Endpoints" },
     { id: "data", label: "Data" }, { id: "trello", label: "Trello" }, { id: "guide", label: "Guide" }
   ];
 
@@ -514,29 +641,410 @@ html.lock { overflow: hidden; }
     var p = pkgOf(id), ts = pkgTasks(id);
     var open = ts.filter(function (t) { return t.status !== "done"; });
     var ids = ts.map(function (t) { return t.id; });
-    var ext = [], letters = [];
-    open.forEach(function (t) { t.depends.forEach(function (d) { if (ids.indexOf(d) < 0 && eff(TASKS[d]).status !== "done" && ext.indexOf(d) < 0) ext.push(d); }); });
-    ext.forEach(function (d) { var l = (PKG[eff(TASKS[d]).pkg] || {}).letter; if (l && letters.indexOf(l) < 0) letters.push(l); });
-    letters.sort();
-    var first = open[0] || null;
-    var firstBlocked = !!first && first.depends.some(function (d) { return ids.indexOf(d) < 0 && eff(TASKS[d]).status !== "done"; });
+    /* Only build cards decide what a package waits for. The sprint test cards come last and wait for the cards they test, so counting them
+       would make two packages look as if they wait for each other. */
+    var builds = open.filter(function (t) { return !t.test; });
+    var waits = function (t) { return t.depends.filter(function (d) { return ids.indexOf(d) < 0 && eff(TASKS[d]).status !== "done"; }); };
+    var lettersOf = function (list) { var out = []; list.forEach(function (d) { var l = (PKG[eff(TASKS[d]).pkg] || {}).letter; if (l && out.indexOf(l) < 0) out.push(l); }); return out.sort(); };
+    var ext = [], extTest = [];
+    builds.forEach(function (t) { waits(t).forEach(function (d) { if (ext.indexOf(d) < 0) ext.push(d); }); });
+    open.filter(function (t) { return t.test; }).forEach(function (t) { waits(t).forEach(function (d) { if (extTest.indexOf(d) < 0 && ext.indexOf(d) < 0) extTest.push(d); }); });
+    var first = builds[0] || null;
+    var firstDeps = first ? waits(first) : [];
+    var laterDeps = ext.filter(function (d) { return firstDeps.indexOf(d) < 0; });
+    var firstLetters = lettersOf(firstDeps);
+    var laterLetters = lettersOf(laterDeps).filter(function (l) { return firstLetters.indexOf(l) < 0; });
+    var letters = lettersOf(ext);
+    var firstBlocked = firstDeps.length > 0;
     var due = ts.reduce(function (m, t) { return t.due && (!m || t.due > m) ? t.due : m; }, "");
     var start = ts.reduce(function (m, t) { return t.start && (!m || t.start < m) ? t.start : m; }, "");
     var sp = ts.map(function (t) { return t.sprint; });
     return {
-      p: p, ts: ts, open: open, done: ts.length - open.length, ext: ext, letters: letters, firstBlocked: firstBlocked,
+      p: p, ts: ts, open: open, done: ts.length - open.length, ext: ext, extTest: extTest, letters: letters, firstBlocked: firstBlocked,
+      firstDeps: firstDeps, laterDeps: laterDeps, firstLetters: firstLetters, laterLetters: laterLetters,
       hours: open.reduce(function (n, t) { return n + HOURS[t.size]; }, 0), due: due, start: start,
       sMin: sp.length ? Math.min.apply(null, sp) : 0, sMax: sp.length ? Math.max.apply(null, sp) : 0,
       state: !open.length ? "done" : p.owner ? "taken" : "free"
     };
+  }
+  /* Ownership. A package with an owner belongs to that person: nobody else adds cards to it, removes cards from it, renames it or changes its cards.
+     Notes stay open to everyone. The board owner can unlock (free) a package but cannot edit it while it is owned. */
+  var LOCK = '<svg class="ic" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M4.5 7V5a3.5 3.5 0 0 1 7 0v2H12a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 12 15H4a1.5 1.5 0 0 1-1.5-1.5v-5A1.5 1.5 0 0 1 4 7h.5zM6 7h4V5a2 2 0 0 0-4 0v2z"/></svg>';
+  var first = function (n) { return String(n || "").split(" ")[0]; };
+  function memberId(name) { var ids = Object.keys(S.members); for (var k = 0; k < ids.length; k++) { if ((S.members[ids[k]] || {}).name === name) return ids[k]; } return null; }
+  function isMine(pid) {
+    var o = S.packages[pid] || {};
+    if (!o.owner) return false;
+    if (o.ownerId && S.me.id) return o.ownerId === S.me.id;
+    return o.owner === S.me.name;
+  }
+  function canEditPkg(pid) { var o = S.packages[pid] || {}; return !o.owner || isMine(pid); }
+  function lockMsg(pid) { var o = S.packages[pid] || {}; return "Package " + PKG[pid].letter + " belongs to " + first(o.owner) + ". Only " + first(o.owner) + " can add cards to it, remove cards from it or change them."; }
+  function cardLock(id) {
+    var pid = eff(TASKS[id]).pkg;
+    if (!PKG[pid] || PKG[pid].kind !== "package") return "";
+    var o = S.packages[pid] || {};
+    if (!o.owner) return "Take package " + PKG[pid].letter + " first, then update its cards.";
+    return isMine(pid) ? "" : lockMsg(pid);
   }
   function pkgChip(id) {
     var p = PKG[id];
     return p && p.letter ? '<span class="pk" title="Package ' + p.letter + ": " + esc(pkgOf(id).name) + '">' + p.letter + "</span>" : "";
   }
 
+  /* ---------------------------------------------------------------- schedule
+     The plan is worked out, never typed in. The rules, in plain words:
+     - a card takes its size in hours: S 2, M 4, L 8. A card in review has 1 hour left. Done cards are skipped.
+     - one person works through a package, one card at a time, and a card never starts before the cards it needs are finished,
+       even when those cards are in another package.
+     - every member works the same number of hours a day (the pace the board owner picks). Every calendar day counts, starting today.
+     - time is counted in hours, so a day is "pace" hours long and a card can start in the middle of a day. */
+  var PACES = [1, 2, 3, 4, 6], DEFAULT_PACE = 2;
+  var addDays = function (iso, n) { var d = new Date(iso + "T00:00:00"); d.setDate(d.getDate() + n); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); };
+  var dayIso = function (n) { return addDays(TODAY, n); };
+  var fdw = function (iso) { return iso ? new Date(iso + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }) : ""; };
+  var dayDiff = function (a, b) { return Math.round((new Date(b + "T00:00:00") - new Date(a + "T00:00:00")) / 86400000); };
+  var letterOf = function (pid) { return (PKG[pid] || {}).letter || ""; };
+  var listOf = function (a) { return a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1]; };
+  var hoursWord = function (h) { return h + (h === 1 ? " hour" : " hours"); };
+  var shortRange = function (a, b) {
+    if (a === b) return fd(a);
+    return fd(a) + "–" + (a.slice(0, 7) === b.slice(0, 7) ? String(Number(b.slice(8))) : fd(b));
+  };
+  function pace() { var h = (S.settings.plan || {}).hours; return PACES.indexOf(h) >= 0 ? h : DEFAULT_PACE; }
+
+  function compute(cap) {
+    var ts = all().filter(function (t) { return t.status !== "done" && PKG[t.pkg] && PKG[t.pkg].kind === "package"; });
+    var open = {}; ts.forEach(function (t) { open[t.id] = t; });
+    var left = function (t) { return t.status === "review" ? Math.min(1, HOURS[t.size]) : HOURS[t.size]; };
+    var groups = {}, rank = {};
+    ts.forEach(function (t) { (groups[t.pkg] = groups[t.pkg] || []).push(t); });
+    Object.keys(groups).forEach(function (k) { groups[k].sort(byDepth).forEach(function (t, n) { rank[t.id] = n; }); });
+    /* Schedule the card that can start first, over and over. A card can only be placed once the cards it needs are placed. */
+    var start = {}, fin = {}, free = {}, seq = {}, idleFrom = {}, todo = ts.slice();
+    while (todo.length) {
+      var best = null;
+      todo.forEach(function (t) {
+        var ready = 0, ok = true;
+        t.depends.forEach(function (d) { if (!open[d]) return; if (fin[d] == null) ok = false; else if (fin[d] > ready) ready = fin[d]; });
+        if (!ok) return;
+        var s = Math.max(free[t.pkg] || 0, ready), L = letterOf(t.pkg);
+        if (!best || s < best.s || (s === best.s && (L < best.L || (L === best.L && rank[t.id] < rank[best.t.id])))) best = { t: t, s: s, L: L };
+      });
+      if (!best) break;
+      var t0 = best.t;
+      idleFrom[t0.id] = free[t0.pkg] || 0;
+      start[t0.id] = best.s; fin[t0.id] = best.s + left(t0); free[t0.pkg] = fin[t0.id];
+      (seq[t0.pkg] = seq[t0.pkg] || []).push(t0.id);
+      todo.splice(todo.indexOf(t0), 1);
+    }
+    var dayOf = function (u) { return Math.floor(u / cap); };
+    var lastDay = function (u) { return Math.max(0, Math.floor((u - 1) / cap)); };
+    var card = {};
+    ts.forEach(function (t) {
+      if (start[t.id] == null) return;
+      var deps = t.depends.filter(function (d) { return open[d] && fin[d] != null; });
+      card[t.id] = {
+        id: t.id, pkg: t.pkg, s: start[t.id], f: fin[t.id], hours: fin[t.id] - start[t.id], sd: dayOf(start[t.id]), ed: lastDay(fin[t.id]),
+        deps: deps, bind: deps.filter(function (d) { return fin[d] === start[t.id]; }), idle: start[t.id] - idleFrom[t.id], test: !!t.test
+      };
+    });
+    var ids = Object.keys(card);
+    /* Room to slip: the latest a card can finish without moving the end, found by walking back from the end.
+       A card is followed by the cards that need it and by the next card its owner builds. */
+    var succ = {}; ids.forEach(function (id) { succ[id] = []; });
+    ids.forEach(function (id) { card[id].deps.forEach(function (d) { succ[d].push(id); }); });
+    Object.keys(seq).forEach(function (k) { for (var n = 0; n + 1 < seq[k].length; n++) succ[seq[k][n]].push(seq[k][n + 1]); });
+    var end = 0; ids.forEach(function (id) { if (card[id].f > end) end = card[id].f; });
+    var lf = {};
+    var latest = function (id) {
+      if (lf[id] != null) return lf[id];
+      var v = end;
+      succ[id].forEach(function (j) { var x = latest(j) - card[j].hours; if (x < v) v = x; });
+      lf[id] = v; return v;
+    };
+    ids.forEach(function (id) { var c = card[id]; c.slack = latest(id) - c.f; c.crit = c.slack === 0; });
+    var pk = {};
+    Object.keys(seq).forEach(function (k) {
+      var cs = seq[k].map(function (id) { return card[id]; });
+      var s = cs[0].s, f = 0, hours = 0, slack = Infinity, needs = {}, needsTest = {}, lastId = cs[0].id;
+      cs.forEach(function (c) {
+        if (c.f > f) { f = c.f; lastId = c.id; }
+        hours += c.hours;
+        if (c.slack < slack) slack = c.slack;
+        var bag = c.test ? needsTest : needs;
+        c.deps.forEach(function (d) {
+          var dp = card[d].pkg; if (dp === k) return;
+          var e = bag[dp] || (bag[dp] = { pkg: dp, letter: letterOf(dp), ready: 0, cards: [] });
+          if (card[d].f > e.ready) e.ready = card[d].f;
+          if (e.cards.indexOf(d) < 0) e.cards.push(d);
+        });
+      });
+      var list = function (bag) {
+        return Object.keys(bag).map(function (x) { var e = bag[x]; e.readyDay = lastDay(e.ready); e.readyIso = dayIso(e.readyDay); return e; }).sort(function (a, b) { return a.letter < b.letter ? -1 : 1; });
+      };
+      var first = cs[0];
+      pk[k] = {
+        id: k, cards: seq[k].slice(), first: first.id, last: lastId, s: s, f: f, sd: dayOf(s), ed: lastDay(f),
+        startIso: dayIso(dayOf(s)), endIso: dayIso(lastDay(f)), days: lastDay(f) - dayOf(s) + 1, hours: hours, idle: (f - s) - hours,
+        slack: slack, room: Math.floor(slack / cap), crit: slack === 0,
+        critCards: cs.filter(function (c) { return c.crit; }).map(function (c) { return c.id; }),
+        needs: list(needs), needsTest: list(needsTest),
+        bind: first.bind.map(function (d) { return card[d].pkg; }).filter(function (x, n, a) { return a.indexOf(x) === n && x !== k; })
+      };
+    });
+    /* The driving chain: from the card that ends last, step back to whatever it was waiting for, again and again. */
+    var tail = null;
+    ids.forEach(function (id) {
+      var c = card[id];
+      if (c.f !== end) return;
+      if (!tail || letterOf(c.pkg) < letterOf(card[tail].pkg)) tail = id;
+    });
+    var chain = [], edge = {}, cur = tail, loops = 0;
+    var byWho = function (a, z) { var la = letterOf(card[a].pkg), lz = letterOf(card[z].pkg); return la < lz ? -1 : la > lz ? 1 : rank[a] - rank[z]; };
+    while (cur && loops++ < 200) {
+      chain.unshift(cur);
+      var c = card[cur], list2 = seq[c.pkg], at = list2.indexOf(cur), prev = at > 0 ? list2[at - 1] : null, nxt = null;
+      if (prev && card[prev].f === c.s) nxt = prev;
+      else if (c.bind.length) nxt = c.bind.slice().sort(byWho)[0];
+      if (nxt) edge[nxt + ">" + cur] = true;
+      cur = nxt;
+    }
+    var segs = [];
+    chain.forEach(function (id) {
+      var c = card[id], g = segs[segs.length - 1];
+      if (g && g.pkg === c.pkg) { g.cards.push(id); g.ed = c.ed; g.f = c.f; }
+      else segs.push({ pkg: c.pkg, cards: [id], sd: c.sd, ed: c.ed, s: c.s, f: c.f });
+    });
+    var endDay = lastDay(end);
+    return {
+      cap: cap, card: card, pk: pk, seq: seq, ids: ids, end: end, endDay: endDay, endIso: dayIso(endDay), days: end ? endDay + 1 : 0,
+      chain: chain, edge: edge, segs: segs, hours: ids.reduce(function (n, id) { return n + card[id].hours; }, 0)
+    };
+  }
+  var PLAN = { sig: "", val: null };
+  function plan() {
+    var cap = pace();
+    var sig = TODAY + "|" + cap + "|" + D.tasks.map(function (t) { var o = S.tasks[t.id] || {}; return (o.pkg || t.pkg) + ":" + (o.status || t.base); }).join(",");
+    if (PLAN.sig !== sig) { PLAN.val = compute(cap); PLAN.val.sig = sig; PLAN.sig = sig; }
+    return PLAN.val;
+  }
+  function cardRange(id) { var c = plan().card[id]; return c ? shortRange(dayIso(c.sd), dayIso(c.ed)) : ""; }
+  function roomText(P) { return P.crit ? "Critical" : P.room >= 1 ? plural(P.room, "day") : "Under a day"; }
+  function pkgDeadline(P) { var d = ""; P.cards.forEach(function (cid) { var t = TASKS[cid]; if (t.due && t.due > d) d = t.due; }); return d; }
+  function statHTML(label, val, sub) { return '<div class="stat"><span>' + label + "</span><b>" + val + "</b>" + (sub ? "<small>" + sub + "</small>" : "") + "</div>"; }
+
+  /* One sentence on why a package starts when it does, and what it needs from other packages. */
+  function whyLine(P) {
+    var pl = plan(), c1 = pl.card[P.first];
+    var ready = function (n) { return n.letter + " (ready " + fd(n.readyIso) + ")"; };
+    if (!P.needs.length) return "<b>Needs nothing from other packages.</b> It can start today.";
+    var firstN = P.needs.filter(function (n) { return P.bind.indexOf(n.pkg) >= 0; });
+    var rest = P.needs.filter(function (n) { return P.bind.indexOf(n.pkg) < 0; });
+    if (c1.s === 0) return "<b>Starts today.</b>" + (rest.length ? " Later cards need " + listOf(rest.map(ready)) + "." : "");
+    return "<b>Waits for " + listOf(firstN.map(ready)) + ".</b>" + (rest.length ? " Later cards also need " + listOf(rest.map(ready)) + "." : "");
+  }
+  function whenHTML(id) {
+    var P = plan().pk[id];
+    if (!P) return "";
+    var nudge = !pkgOf(id).owner && P.sd === 0 ? " Take it today to keep these dates." : "";
+    return '<div class="pk-when"><div class="w-dates"><div><span>Start</span><b>' + esc(fdw(P.startIso)) + '</b></div><i aria-hidden="true">&rarr;</i><div><span>End</span><b>' + esc(fdw(P.endIso)) + '</b></div><div class="w-len"><span>Length</span><b>' + plural(P.days, "day") + "</b></div></div><p>" + whyLine(P) + nudge + "</p></div>";
+  }
+  function critChip(id) {
+    var P = plan().pk[id];
+    if (!P) return "";
+    if (P.crit) return '<span class="chip crit" title="Critical path. If this package slips a day, the whole project ends a day later.">Critical path</span>';
+    return '<span class="chip ok" title="This package can slip this long without moving the end date.">Room: ' + roomText(P) + "</span>";
+  }
+  function planStripHTML() {
+    var pl = plan();
+    if (!pl.ids.length) return "";
+    var chain = pl.segs.map(function (g) { return letterOf(g.pkg); });
+    return '<div class="plan-strip"><p><b>Plan:</b> the whole back end is done by <b>' + esc(fdw(pl.endIso)) + "</b>, " + plural(pl.days, "day") + " from today, if every member works " + hoursWord(pl.cap) + " a day. The longest chain is <b>" + chain.join(" &rarr; ") + "</b>. A delay in one of those moves the end date.</p>" +
+      '<button class="btn" type="button" data-act="tab" data-id="schedule">See the schedule</button></div>';
+  }
+  /* Why a card starts when it does, for the card window. */
+  function cardWhy(id) {
+    var pl = plan(), c = pl.card[id];
+    if (!c) return "";
+    if (c.s === 0) return "Nothing blocks it. It can start today.";
+    var when = fd(dayIso(Math.max(0, Math.floor((c.s - 1) / pl.cap))));
+    if (c.bind.length) return "Starts when " + listOf(c.bind.map(function (d) { var x = TASKS[d]; return x.code + " (" + (pl.card[d].pkg === c.pkg ? "this package" : "package " + letterOf(pl.card[d].pkg)) + ")"; })) + (c.bind.length > 1 ? " are" : " is") + " done, on " + when + ".";
+    var list = pl.seq[c.pkg], at = list.indexOf(id), prev = at > 0 ? list[at - 1] : null;
+    if (prev && pl.card[prev].f === c.s) return "Starts when " + TASKS[prev].code + " (this package) is done, on " + when + ".";
+    return "";
+  }
+
+  /* A small timeline for one package: the packages it waits for, up to the day the cards it needs are ready, then the package itself. */
+  function miniGantt(P) {
+    var rows = [];
+    P.needs.forEach(function (n) { rows.push({ letter: n.letter, from: 0, to: n.readyDay, label: "ready " + fd(n.readyIso) }); });
+    rows.push({ letter: letterOf(P.id), from: P.sd, to: P.ed, label: fd(P.startIso) + " to " + fd(P.endIso), me: true });
+    var maxDay = Math.max.apply(null, rows.map(function (r) { return r.to; })) + 1;
+    var html = rows.map(function (r) {
+      var left = r.from / maxDay * 100, width = (r.to + 1 - r.from) / maxDay * 100, inside = left + width > 70;
+      var pos = inside ? "right:" + (100 - left - width + 1).toFixed(2) + "%" : "left:" + (left + width + 1).toFixed(2) + "%";
+      return '<div class="mg-row' + (r.me ? " own" : "") + '"><span class="mg-l"><span class="pk">' + esc(r.letter) + '</span></span><div class="mg-t"><i class="mg-b" style="left:' + left.toFixed(2) + "%;width:" + width.toFixed(2) + '%"></i><em class="' + (inside ? "in" : "") + '" style="' + pos + '">' + esc(r.label) + "</em></div></div>";
+    }).join("");
+    var tip = rows.map(function (r) { return r.letter + " " + r.label; }).join(". ");
+    return '<div class="mg" role="img" aria-label="Timeline. ' + esc(tip) + '">' + html + '<div class="mg-axis"><span>Today</span><span>' + esc(fd(dayIso(maxDay - 1))) + "</span></div></div>";
+  }
+  /* The top of the package window. */
+  function schedSection(id) {
+    var pl = plan(), P = pl.pk[id], cap = pl.cap;
+    if (!P) return "";
+    var idleDays = Math.round(P.idle / cap * 10) / 10, workDays = Math.round(P.hours / cap * 10) / 10;
+    var dates = '<div class="sch-dates">' + statHTML("Start", esc(fdw(P.startIso)), P.sd === 0 ? "today" : "in " + plural(P.sd, "day")) + statHTML("End", esc(fdw(P.endIso)), "in " + plural(P.ed, "day")) +
+      statHTML("Work", P.hours + " h", "= " + plural(workDays, "day") + " at " + cap + " h a day") + statHTML("Waiting", P.idle ? plural(idleDays, "day") : "none", P.idle ? "between cards, for other packages" : "no gaps") + "</div>";
+    var ddl = pkgDeadline(P), cmp = "";
+    if (ddl) {
+      var diff = dayDiff(P.endIso, ddl);
+      cmp = '<p class="muted" style="font-size:13px;margin-top:10px">Trello deadline for this package: <b>' + esc(fd(ddl)) + "</b>. " + (diff > 0 ? "The plan ends " + plural(diff, "day") + " before it." : diff === 0 ? "The plan ends on that day." : '<span class="late">The plan ends ' + plural(-diff, "day") + " after it.</span> At " + hoursWord(cap) + " a day this package misses that date.") + "</p>";
+    }
+    var tests = P.needsTest.length ? '<p class="muted" style="font-size:13px;margin-top:6px">Its test cards at the end also wait for ' + listOf(P.needsTest.map(function (n) { return n.letter + " (ready " + fd(n.readyIso) + ")"; })) + ".</p>" : "";
+    return '<section class="sch"><h3>Schedule <small>' + hoursWord(cap) + " a day for each member</small></h3>" + dates + '<p class="why">' + whyLine(P) + "</p>" + miniGantt(P) + cmp + tests + "</section>";
+  }
+
+  /* ---------------------------------------------------------------- schedule tab */
+  var GR = { pk: 44, cd: 30 };
+  function paceHTML() {
+    var pl = plan(), can = S.isOwner && S.canWrite;
+    var opts = PACES.map(function (h) {
+      var r = h === pl.cap ? pl : compute(h);
+      return '<button type="button" class="pace" data-act="pace" data-v="' + h + '" aria-pressed="' + (h === pl.cap) + '"' + (can ? "" : ' disabled title="Only the board owner changes this"') + "><b>" + hoursWord(h) + "</b><span>done " + esc(fd(r.endIso)) + "</span></button>";
+    }).join("");
+    var who = (S.settings.plan || {}).by;
+    var chain = pl.segs.map(function (g) { return letterOf(g.pkg); }).join(" → ");
+    return '<section class="panel pace-box"><div><h3 style="font-size:16px;margin-bottom:4px">How many hours a day does each member work?</h3><p class="muted" style="font-size:13px;max-width:72ch">' +
+      (can ? "You are the board owner, so you set this once and everyone sees the same dates." : "Only the board owner sets this, so everyone sees the same dates.") + (who ? " Last set by " + esc(first(who)) + "." : " Nobody has set it yet, so the board assumes " + hoursWord(DEFAULT_PACE) + ".") +
+      " Every calendar day counts, like the Trello sprints. No time is added for meetings or reviews.</p></div>" +
+      '<div class="pace-row" role="group" aria-label="Hours a day for each member">' + opts + "</div>" +
+      '<div class="stats">' + statHTML("Plan starts", esc(fdw(TODAY)), "today") + statHTML("Everything done", esc(fdw(pl.endIso)), plural(pl.days, "day") + " from today") + statHTML("Work left", pl.hours + " h", "in " + plural(Object.keys(pl.pk).length, "package")) + statHTML("Critical path", esc(chain), "decides the end date") + "</div></section>";
+  }
+
+  function ganttHTML() {
+    var pl = plan(), cap = pl.cap, mode = S.gv.mode, showT = S.gv.trello;
+    var tDay = function (iso) { return dayDiff(TODAY, iso); };
+    var tMax = 0;
+    if (showT) pl.ids.forEach(function (id) { var d = TASKS[id].due; if (d) tMax = Math.max(tMax, tDay(d)); });
+    var N = Math.max(pl.endDay, tMax) + 1;
+    var dw = N <= 30 ? 34 : N <= 45 ? 26 : N <= 70 ? 18 : N <= 110 ? 12 : 8;
+    var padD = Math.ceil(150 / dw), total = N + padD, TW = total * dw;
+    var X = function (u) { return u / cap * dw; };
+    var pkgs = realPkgs().filter(function (p) { return pl.pk[p.id]; });
+    var rows = [], top = 0, ypos = {};
+    pkgs.forEach(function (p) {
+      rows.push({ k: "pkg", id: p.id }); ypos["p:" + p.id] = top + GR.pk / 2; top += GR.pk;
+      if (mode === "card") pl.pk[p.id].cards.forEach(function (cid) { rows.push({ k: "card", id: cid }); ypos[cid] = top + GR.cd / 2; top += GR.cd; });
+    });
+    var yOf = function (cid) { return mode === "card" ? ypos[cid] : ypos["p:" + pl.card[cid].pkg]; };
+    var segHTML = function (cid, h, topPx) {
+      var c = pl.card[cid], t = TASKS[cid], e = eff(t);
+      var width = Math.max(3, X(c.f) - X(c.s) - 1);
+      var tip = t.code + " " + t.title + " · package " + letterOf(c.pkg) + " · " + shortRange(dayIso(c.sd), dayIso(c.ed)) + " · " + c.hours + " h" + (c.crit ? " · critical path" : "") + (t.due ? " · Trello due " + fd(t.due) : "");
+      return '<button type="button" class="g-seg' + (c.crit ? " crit" : "") + (t.test ? " test" : "") + (e.status === "doing" ? " doing" : "") + '" style="left:' + X(c.s).toFixed(1) + "px;width:" + width.toFixed(1) + "px;top:" + topPx + "px;height:" + h + 'px" data-act="open-task" data-id="' + cid + '" title="' + esc(tip) + '" aria-label="' + esc(tip) + '">' + (width >= 24 ? esc(t.code) : "") + "</button>";
+    };
+    var baseHTML = function (a, b, y) {
+      if (!showT || !b) return "";
+      var d1 = Math.max(0, tDay(a || b)), d2 = Math.max(0, tDay(b)), x1 = d1 * dw, x2 = (d2 + 1) * dw;
+      return '<i class="g-base" style="left:' + x1 + "px;width:" + Math.max(4, x2 - x1) + "px;top:" + y + 'px"></i><i class="g-dia' + (tDay(b) < 0 ? " late" : "") + '" style="left:' + x2 + "px;top:" + (y - 3) + 'px" title="Trello due ' + esc(fd(b)) + '"></i>';
+    };
+    var pkgRow = function (r) {
+      var P = pl.pk[r.id], p = pkgOf(r.id), x1 = X(P.s), x2 = X(P.f), span, segs = "";
+      if (mode === "pkg") {
+        span = '<i class="g-span" style="left:' + x1.toFixed(1) + "px;width:" + (x2 - x1).toFixed(1) + 'px;top:9px;height:24px"></i>';
+        segs = P.cards.map(function (cid) { return segHTML(cid, 24, 9); }).join("");
+      } else span = '<i class="g-span brief" style="left:' + x1.toFixed(1) + "px;width:" + (x2 - x1).toFixed(1) + 'px;top:17px;height:10px"></i>';
+      var bs = "", be = "";
+      if (showT) P.cards.forEach(function (cid) { var t = TASKS[cid], a = t.start || t.due; if (a && (!bs || a < bs)) bs = a; if (t.due && (!be || t.due > be)) be = t.due; });
+      return '<div class="g-row" style="height:' + GR.pk + 'px"><div class="g-label"><button type="button" class="g-name" data-act="open-pkg" data-id="' + r.id + '" title="' + esc("Package " + p.letter + ": " + p.name) + '"><span class="letter sm">' + p.letter + '</span><span class="gn"><b>' + esc(p.name) + "</b><small>" + P.hours + " h · " + (p.owner ? esc(first(p.owner)) : "free") + "</small></span></button></div>" +
+        '<div class="g-track">' + span + segs + '<span class="g-note" style="left:' + (x2 + 8).toFixed(1) + 'px;top:15px">' + esc(shortRange(P.startIso, P.endIso)) + "</span>" + baseHTML(bs, be, GR.pk - 9) + "</div></div>";
+    };
+    var cardRow = function (r) {
+      var c = pl.card[r.id], t = TASKS[r.id];
+      return '<div class="g-row" style="height:' + GR.cd + 'px"><div class="g-label"><button type="button" class="g-name" data-act="open-task" data-id="' + r.id + '"><span class="code">' + esc(t.code) + '</span><span class="gn"><b>' + esc(t.title) + "</b></span></button></div>" +
+        '<div class="g-track">' + segHTML(r.id, 18, 6) + '<span class="g-note" style="left:' + (X(c.f) + 8).toFixed(1) + 'px;top:9px">' + esc(shortRange(dayIso(c.sd), dayIso(c.ed))) + "</span>" + baseHTML(t.start, t.due, GR.cd - 6) + "</div></div>";
+    };
+    /* the calendar header: months on top, days below */
+    var mo = "", dy = "", cur = "", from = 0, step = dw >= 22 ? 1 : dw >= 13 ? 2 : 7;
+    var monthName = function (iso) { return new Date(iso + "T00:00:00").toLocaleDateString("en-US", { month: "long" }); };
+    for (var k = 0; k <= total; k++) {
+      var iso = k < total ? dayIso(k) : "", m = iso.slice(0, 7);
+      if (m !== cur) {
+        if (cur) { var mw = (k - from) * dw, mn = monthName(dayIso(from)); mo += '<span class="g-mo" style="left:' + from * dw + "px;width:" + mw + 'px">' + (mw >= 80 ? mn : mn.slice(0, 3)) + "</span>"; }
+        cur = m; from = k;
+      }
+      if (iso && (k % step === 0)) dy += '<span class="g-dy' + (k === 0 ? " now" : "") + '" style="left:' + k * dw + "px;width:" + dw * Math.min(step, total - k) + 'px">' + Number(iso.slice(8)) + "</span>";
+    }
+    var normal = "", hot = "";
+    pl.ids.forEach(function (cid) {
+      var c = pl.card[cid];
+      c.bind.forEach(function (d) {
+        var dc = pl.card[d];
+        if (dc.pkg === c.pkg) return;
+        var x1 = X(dc.f), x2 = X(c.s), y1 = yOf(d), y2 = yOf(cid), xm = Math.max(x1 + 5, Math.min(x2 - 5, (x1 + x2) / 2)), crit = !!pl.edge[d + ">" + cid];
+        var path = '<path class="g-l' + (crit ? " crit" : "") + '" marker-end="url(#' + (crit ? "gac" : "ga") + ')" d="M' + x1.toFixed(1) + " " + y1 + " H" + xm.toFixed(1) + " V" + y2 + " H" + Math.max(xm, x2 - 1).toFixed(1) + '"/>';
+        if (crit) hot += path; else normal += path;
+      });
+    });
+    var svg = '<svg class="g-links" width="' + TW + '" height="' + top + '" aria-hidden="true"><defs><marker id="ga" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="g-ah" d="M0 0 L8 4 L0 8z"/></marker><marker id="gac" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="g-ah crit" d="M0 0 L8 4 L0 8z"/></marker></defs>' + normal + hot + "</svg>";
+    var lines = '<i class="g-line today" style="left:calc(var(--lw) + 0px)"></i><i class="g-line end" style="left:calc(var(--lw) + ' + X(pl.end).toFixed(1) + 'px)" title="Everything done ' + esc(fd(pl.endIso)) + '"></i>';
+    var legend = '<div class="g-legend"><span><i></i>Work</span><span><i class="crit"></i>Critical path</span><span><i class="test"></i>Test card</span><span><i class="wait"></i>Waiting for another package</span><span><i class="today"></i>Today</span><span><i class="endl"></i>Everything done</span>' + (showT ? '<span><i class="dia"></i>Trello due date</span>' : "") + "</div>";
+    var tools = '<div class="g-tools"><span class="seg" role="group" aria-label="Rows"><button type="button" data-act="gv-mode" data-v="pkg" aria-pressed="' + (mode === "pkg") + '">Packages</button><button type="button" data-act="gv-mode" data-v="card" aria-pressed="' + (mode === "card") + '">Every card</button></span><label class="tick"><input type="checkbox" data-act="gv-trello"' + (showT ? " checked" : "") + "> Show Trello due dates</label></div>";
+    return '<section class="panel gantt" aria-label="Gantt chart"><div><h3 style="font-size:16px;margin-bottom:4px">Gantt chart</h3><p class="muted" style="font-size:13px;max-width:72ch">Each bar is a card, in the order its owner builds them. A hatched gap means the owner is waiting for another package. An arrow shows the card that held up another package. Click a bar or a name to open it.</p></div>' +
+      tools + legend + '<div class="g-scroll" tabindex="0" role="group" aria-label="Gantt chart, scrolls sideways"><div class="g-inner" style="--tw:' + TW + "px;--dw:" + dw + 'px"><div class="g-head"><div class="g-row"><div class="g-label">Package</div><div class="g-track g-axis">' + mo + '</div></div><div class="g-row"><div class="g-label"></div><div class="g-track g-axis">' + dy + '</div></div></div><div class="g-body" style="height:' + top + 'px">' +
+      rows.map(function (r) { return r.k === "pkg" ? pkgRow(r) : cardRow(r); }).join("") + svg + lines + "</div></div></div></section>";
+  }
+
+  function critHTML() {
+    var pl = plan();
+    if (!pl.segs.length) return "";
+    var node = function (g) {
+      var p = pkgOf(g.pkg);
+      return '<button type="button" class="ch-node" data-act="open-pkg" data-id="' + g.pkg + '"><span class="letter sm">' + esc(p.letter) + '</span><span class="ch-t"><b>' + esc(p.name) + "</b><span>" + esc(shortRange(dayIso(g.sd), dayIso(g.ed))) + '</span><span class="cc">' + g.cards.map(function (id) { return esc(TASKS[id].code); }).join(" → ") + "</span></span></button>";
+    };
+    var chain = pl.segs.map(function (g, n) { return (n ? '<li class="ch-arrow" aria-hidden="true">&rarr;</li>' : "") + "<li>" + node(g) + "</li>"; }).join("");
+    var inChain = {}; pl.segs.forEach(function (g) { inChain[g.pkg] = true; });
+    var list = realPkgs().filter(function (p) { return pl.pk[p.id]; });
+    var also = list.filter(function (p) { return pl.pk[p.id].crit && !inChain[p.id]; });
+    var roomy = list.filter(function (p) { return !pl.pk[p.id].crit && pl.pk[p.id].room >= 1; });
+    var rows = list.map(function (p) {
+      var P = pl.pk[p.id];
+      return ['<span class="pk">' + p.letter + "</span> " + esc(pkgOf(p.id).name), esc(fd(P.startIso)) + " to " + esc(fd(P.endIso)), P.crit ? '<span class="chip crit">Critical</span>' : '<span class="chip ok">' + roomText(P) + "</span>", P.critCards.length ? esc(P.critCards.map(function (id) { return TASKS[id].code; }).join(", ")) : '<span class="muted">none</span>'];
+    });
+    return '<section class="panel sect"><h3>Critical path of the packages</h3><p class="lead">These packages decide the end date. If one of them slips a day, the whole project ends a day later. They follow each other because each one waits for cards in the one before.</p>' +
+      '<ol class="chain" aria-label="Critical path">' + chain + "</ol>" +
+      (also.length ? '<p class="muted" style="font-size:13px">Also critical, because they end on the same day as the chain: ' + listOf(also.map(function (p) { return "<b>" + esc(p.letter) + "</b> (" + esc(pl.pk[p.id].critCards.map(function (id) { return TASKS[id].code; }).join(", ")) + ")"; })) + ".</p>" : "") +
+      "<div><h4 style=\"font:600 11px/1.3 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);margin:6px 0 8px\">Room to slip, package by package</h4>" + table(["Package", "Plan", "Room", "Critical cards"], rows) + "</div>" +
+      (roomy.length ? '<p class="muted" style="font-size:13px">To finish sooner, move a card from a critical package to one with room (<b>' + roomy.map(function (p) { return esc(p.letter); }).join(", ") + "</b>). The owners agree first, because a package belongs to its owner.</p>" : "") + "</section>";
+  }
+
+  function schedTableHTML() {
+    var pl = plan();
+    var rows = realPkgs().filter(function (p) { return pl.pk[p.id]; }).map(function (p) {
+      var P = pl.pk[p.id], q = pkgOf(p.id);
+      var needs = P.needs.length ? listOf(P.needs.map(function (n) { return n.letter + " (" + fd(n.readyIso) + ")"; })) : "Nothing";
+      var ddl = pkgDeadline(P), cmp = "";
+      if (ddl) { var diff = dayDiff(P.endIso, ddl); cmp = esc(fd(ddl)) + " " + (diff >= 0 ? '<span class="chip ok">' + plural(diff, "day") + " spare</span>" : '<span class="chip bad">' + plural(-diff, "day") + " late</span>"); }
+      return ['<button class="chip" type="button" data-act="open-pkg" data-id="' + p.id + '"><b>' + p.letter + "</b> " + esc(q.name) + "</button>", q.owner ? esc(first(q.owner)) : "Free", P.hours + " h", esc(fdw(P.startIso)), esc(fdw(P.endIso)), String(P.days), esc(needs), P.crit ? '<span class="chip crit">Critical</span>' : roomText(P), cmp];
+    });
+    return '<section class="panel sect"><h3>Dates for every package</h3><p class="lead">Start is the day the first card begins. End is the day the last card is done. The Trello deadline is the last due date of the package on the Trello board.</p>' +
+      table(["Package", "Owner", "Work", "Starts", "Ends", "Days", "Needs", "Room", "Trello deadline"], rows) + "</section>";
+  }
+
+  function renderSchedule() {
+    var pl = plan(), gs = $(".g-scroll"), keepX = gs ? gs.scrollLeft : 0, b = bannerHTML();
+    if (!pl.ids.length) { $("#view").innerHTML = b + '<div class="empty"><h3>Nothing left to schedule</h3><p>Every card is done.</p></div>'; return; }
+    $("#view").innerHTML = b +
+      '<div class="sect" style="margin-bottom:18px"><h3>Project schedule</h3><p class="lead">Every date on this page is worked out, not typed in. A package starts when the cards it needs from other packages are finished, and its owner builds one card at a time. The Gantt chart puts it all on one calendar, and the critical path shows which packages decide the end date. Trello keeps the deadlines.</p></div>' +
+      '<div class="grid" style="gap:18px">' + paceHTML() + ganttHTML() + critHTML() + schedTableHTML() + "</div>";
+    gs = $(".g-scroll"); if (gs && keepX) gs.scrollLeft = keepX;
+  }
+
   /* ---------------------------------------------------------------- toast and copy */
   function toast(msg, bad) {
+    var same = $$("#toasts .toast").some(function (x) { return x.textContent === msg && !x.classList.contains("out"); });
+    if (same) return;
     var el = document.createElement("div");
     el.className = "toast" + (bad ? " bad" : "");
     el.textContent = msg;
@@ -560,79 +1068,118 @@ html.lock { overflow: hidden; }
   }
   function guard(fn) {
     if (!S.db) { toast("Live sharing is off in this view, so nothing is saved. Open the artifact link to work together.", true); return false; }
-    if (!S.canWrite) { toast("You can read this board but not change it. Ask the owner for Contributor access in Share.", true); return false; }
+    if (!S.canWrite) { toast("View only. The board owner has to give you Contributor access, or add your email as an Editor, in Share.", true); return false; }
     if (!S.me.name) { S.pending = fn; showWho(); return false; }
     return true;
   }
-  function save(path, data, okMsg) {
-    return serial(path, function () { return S.db.doc(path).set(data); }).then(function () { if (okMsg) toast(okMsg); }, function () { toast("Could not save that. Check your connection and try again.", true); });
+  /* A refused write (invalid_argument) means this account may read the board but not change it. Say so once and switch to view only. */
+  function readOnly() {
+    if (S.denied) return;
+    S.denied = true; S.canWrite = false; S.live = "ro";
+    toast("You can read this board but not change it. The board owner has to give you Contributor access, or add your email as an Editor, in Share.", true);
+    schedule();
   }
-  function saveTask(id, patch, okMsg) {
+  function failed(e) {
+    var code = e && e.code;
+    if (code === "invalid_argument" || code === "revoked") readOnly();
+    else toast("Could not save that. Check your connection and try again.", true);
+  }
+  /* saveQuiet resolves to null when the write worked, or to the error. report() then shows one message for a whole group of writes. */
+  function saveQuiet(path, data) {
+    return serial(path, function () { return S.db.doc(path).set(data); }).then(function () { return null; }, function (e) { return e || { code: "unavailable" }; });
+  }
+  function report(errs, okMsg) {
+    var bad = errs.filter(Boolean);
+    if (bad.length) { failed(bad[0]); return false; }
+    if (okMsg) toast(okMsg);
+    return true;
+  }
+  function save(path, data, okMsg) { return saveQuiet(path, data).then(function (e) { return report([e], okMsg); }); }
+  function saveTask(id, patch, okMsg, quiet) {
     var cur = S.tasks[id] || {};
     var next = Object.assign({}, cur, patch, { updatedAt: new Date().toISOString(), updatedBy: S.me.name });
-    return save("tasks/" + id, next, okMsg);
+    return quiet ? saveQuiet("tasks/" + id, next) : save("tasks/" + id, next, okMsg);
   }
   var act = {
-    take: function (id) { if (!guard(function () { act.take(id); })) return; var t = TASKS[id]; var w = waiting(eff(t)); saveTask(id, { assignee: S.me.name, status: "doing" }, t.code + " is yours now." + (w.length ? " It waits for " + w.map(function (d) { return TASKS[d].code; }).join(", ") + "." : "")); },
-    release: function (id) { if (!guard(function () { act.release(id); })) return; saveTask(id, { assignee: null, status: "todo" }, "Released."); },
+    take: function (id) { var pid = eff(TASKS[id]).pkg; if (PKG[pid] && PKG[pid].kind === "package") act.takePkg(pid); },
+    release: function (id) { act.releasePkg(eff(TASKS[id]).pkg); },
     status: function (id, v) {
       if (!guard(function () { act.status(id, v); })) return;
-      var patch = { status: v };
-      if (!eff(TASKS[id]).assignee && (v === "doing" || v === "review")) patch.assignee = S.me.name;
-      saveTask(id, patch, TASKS[id].code + " is now " + STATUS[v].toLowerCase() + ".");
+      var m = cardLock(id); if (m) { toast(m, true); return; }
+      saveTask(id, { status: v }, TASKS[id].code + " is now " + STATUS[v].toLowerCase() + ".");
     },
-    assign: function (id, name) { if (!guard(function () { act.assign(id, name); })) return; saveTask(id, { assignee: name || null, status: name && eff(TASKS[id]).status === "todo" ? "doing" : eff(TASKS[id]).status }); },
-    check: function (id, i) { if (!guard(function () { act.check(id, i); })) return; var c = Object.assign({}, (S.tasks[id] || {}).checks || {}); c[i] = !c[i]; saveTask(id, { checks: c }); },
+    assign: function () { toast("A card belongs to the owner of its package. Move the card to another package to give it away.", true); },
+    check: function (id, i) {
+      if (!guard(function () { act.check(id, i); })) return;
+      var m = cardLock(id); if (m) { toast(m, true); return; }
+      var c = Object.assign({}, (S.tasks[id] || {}).checks || {}); c[i] = !c[i]; saveTask(id, { checks: c });
+    },
     note: function (id, text) {
       if (!guard(function () { act.note(id, text); })) return;
       if (!text.trim()) return;
       S.draft = "";
       serial("notes", function () { return S.db.collection("notes").add({ taskId: id, by: S.me.name, at: new Date().toISOString(), text: text.trim().slice(0, 1500) }); })
-        .then(function () { toast("Note added."); }, function () { toast("Could not add the note.", true); });
+        .then(function () { toast("Note added."); }, function (e) { failed(e); });
     },
     decide: function (id, v) { if (!guard(function () { act.decide(id, v); })) return; save("decisions/" + id, { choice: v, by: S.me.name, at: new Date().toISOString() }, "Decision saved."); },
     trello: function (key, on) { if (!guard(function () { act.trello(key, on); })) return; save("trello/" + key, { added: on, by: S.me.name, at: new Date().toISOString() }); },
+    setPace: function (h) {
+      h = Number(h);
+      if (PACES.indexOf(h) < 0) return;
+      if (!guard(function () { act.setPace(h); })) return;
+      if (!S.isOwner) { toast("Only the board owner sets the pace, so everyone sees the same dates.", true); return; }
+      save("settings/plan", { hours: h, by: S.me.name, at: new Date().toISOString() }, "The plan now assumes " + hoursWord(h) + " a day for each member.");
+    },
     setOwner: function (pid, name, okMsg) {
       if (!guard(function () { act.setOwner(pid, name, okMsg); })) return false;
       var old = (S.packages[pid] || {}).owner || null;
+      if (old && !isMine(pid) && !(S.isOwner && !name)) { toast(lockMsg(pid), true); return false; }
+      if (name && name !== S.me.name && !S.isOwner) { toast("Take a free package for yourself. Only the board owner can give a package to someone else.", true); return false; }
       if (old === name) return true;
-      var jobs = [savePkg(pid, { owner: name || null })];
+      var ownerId = name ? (name === S.me.name ? S.me.id : memberId(name)) : null;
+      var jobs = [savePkg(pid, { owner: name || null, ownerId: ownerId || null }, null, true)];
       pkgTasks(pid).forEach(function (t) {
         if (t.status === "done" || t.status === "review") return;
-        if (t.assignee && t.assignee !== old) return;
-        jobs.push(saveTask(t.id, { assignee: name || null, status: name ? t.status : "todo" }));
+        jobs.push(saveTask(t.id, { assignee: name || null, status: name ? t.status : "todo" }, null, true));
       });
-      Promise.all(jobs).then(function () { toast(okMsg || (name ? "Package " + PKG[pid].letter + " belongs to " + name.split(" ")[0] + " now." : "Package " + PKG[pid].letter + " is free again.")); });
+      Promise.all(jobs).then(function (errs) { report(errs, okMsg || (name ? "Package " + PKG[pid].letter + " belongs to " + first(name) + " now." : "Package " + PKG[pid].letter + " is free again.")); });
       return true;
     },
     takePkg: function (pid) {
-      var cur = (S.packages[pid] || {}).owner;
-      if (cur && cur !== S.me.name) { toast("Package " + PKG[pid].letter + " belongs to " + cur.split(" ")[0] + " already.", true); return; }
       if (!S.me.name) { guard(function () { act.takePkg(pid); }); return; }
-      act.setOwner(pid, S.me.name, "Package " + PKG[pid].letter + " is yours: " + pkgTasks(pid).filter(function (t) { return t.status !== "done"; }).length + " cards, in the order shown.");
+      var o = S.packages[pid] || {};
+      if (o.owner && !isMine(pid)) { toast(lockMsg(pid), true); return; }
+      if (o.owner) { toast("Package " + PKG[pid].letter + " is already yours.", true); return; }
+      var n = pkgTasks(pid).filter(function (t) { return t.status !== "done"; }).length;
+      act.setOwner(pid, S.me.name, "Package " + PKG[pid].letter + " is yours: " + n + " cards. Nobody else can add or remove its cards now.");
     },
     releasePkg: function (pid) { act.setOwner(pid, null); },
+    unlockPkg: function (pid) { if (S.isOwner) act.setOwner(pid, null, "Package " + PKG[pid].letter + " is unlocked and free again."); },
     move: function (id, pid) {
       if (!guard(function () { act.move(id, pid); })) return false;
       var t = eff(TASKS[id]);
       if (t.pkg === pid || !PKG[pid] || PKG[pid].kind !== "package") return true;
       if (t.status === "done") { toast("A finished card stays where it is.", true); return false; }
+      if (!canEditPkg(t.pkg)) { toast(lockMsg(t.pkg), true); return false; }
+      if (!canEditPkg(pid)) { toast(lockMsg(pid), true); return false; }
       var owner = (S.packages[pid] || {}).owner || null;
       var patch = { pkg: pid };
       if (t.status !== "review") { patch.assignee = owner; if (!owner && t.status === "doing") patch.status = "todo"; }
-      saveTask(id, patch, t.code + " moved to package " + PKG[pid].letter + "." + (owner ? " It is " + owner.split(" ")[0] + "'s now." : " Nobody owns that package yet."));
+      saveTask(id, patch, t.code + " moved to package " + PKG[pid].letter + "." + (owner ? " It is " + first(owner) + "'s now." : " Nobody owns that package yet."));
       return true;
     },
     renamePkg: function (pid, name) {
       if (!guard(function () { act.renamePkg(pid, name); })) return;
+      if (!isMine(pid)) { toast((S.packages[pid] || {}).owner ? lockMsg(pid) : "Take package " + PKG[pid].letter + " first to rename it.", true); return; }
       name = String(name || "").trim().slice(0, 60);
       S.nameDraft = null;
       savePkg(pid, { name: name && name !== PKG[pid].name ? name : null }, name && name !== PKG[pid].name ? "Package renamed." : "Original name restored.");
     }
   };
-  function savePkg(pid, patch, okMsg) {
+  function savePkg(pid, patch, okMsg, quiet) {
     var cur = S.packages[pid] || {};
-    return save("packages/" + pid, Object.assign({}, cur, patch, { updatedAt: new Date().toISOString(), updatedBy: S.me.name }), okMsg);
+    var next = Object.assign({}, cur, patch, { updatedAt: new Date().toISOString(), updatedBy: S.me.name });
+    return quiet ? saveQuiet("packages/" + pid, next) : save("packages/" + pid, next, okMsg);
   }
 
   function showWho() {
@@ -642,9 +1189,11 @@ html.lock { overflow: hidden; }
   }
   function pickMe(name) {
     if (D.team.indexOf(name) < 0) return;
+    var taken = S.me.id ? Object.keys(S.members).filter(function (id) { return id !== S.me.id && (S.members[id] || {}).name === name; }).length : 0;
+    if (taken) { toast(name + " is already picked on another account.", true); return; }
     S.me.name = name;
     try { localStorage.setItem("wf-me", name); } catch (e) {}
-    if (S.db && S.me.id && S.canWrite) { S.db.doc("members/" + S.me.id).set({ name: name }).catch(function () {}); }
+    if (S.db && S.me.id && S.canWrite) { S.db.doc("members/" + S.me.id).set({ name: name }).catch(function (e) { failed(e); }); }
     $("#who").hidden = true;
     renderAll();
     var p = S.pending; S.pending = null;
@@ -664,6 +1213,7 @@ html.lock { overflow: hidden; }
       if (user) {
         steps.push(user.id().then(function (id) { S.me.id = id; }).catch(function () {}));
         steps.push(user.can("data.write").then(function (w) { S.canWrite = w !== false; }).catch(function () {}));
+        steps.push(user.isOwner().then(function (o) { S.isOwner = !!o; }).catch(function () {}));
       }
       return Promise.all(steps).then(function () {
         var name = "";
@@ -683,17 +1233,27 @@ html.lock { overflow: hidden; }
         sub("decisions", function (docs) { var m = {}; docs.forEach(function (d) { m[d.id] = d.data(); }); S.decisions = m; });
         sub("trello", function (docs) { var m = {}; docs.forEach(function (d) { m[d.id] = d.data(); }); S.trello = m; });
         sub("packages", function (docs) { var m = {}; docs.forEach(function (d) { m[d.id] = d.data(); }); S.packages = m; });
+        sub("members", function (docs) { var m = {}; docs.forEach(function (d) { m[d.id] = d.data(); }); S.members = m; });
+        sub("settings", function (docs) { var m = {}; docs.forEach(function (d) { m[d.id] = d.data(); }); S.settings = m; });
         S.live = S.canWrite ? "on" : "ro";
         renderAll();
       });
     });
   }
 
+  function bannerHTML() {
+    if (S.live === "off") return '<div class="banner"><span>Shared saving is off in this view, so you can read everything but changes will not stick. Open the artifact link while signed in to work together.</span></div>';
+    if (S.live === "ro") return '<div class="banner"><span><b>View only.</b> This account can read the board but not change it, so it cannot take a package yet. Only the board owner can fix that, in Share: give you Contributor access, or turn off &ldquo;Anyone with the link&rdquo; and add your email as an Editor.</span><button class="btn mini" type="button" data-act="copy-owner-msg">Copy a message for the owner</button></div>';
+    if (!S.me.name) return '<div class="banner"><span>Pick your name so the board knows who owns each package and card.</span><button class="btn mini" type="button" data-act="who">Pick your name</button></div>';
+    if (S.isOwner && !S.hintGone) return '<div class="banner info"><span><b>Teammates can only change this board after you change Share.</b> Same organization: set access to Contributor. Personal accounts: turn off &ldquo;Anyone with the link&rdquo; and add each teammate by email as an Editor. A link visitor from outside your organization can only read.</span><button class="btn mini" type="button" data-act="hint-gone">Got it</button></div>';
+    return "";
+  }
+
   /* ---------------------------------------------------------------- header and summary */
   function renderHeader() {
     var live = $("#live");
     live.className = "live " + (S.live === "on" ? "on" : S.live === "ro" ? "ro" : "");
-    live.lastChild.textContent = { on: "Live, shared with the team", ro: "View only", off: "Offline view, changes are not saved", loading: "Connecting" }[S.live];
+    live.lastChild.textContent = { on: "Live, shared with the team", ro: "View only. Ask the owner for Contributor access", off: "Offline view, changes are not saved", loading: "Connecting" }[S.live];
     $("#me").innerHTML = S.me.name
       ? avatar(S.me.name, "lg") + "<span>" + esc(S.me.name.split(" ")[0]) + '</span> <button class="btn mini" type="button" data-act="who">Switch</button>'
       : '<button class="btn" type="button" data-act="who">Pick your name</button>';
@@ -713,7 +1273,7 @@ html.lock { overflow: hidden; }
       return '<button class="person" type="button" data-act="who-filter" data-name="' + esc(name) + '" aria-pressed="' + (S.f.who === name) + '" title="Show the cards of ' + esc(name) + '">' + avatar(name) + "<span>" + esc(name.split(" ")[0]) + "</span>" + owned + "<small>" + mine + "</small></button>";
     }).join("");
     $("#summary").innerHTML =
-      '<div><p class="eyebrow">Car Rental Management System</p><h2>Back end, split into ' + infos.length + ' packages</h2><p class="lede">Every endpoint the 14 pages need, grouped into packages of related cards, one for each member. Take a package, build its cards in order, and move cards between packages if the split feels uneven. Trello keeps the dates, this board keeps the details.</p></div>' +
+      '<div><p class="eyebrow">Car Rental Management System</p><h2>Back end, split into ' + infos.length + ' packages</h2><p class="lede">Every endpoint the 14 pages need, grouped into packages of related cards, one for each member. Take a package, build its cards in order, and move cards between packages if the split feels uneven. The Schedule tab works out the dates. Trello keeps the deadlines.</p></div>' +
       '<div><div class="big"><strong>' + c.done + "</strong><span>of " + n + " cards done</span></div>" +
       '<div class="meter" role="img" aria-label="' + c.done + " done, " + c.review + " in review, " + c.doing + " in progress, " + c.todo + ' to do"><i class="m-done" style="width:' + pct("done") + '"></i><i class="m-review" style="width:' + pct("review") + '"></i><i class="m-doing" style="width:' + pct("doing") + '"></i></div>' +
       '<ul class="counts"><li><b>' + taken + "</b> of " + infos.length + " packages taken</li><li><b>" + c.todo + "</b> to do</li><li><b>" + c.doing + "</b> in progress</li><li><b>" + c.review + "</b> in review</li><li class=\"late\"><b>" + late + "</b> late</li></ul>" +
@@ -752,15 +1312,16 @@ html.lock { overflow: hidden; }
     var due = done ? "" : late ? '<span class="late">Late by ' + plural(-daysFrom(t.due), "day") + "</span>" : t.due ? '<span class="due">Due ' + fd(t.due) + "</span>" : "";
     var tr = t.cards.length ? t.cards.map(function (c) { return "#" + c.n; }).join(" ") : t.newCard ? "New card" : "";
     var wt = waiting(t);
-    var take = !done && !t.assignee && t.status === "todo" ? '<button class="btn mini primary" type="button" data-act="take" data-id="' + t.id + '">Take it</button>' : "";
-    var who = t.assignee ? '<span class="who">' + avatar(t.assignee) + "<span>" + esc(t.assignee.split(" ")[0]) + "</span></span>" : done ? '<span class="who none">Finished</span>' : '<span class="who none">Unclaimed</span>';
+    var home = PKG[t.pkg] || {};
+    var take = !done && home.kind === "package" && !(S.packages[t.pkg] || {}).owner ? '<button class="btn mini primary" type="button" data-act="take-pkg" data-id="' + t.pkg + '">Take package ' + esc(home.letter) + "</button>" : "";
+    var who = t.assignee ? '<span class="who">' + avatar(t.assignee) + "<span>" + esc(t.assignee.split(" ")[0]) + "</span></span>" : done ? '<span class="who none">Finished</span>' : '<span class="who none">Package is free</span>';
     return '<article class="task' + (done ? " is-done" : "") + '" tabindex="0" role="button" data-act="open-task" data-id="' + t.id + '" aria-label="' + esc(t.code + " " + t.title) + '">' +
       '<div class="top1"><span class="code">' + esc(t.code) + "</span>" + pkgChip(t.pkg) + '<span class="chip">Sprint ' + t.sprint + '</span><span class="size" title="' + SIZE[t.size] + '">' + t.size + "</span>" + (t.tier !== "core" ? '<span class="chip ' + (t.tier === "optional" ? "" : "acc") + '">' + TIER[t.tier] + "</span>" : "") + "</div>" +
       "<h4>" + esc(t.title) + "</h4>" +
       (chips ? '<div class="epchips">' + chips + "</div>" : "") +
       (!done && wt.length ? '<div class="meta2"><span class="chip warn">Waits for ' + wt.map(function (d) { return esc(TASKS[d].code); }).join(", ") + "</span></div>" : "") +
       '<div class="foot">' + who + (take || due) + '</div>' +
-      '<div class="meta2"><span>' + (tr ? "Trello " + esc(tr) : "") + "</span>" + (take && due ? due : "") + "</div></article>";
+      '<div class="meta2"><span>' + (tr ? "Trello " + esc(tr) : "") + "</span>" + (!done && plan().card[t.id] ? "<span>Plan " + esc(cardRange(t.id)) + "</span>" : "") + (take && due ? due : "") + "</div></article>";
   }
 
   function buildBoardTools() {
@@ -807,10 +1368,7 @@ html.lock { overflow: hidden; }
         '<div id="boardBanner"></div><div class="tools" id="boardTools"></div><div id="boardList"></div>';
       buildBoardTools();
     }
-    var b = "";
-    if (S.live === "off") b = '<div class="banner"><span>Shared saving is off in this view, so you can read everything but changes will not stick. Open the artifact link while signed in to work together.</span></div>';
-    else if (S.live === "ro") b = '<div class="banner"><span>You can read this board but not change it. Ask the owner to share it with you as a Contributor.</span></div>';
-    else if (!S.me.name && S.live === "on") b = '<div class="banner"><span>Pick your name so the board knows who takes each card.</span><button class="btn mini" type="button" data-act="who">Pick your name</button></div>';
+    var b = bannerHTML();
     $("#boardBanner").innerHTML = b;
     renderBoardList();
   }
@@ -818,34 +1376,38 @@ html.lock { overflow: hidden; }
 
   /* ---------------------------------------------------------------- packages tab */
   function ownerChip(p) {
-    return p.owner ? '<span class="who">' + avatar(p.owner) + "<span>" + esc(p.owner.split(" ")[0]) + (p.owner === S.me.name ? " (you)" : "") + "</span></span>" : '<span class="st st-todo">Free</span>';
+    return p.owner ? '<span class="who">' + avatar(p.owner) + "<span>" + esc(first(p.owner)) + (isMine(p.id) ? " (you)" : "") + '</span></span><span class="padlock" title="Only ' + esc(first(p.owner)) + ' can change this package">' + LOCK + "</span>" : '<span class="st st-todo">Free</span>';
   }
   function readyChip(i) {
     if (!i.open.length) return "";
-    if (!i.ext.length) return '<span class="chip ok" title="Every card this package needs is done.">Nothing blocks you</span>';
-    var names = i.ext.map(function (d) { var x = eff(TASKS[d]); return x.code + " " + x.title + " (package " + ((PKG[x.pkg] || {}).letter || "") + ")"; }).join("\n");
-    if (i.firstBlocked) return '<span class="chip bad" title="' + esc(names) + '">Waits for ' + i.letters.join(", ") + "</span>";
-    return '<span class="chip warn" title="' + esc(names) + '">Start now, later cards wait for ' + i.letters.join(", ") + "</span>";
+    var tip = function (list) { return esc(list.map(function (d) { var x = eff(TASKS[d]); return x.code + " " + x.title + " (package " + ((PKG[x.pkg] || {}).letter || "") + ")"; }).join("\n")); };
+    if (!i.ext.length) return '<span class="chip ok" title="Every card this package needs from other packages is done.">Nothing blocks you</span>';
+    var out = "";
+    if (i.firstBlocked) out += '<span class="chip bad" title="' + tip(i.firstDeps) + '">Waits for ' + i.firstLetters.join(", ") + " first</span>";
+    if (i.laterLetters.length) out += '<span class="chip warn" title="' + tip(i.laterDeps) + '">' + (i.firstBlocked ? "Later also needs " : "Start now, later cards need ") + i.laterLetters.join(", ") + "</span>";
+    return out;
   }
   function miniRow(t, n) {
     var done = t.status === "done";
     var moved = t.pkg !== TASKS[t.id].pkg;
-    return '<li class="mini' + (done ? " is-done" : "") + '" data-act="open-task" data-id="' + t.id + '" data-from="' + t.pkg + '"' + (done ? "" : ' draggable="true" data-drag="' + t.id + '" title="Drag onto another package to move this card"') + ">" +
+    var drag = !done && canEditPkg(t.pkg);
+    return '<li class="mini' + (done ? " is-done" : "") + '" data-act="open-task" data-id="' + t.id + '" data-from="' + t.pkg + '"' + (drag ? ' draggable="true" data-drag="' + t.id + '" title="Drag onto another package to move this card"' : "") + ">" +
       '<span class="no s-' + t.status + '" title="' + STATUS[t.status] + '">' + (done ? "&#10003;" : n + 1) + "</span>" +
       '<span class="mt"><b class="code">' + esc(t.code) + "</b>" + esc(t.title) + (moved ? ' <span class="chip acc">moved here</span>' : "") + "</span>" +
-      '<span class="size" title="' + SIZE[t.size] + '">' + t.size + '</span><span class="md">' + (t.due ? fd(t.due) : "") + "</span></li>";
+      '<span class="size" title="' + SIZE[t.size] + '">' + t.size + '</span><span class="md"' + (done ? "" : ' title="Plan ' + esc(cardRange(t.id)) + (t.due ? ". Trello due " + esc(fd(t.due)) : "") + '"') + ">" + (done ? "" : esc(cardRange(t.id))) + "</span></li>";
   }
   function pkgCardHTML(id) {
-    var i = pkgInfo(id), p = i.p, mine = p.owner && p.owner === S.me.name;
-    var cls = "pkg" + (i.state === "done" ? " is-done" : i.state === "taken" ? " is-taken" : "");
+    var i = pkgInfo(id), p = i.p, mine = isMine(id), locked = !!p.owner && !mine;
+    var cls = "pkg" + (i.state === "done" ? " is-done" : i.state === "taken" ? " is-taken" : "") + (locked ? " is-locked" : "");
     var pages = p.pages.length ? '<div class="pages"><span>Makes these pages work</span>' + p.pages.map(function (x) { return "<code>" + esc(x) + "</code>"; }).join("") + "</div>" : "";
-    var take = i.state === "done" ? "" : !p.owner ? '<button class="btn primary" type="button" data-act="take-pkg" data-id="' + id + '">Take this package</button>' : mine ? '<button class="btn ghost" type="button" data-act="release-pkg" data-id="' + id + '">Give it back</button>' : "";
+    var take = i.state === "done" ? "" : !p.owner ? '<button class="btn primary" type="button" data-act="take-pkg" data-id="' + id + '">Take this package</button>' : mine ? '<button class="btn ghost" type="button" data-act="release-pkg" data-id="' + id + '">Give it back</button>' : S.isOwner ? '<button class="btn ghost" type="button" data-act="unlock-pkg" data-id="' + id + '" title="Board owner only. Frees the package.">Unlock</button>' : "";
     var tags = (p.tags || []).map(function (x) { return '<span class="chip acc">' + esc(x) + "</span>"; }).join("");
+    var line = p.owner ? '<p class="lockline">' + LOCK + "<span>" + (mine ? "You own this package. Nobody else can add, remove or change its cards." : "Only " + esc(first(p.owner)) + " can add, remove or change its cards.") + "</span></p>" : "";
     return '<article class="' + cls + '" data-pkg="' + id + '" tabindex="0" role="button" data-act="open-pkg" data-id="' + id + '" aria-label="Package ' + p.letter + ", " + esc(p.name) + '">' +
-      '<header class="pk-head"><span class="letter">' + p.letter + '</span><div class="pk-title"><h3>' + esc(p.name) + '</h3><div class="pk-sub"><span><b>' + i.ts.length + "</b> cards</span>" + (i.hours ? "<span><b>" + i.hours + " h</b> left</span>" : "") + "<span>" + (i.sMin === i.sMax ? "Sprint " + i.sMin : "Sprints " + i.sMin + " to " + i.sMax) + "</span>" + (i.done ? "<span><b>" + i.done + "</b> done</span>" : "") + '</div></div><div class="pk-owner">' + ownerChip(p) + "</div></header>" +
+      '<header class="pk-head"><span class="letter">' + p.letter + '</span><div class="pk-title"><h3>' + esc(p.name) + '</h3><div class="pk-sub"><span><b>' + i.ts.length + "</b> cards</span>" + (i.hours ? "<span><b>" + i.hours + " h</b> of work</span>" : "") + (i.done ? "<span><b>" + i.done + "</b> done</span>" : "") + '</div></div><div class="pk-owner">' + ownerChip(p) + "</div></header>" + (i.state === "done" ? "" : whenHTML(id)) +
       '<p class="goal">' + esc(p.goal) + "</p>" + pages +
-      '<ol class="mini-list" aria-label="Cards in package ' + p.letter + '">' + (i.ts.map(function (t, n) { return miniRow(t, n); }).join("") || '<li class="mini"><span></span><span class="muted">No cards. Drag one here.</span></li>') + "</ol>" +
-      '<footer class="pk-foot"><div class="pk-ready">' + readyChip(i) + tags + '</div><div class="pk-actions">' + take + '<button class="btn" type="button" data-act="open-pkg" data-id="' + id + '">Details</button></div></footer></article>';
+      '<ol class="mini-list" aria-label="Cards in package ' + p.letter + '">' + (i.ts.map(function (t, n) { return miniRow(t, n); }).join("") || '<li class="mini"><span></span><span class="muted">No cards. Drag one here.</span></li>') + "</ol>" + line +
+      '<footer class="pk-foot"><div class="pk-ready">' + readyChip(i) + (i.open.length ? critChip(id) : "") + tags + '</div><div class="pk-actions">' + take + '<button class="btn" type="button" data-act="open-pkg" data-id="' + id + '">Details</button></div></footer></article>';
   }
   function workloadHTML() {
     var infos = realPkgs().map(function (p) { return pkgInfo(p.id); });
@@ -862,21 +1424,19 @@ html.lock { overflow: hidden; }
   function renderPackages() {
     var infos = realPkgs().map(function (p) { return pkgInfo(p.id); });
     var c = { all: infos.length, free: 0, taken: 0, done: 0, mine: 0 };
-    infos.forEach(function (i) { c[i.state]++; if (i.p.owner && i.p.owner === S.me.name) c.mine++; });
+    infos.forEach(function (i) { c[i.state]++; if (isMine(i.p.id)) c.mine++; });
     var f = S.pf;
-    var shown = infos.filter(function (i) { return !f || (f === "mine" ? i.p.owner === S.me.name : i.state === f); });
+    var shown = infos.filter(function (i) { return !f || (f === "mine" ? isMine(i.p.id) : i.state === f); });
     var seg = [["", "All", c.all], ["free", "Free", c.free], ["taken", "Taken", c.taken], ["mine", "Mine", c.mine], ["done", "Done", c.done]].map(function (s) {
       return '<button type="button" data-act="pkg-filter" data-v="' + s[0] + '" aria-pressed="' + (f === s[0]) + '">' + s[1] + ' <span class="muted">' + s[2] + "</span></button>";
     }).join("");
     var fin = D.packages.filter(function (p) { return p.kind === "done"; })[0];
     var finCards = fin ? pkgTasks(fin.id).map(cardHTML).join("") : "";
-    var b = "";
-    if (S.live === "off") b = '<div class="banner"><span>Shared saving is off in this view, so changes will not stick. Open the artifact link while signed in to work together.</span></div>';
-    else if (S.live === "ro") b = '<div class="banner"><span>You can read this board but not change it. Ask the owner to share it with you as a Contributor.</span></div>';
-    else if (!S.me.name && S.live === "on") b = '<div class="banner"><span>Pick your name so the board knows who owns each package.</span><button class="btn mini" type="button" data-act="who">Pick your name</button></div>';
+    var b = bannerHTML();
     $("#view").innerHTML = b +
       '<div class="pk-intro"><div><h3>One package for each member</h3><p class="lead">A package is a set of related cards, listed in the order to build them. Take a free package, or open a package and give it to someone. If the split feels uneven, drag a card onto another package, or open the package and change the Package of a card. The card goes to the owner of the package it lands in.</p></div>' +
       '<ol class="how" style="margin:0"><li><b>1</b><strong>Take one</strong><span>You own all its cards.</span></li><li><b>2</b><strong>Build in order</strong><span>Top card first.</span></li><li><b>3</b><strong>Rebalance</strong><span>Drag cards between packages.</span></li></ol></div>' +
+      planStripHTML() +
       workloadHTML() +
       '<div class="tools"><span class="seg" role="group" aria-label="Show packages">' + seg + "</span></div>" +
       '<div class="pkgs">' + (shown.map(function (i) { return pkgCardHTML(i.p.id); }).join("") || '<div class="empty"><h3>No package matches</h3><button class="btn" type="button" data-act="pkg-filter" data-v="">Show all packages</button></div>') + "</div>" +
@@ -884,28 +1444,39 @@ html.lock { overflow: hidden; }
   }
 
   function pkgDrawerHTML(id) {
-    var i = pkgInfo(id), p = i.p, mine = p.owner && p.owner === S.me.name;
-    var ownerOpts = '<option value="">Free</option>' + D.team.map(function (n) { return '<option value="' + esc(n) + '"' + (p.owner === n ? " selected" : "") + ">" + esc(n) + "</option>"; }).join("");
-    var pkgOpts = function (cur) { return realPkgs().map(function (q) { return '<option value="' + q.id + '"' + (q.id === cur ? " selected" : "") + ">" + q.letter + " &middot; " + esc(pkgOf(q.id).name) + "</option>"; }).join(""); };
+    var i = pkgInfo(id), p = i.p, mine = isMine(id), locked = !!p.owner && !mine;
+    var names = S.isOwner ? D.team : D.team.filter(function (n) { return n === S.me.name; });
+    var ownerOpts = '<option value="">Free</option>' + names.map(function (n) { return '<option value="' + esc(n) + '"' + (p.owner === n ? " selected" : "") + ">" + esc(n) + "</option>"; }).join("");
+    var pkgOpts = function (cur) {
+      return realPkgs().map(function (q) {
+        var theirs = !canEditPkg(q.id) && q.id !== cur;
+        return '<option value="' + q.id + '"' + (q.id === cur ? " selected" : "") + (theirs ? " disabled" : "") + ">" + q.letter + " &middot; " + esc(pkgOf(q.id).name) + (theirs ? " (" + esc(first((S.packages[q.id] || {}).owner)) + "'s)" : "") + "</option>";
+      }).join("");
+    };
     var rows = i.ts.map(function (t, n) {
       var wt = waiting(t);
       return '<li class="trow"><span class="no s-' + t.status + '">' + (t.status === "done" ? "&#10003;" : n + 1) + '</span><div class="tr-main"><button type="button" class="tr-title" data-act="open-task" data-id="' + t.id + '" data-from="' + id + '"><b class="code">' + esc(t.code) + "</b>" + esc(t.title) + "</button>" +
-        '<div class="meta2"><span class="size" title="' + SIZE[t.size] + '">' + t.size + "</span><span>Sprint " + t.sprint + "</span>" + (t.due ? "<span>Due " + fd(t.due) + "</span>" : "") + stPill(t.status) + (t.assignee ? '<span class="who">' + avatar(t.assignee) + "<span>" + esc(t.assignee.split(" ")[0]) + "</span></span>" : "") + "</div>" +
+        '<div class="meta2"><span class="size" title="' + SIZE[t.size] + '">' + t.size + "</span>" + (t.status !== "done" && plan().card[t.id] ? "<span><b>Plan</b> " + esc(cardRange(t.id)) + "</span>" : "") + (t.due ? "<span>Trello due " + fd(t.due) + "</span>" : "") + stPill(t.status) + (t.assignee ? '<span class="who">' + avatar(t.assignee) + "<span>" + esc(first(t.assignee)) + "</span></span>" : "") + "</div>" +
         (t.status !== "done" && wt.length ? '<div class="meta2"><span class="chip warn">Waits for ' + wt.map(function (d) { return esc(TASKS[d].code); }).join(", ") + "</span></div>" : "") + "</div>" +
-        (t.status === "done" ? "" : '<label class="mv">Package<select data-act="move" data-id="' + t.id + '" aria-label="Package of ' + esc(t.code) + '">' + pkgOpts(t.pkg) + "</select></label>") + "</li>";
+        (t.status === "done" ? "" : '<label class="mv">Package<select data-act="move" data-id="' + t.id + '" aria-label="Package of ' + esc(t.code) + '"' + (canEditPkg(t.pkg) ? "" : " disabled") + ">" + pkgOpts(t.pkg) + "</select></label>") + "</li>";
     }).join("");
-    var ext = i.ext.map(function (d) { var x = eff(TASKS[d]); return '<button class="chip warn" type="button" data-act="open-task" data-id="' + d + '" data-from="' + id + '"><b>' + esc(x.code) + "</b> " + esc(x.title) + " (package " + esc((PKG[x.pkg] || {}).letter || "") + ")</button>"; }).join(" ");
+    var ext = i.ext.map(function (d) { var x = eff(TASKS[d]); return '<button class="chip warn" type="button" data-act="open-task" data-id="' + d + '" data-from="' + id + '"><b>' + esc(x.code) + "</b> " + esc(x.title) + " (package " + esc((PKG[x.pkg] || {}).letter || "") + ")" + (plan().card[d] ? ", ready " + esc(fd(dayIso(plan().card[d].ed))) : "") + "</button>"; }).join(" ");
     var draft = S.nameDraft != null && S.nameDraft.id === id ? S.nameDraft.v : p.name;
-    return '<div class="d-head"><div class="d-title"><div><div class="top1" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px"><span class="letter sm">' + p.letter + '</span><span class="chip">' + plural(i.ts.length, "card") + '</span><span class="chip">' + (i.hours ? span(i.hours) + " left" : "All done") + '</span><span class="chip">' + (i.sMin === i.sMax ? "Sprint " + i.sMin : "Sprints " + i.sMin + " to " + i.sMax) + "</span>" + (i.start ? '<span class="chip">' + fd(i.start) + " to " + fd(i.due) + "</span>" : "") + (p.level ? '<span class="chip">' + esc(p.level) + "</span>" : "") + (p.tags || []).map(function (x) { return '<span class="chip acc">' + esc(x) + "</span>"; }).join("") + '</div><h2 id="d-title">Package ' + p.letter + " &middot; " + esc(p.name) + '</h2></div><button class="x" type="button" data-act="close-drawer" aria-label="Close">&times;</button></div>' +
-      '<div class="d-ctl"><label class="lbl" for="pkgOwner">Owner</label><select id="pkgOwner" data-id="' + id + '">' + ownerOpts + "</select>" +
+    var ownerCtl = mine || (S.isOwner && !p.owner) ? '<label class="lbl" for="pkgOwner">Owner</label><select id="pkgOwner" data-id="' + id + '">' + ownerOpts + "</select>" : '<span class="lbl">Owner</span>' + ownerChip(p);
+    var bar = locked
+      ? '<div class="lockbar">' + LOCK + "<span><b>Package " + p.letter + " belongs to " + esc(first(p.owner)) + ".</b> Only " + esc(first(p.owner)) + " can add cards, remove cards or change anything in it. You can read all of it and leave notes on any card.</span>" + (S.isOwner ? '<button class="btn mini" type="button" data-act="unlock-pkg" data-id="' + id + '">Unlock</button>' : "") + "</div>"
+      : mine ? '<div class="lockbar mine">' + LOCK + "<span><b>You own this package.</b> Nobody else can add cards to it, remove cards from it or change it.</span></div>" : "";
+    return '<div class="d-head"><div class="d-title"><div><div class="top1" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px"><span class="letter sm">' + p.letter + '</span><span class="chip">' + plural(i.ts.length, "card") + '</span><span class="chip">' + (i.hours ? i.hours + " h of work" : "All done") + "</span>" + (function () { var PP = plan().pk[id]; return PP ? '<span class="chip acc">' + esc(fd(PP.startIso)) + " to " + esc(fd(PP.endIso)) + "</span>" + critChip(id) : ""; })() + (p.level ? '<span class="chip">' + esc(p.level) + "</span>" : "") + (p.tags || []).map(function (x) { return '<span class="chip acc">' + esc(x) + "</span>"; }).join("") + '</div><h2 id="d-title">Package ' + p.letter + " &middot; " + esc(p.name) + '</h2></div><button class="x" type="button" data-act="close-drawer" aria-label="Close">&times;</button></div>' +
+      '<div class="d-ctl">' + ownerCtl +
       (!p.owner && i.state !== "done" ? '<button class="btn primary" type="button" data-act="take-pkg" data-id="' + id + '">Take this package</button>' : "") + (mine ? '<button class="btn ghost" type="button" data-act="release-pkg" data-id="' + id + '">Give it back</button>' : "") + "</div>" +
-      '<form class="rename" id="renameForm" data-id="' + id + '"><label class="sr-only" for="pkgName">Package name</label><input type="text" id="pkgName" maxlength="60" value="' + esc(draft) + '"><button class="btn mini" type="submit">Rename</button>' + (p.renamed ? '<button class="btn mini ghost" type="button" data-act="rename-reset" data-id="' + id + '">Use the first name</button>' : "") + "</form></div>" +
-      '<div class="d-body">' +
+      '<form class="rename" id="renameForm" data-id="' + id + '"><label class="sr-only" for="pkgName">Package name</label><input type="text" id="pkgName" maxlength="60" value="' + esc(draft) + '"' + (mine ? "" : " disabled") + '><button class="btn mini" type="submit"' + (mine ? "" : " disabled") + ">Rename</button>" + (p.renamed && mine ? '<button class="btn mini ghost" type="button" data-act="rename-reset" data-id="' + id + '">Use the first name</button>' : "") + "</form>" + bar + "</div>" +
+      '<div class="d-body">' + schedSection(id) +
       '<section><h3>What you will have at the end</h3><p style="max-width:70ch">' + esc(p.goal) + "</p>" + (p.pages.length ? '<div class="chips" style="margin-top:10px"><span class="muted" style="font-size:12.5px">Pages</span>' + p.pages.map(function (x) { return "<code>" + esc(x) + "</code>"; }).join("") + "</div>" : "") + "</section>" +
       (p.why ? '<section><h3>Why these cards go together</h3><p style="max-width:70ch">' + esc(p.why) + "</p></section>" : "") +
       (p.first ? '<section><h3>Start here</h3><p style="max-width:70ch">' + esc(p.first) + "</p>" + (p.tip ? '<p class="tip">' + esc(p.tip) + "</p>" : "") + "</section>" : "") +
-      "<section><h3>Cards, in the order to build them <small>" + i.done + " of " + i.ts.length + " done</small></h3>" + (rows ? '<ol class="tlist">' + rows + "</ol>" : '<p class="muted">No cards in this package. Move one here from another package.</p>') + '<p class="pk-hint">Changing the Package of a card gives it to the owner of that package. The order follows what each card needs first.</p></section>' +
+      "<section><h3>Cards, in the order to build them <small>" + i.done + " of " + i.ts.length + " done</small></h3>" + (rows ? '<ol class="tlist">' + rows + "</ol>" : '<p class="muted">No cards in this package. Move one here from another package.</p>') + '<p class="pk-hint">' + (locked ? "Only the owner can change the package of a card." : "Changing the Package of a card gives it to the owner of that package. You cannot move cards into or out of a package someone else owns.") + " The order follows what each card needs first.</p></section>" +
       (ext ? "<section><h3>Needs these first <small>cards in other packages</small></h3><div class=\"chips\">" + ext + "</div></section>" : "") +
+      (i.extTest.length ? '<section><h3>The test cards at the end also wait for <small>cards in other packages</small></h3><div class="chips">' + i.extTest.map(function (d) { var x = eff(TASKS[d]); return '<button class="chip" type="button" data-act="open-task" data-id="' + d + '" data-from="' + id + '"><b>' + esc(x.code) + "</b> " + esc(x.title) + " (package " + esc((PKG[x.pkg] || {}).letter || "") + ")" + (plan().card[d] ? ", ready " + esc(fd(dayIso(plan().card[d].ed))) : "") + "</button>"; }).join(" ") + "</div></section>" : "") +
       (p.skills.length ? '<section><h3>Skills you will use</h3><div class="chips">' + p.skills.map(function (x) { return '<span class="chip">' + esc(x) + "</span>"; }).join("") + "</div></section>" : "") +
       "</div>";
   }
@@ -986,37 +1557,43 @@ html.lock { overflow: hidden; }
     var keep = keepId ? [ae.selectionStart, ae.selectionEnd] : null;
     var prevScroll = $(".d-body", dr) ? $(".d-body", dr).scrollTop : 0;
     if (pk) {
-      var pi = pkgInfo(pk.id);
-      var psig = JSON.stringify(["p", pk.id, pi.ts.map(function (x) { return [x.id, x.status, x.assignee, x.pkg, x.updatedAt]; }), pi.p.owner, pi.p.name, S.me.name, S.canWrite, S.nameDraft]);
+      var pi = pkgInfo(pk.id), po = S.packages[pk.id] || {};
+      var psig = JSON.stringify(["p", pk.id, plan().sig, pi.ts.map(function (x) { return [x.id, x.status, x.assignee, x.pkg, x.updatedAt]; }), pi.p.owner, po.ownerId, pi.p.name, S.me.name, S.me.id, S.isOwner, S.canWrite, S.nameDraft, Object.keys(S.packages).map(function (k) { return (S.packages[k] || {}).owner || ""; })]);
       if (dr.classList.contains("on") && S.sig === psig) return;
       S.sig = psig;
       dr.innerHTML = pkgDrawerHTML(pk.id);
     } else {
-      var e = eff(t);
+      var e = eff(t), po2 = S.packages[e.pkg] || {};
       var ns = S.notes.filter(function (n) { return n.taskId === t.id; });
       var wt = waiting(e);
-      var sig = JSON.stringify(["t", t.id, e.status, e.pkg, e.assignee, e.checks, e.updatedAt, ns.map(function (n) { return n.id; }), wt, S.me.name, S.canWrite, S.openPkg, pkgOf(e.pkg).name]);
+      var sig = JSON.stringify(["t", t.id, plan().sig, e.status, e.pkg, e.assignee, e.checks, e.updatedAt, ns.map(function (n) { return n.id; }), wt, S.me.name, S.me.id, S.isOwner, S.canWrite, S.openPkg, pkgOf(e.pkg).name, po2.owner, po2.ownerId, Object.keys(S.packages).map(function (k) { return (S.packages[k] || {}).owner || ""; })]);
       if (dr.classList.contains("on") && S.sig === sig) return;
       S.sig = sig;
       var late = isLate(e);
+      var cp = plan().card[t.id];
+      var planBit = cp ? "<span><b>Plan</b> " + esc(fdw(dayIso(cp.sd))) + (cp.ed > cp.sd ? " to " + esc(fdw(dayIso(cp.ed))) : "") + "</span>" : "";
+      var trBit = t.start ? "<span>Trello " + fd(t.start) + " to " + fd(t.due) + "</span>" : "<span>No Trello dates</span>";
+      var lateBit = cp && e.due && dayIso(cp.ed) > e.due ? '<span class="late">Plan ends ' + plural(dayDiff(e.due, dayIso(cp.ed)), "day") + " after the Trello due date</span>" : "";
+      var whyBit = cardWhy(t.id);
       var checks = e.checks;
-      var steps = t.steps.map(function (s, i) { return '<li><label><input type="checkbox" data-act="check" data-id="' + t.id + '" data-i="' + i + '"' + (checks[i] ? " checked" : "") + "><span>" + esc(s) + "</span></label></li>"; }).join("");
+      var lockText = cardLock(t.id), home = PKG[e.pkg] || {}, real = home.kind === "package";
+      var off = lockText ? " disabled" : "";
+      var steps = t.steps.map(function (s, i) { return '<li><label><input type="checkbox" data-act="check" data-id="' + t.id + '" data-i="' + i + '"' + (checks[i] ? " checked" : "") + off + "><span>" + esc(s) + "</span></label></li>"; }).join("");
       var doneSteps = t.steps.filter(function (s, i) { return checks[i]; }).length;
       var trello = t.cards.map(function (c) { return '<a class="chip' + (c.done ? " ok" : "") + '" href="' + esc(c.url) + '" target="_blank" rel="noopener">Trello #' + c.n + (c.done ? " done" : "") + "</a>"; }).join(" ");
       if (t.newCard) { var nc = D.newCards[t.newCard]; trello += ' <button class="chip warn" type="button" data-act="nav" data-tab="trello" data-id="' + t.newCard + '">New card to add: ' + esc(nc.title) + "</button>"; }
       var eps = t.endpoints.map(function (id, i) { return epHTML(EPS[id], "drw", i === 0); }).join("");
-      var statusBtns = ORDER.map(function (s) { return '<button type="button" data-act="status" data-id="' + t.id + '" data-v="' + s + '" aria-pressed="' + (e.status === s) + '">' + STATUS[s] + "</button>"; }).join("");
-      var assignOpts = '<option value="">Unclaimed</option>' + D.team.map(function (n) { return '<option value="' + esc(n) + '"' + (e.assignee === n ? " selected" : "") + ">" + esc(n) + "</option>"; }).join("");
-      var home = PKG[e.pkg] || {};
-      var pkgSel = home.kind === "package" && e.status !== "done" ? '<label class="sr-only" for="taskPkg">Package</label><select id="taskPkg" data-id="' + t.id + '">' + realPkgs().map(function (q) { return '<option value="' + q.id + '"' + (q.id === e.pkg ? " selected" : "") + ">Package " + q.letter + " &middot; " + esc(pkgOf(q.id).name) + "</option>"; }).join("") + "</select>" : "";
+      var statusBtns = ORDER.map(function (s) { return '<button type="button" data-act="status" data-id="' + t.id + '" data-v="' + s + '" aria-pressed="' + (e.status === s) + '"' + off + ">" + STATUS[s] + "</button>"; }).join("");
+      var pkgSel = real && e.status !== "done" ? '<label class="sr-only" for="taskPkg">Package</label><select id="taskPkg" data-id="' + t.id + '"' + off + ">" + realPkgs().map(function (q) { var theirs = !canEditPkg(q.id) && q.id !== e.pkg; return '<option value="' + q.id + '"' + (q.id === e.pkg ? " selected" : "") + (theirs ? " disabled" : "") + ">Package " + q.letter + " &middot; " + esc(pkgOf(q.id).name) + (theirs ? " (" + esc(first((S.packages[q.id] || {}).owner)) + "'s)" : "") + "</option>"; }).join("") + "</select>" : "";
+      var ownerBit = real ? (po2.owner ? '<span class="who">' + avatar(po2.owner) + "<span>" + esc(first(po2.owner)) + "</span></span>" : '<span class="chip">Package is free</span>') : "";
+      var takeBtn = real && !po2.owner && e.status !== "done" ? '<button class="btn primary" type="button" data-act="take-pkg" data-id="' + e.pkg + '">Take package ' + esc(home.letter) + "</button>" : "";
+      var bar = lockText ? '<div class="lockbar' + (real && !po2.owner ? " free" : "") + '">' + (real && !po2.owner ? "" : LOCK) + "<span>" + esc(lockText) + " You can leave a note below.</span></div>" : "";
       var back = S.openPkg && PKG[S.openPkg] ? '<button class="btn mini ghost back" type="button" data-act="back-pkg">&larr; Package ' + esc(PKG[S.openPkg].letter) + "</button>" : "";
       dr.innerHTML =
         '<div class="d-head"><div class="d-title"><div>' + back + '<div class="top1" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px"><span class="code">' + esc(t.code) + "</span>" + (home.letter ? '<button class="chip" type="button" data-act="open-pkg" data-id="' + e.pkg + '">' + pkgChip(e.pkg) + " " + esc(pkgOf(e.pkg).name) + "</button>" : '<span class="chip">' + esc(home.name || "") + "</span>") + '<span class="chip">Sprint ' + t.sprint + '</span><span class="size" title="' + SIZE[t.size] + '">' + t.size + '</span><span class="chip ' + (t.tier === "core" ? "" : t.tier === "needed" ? "acc" : "warn") + '">' + TIER[t.tier] + '</span></div><h2 id="d-title">' + esc(t.title) + '</h2></div><button class="x" type="button" data-act="close-drawer" aria-label="Close">&times;</button></div>' +
-        '<div class="d-ctl"><span class="seg" role="group" aria-label="Status">' + statusBtns + '</span><label class="sr-only" for="assignee">Assigned to</label><select id="assignee" data-id="' + t.id + '">' + assignOpts + "</select>" + pkgSel +
-        (!e.assignee && e.status !== "done" ? '<button class="btn primary" type="button" data-act="take" data-id="' + t.id + '">Take it</button>' : "") +
-        (e.assignee === S.me.name && e.status !== "done" ? '<button class="btn ghost" type="button" data-act="release" data-id="' + t.id + '">Give it back</button>' : "") + "</div>" +
-        '<div class="meta2"><span>' + (t.start ? fd(t.start) + " to " + fd(t.due) : "No dates yet") + "</span>" + (late ? '<span class="late">Late by ' + plural(-daysFrom(t.due), "day") + "</span>" : "") + (e.updatedBy ? "<span>Last change by " + esc(e.updatedBy.split(" ")[0]) + "</span>" : "") + "</div></div>" +
-        '<div class="d-body">' +
+        '<div class="d-ctl"><span class="seg" role="group" aria-label="Status">' + statusBtns + "</span>" + pkgSel + ownerBit + takeBtn + "</div>" +
+        '<div class="meta2">' + planBit + trBit + (late ? '<span class="late">Late by ' + plural(-daysFrom(t.due), "day") + "</span>" : "") + lateBit + (e.updatedBy ? "<span>Last change by " + esc(first(e.updatedBy)) + "</span>" : "") + "</div>" + (whyBit ? '<p class="muted" style="font-size:12.5px">' + esc(whyBit) + "</p>" : "") + "</div>" +
+        '<div class="d-body">' + bar +
         '<section><h3>What to build</h3><p style="max-width:70ch">' + esc(t.summary) + "</p>" + (t.notes.length ? '<ul class="plain" style="margin-top:8px">' + t.notes.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul>" : "") + "</section>" +
         "<section><h3>Trello</h3><div>" + (trello || '<span class="muted">No Trello card.</span>') + "</div></section>" +
         (t.depends.length ? "<section><h3>Needs these first</h3><div>" + t.depends.map(function (d) { var x = eff(TASKS[d]); return '<button class="chip ' + (x.status === "done" ? "ok" : "warn") + '" type="button" data-act="open-task" data-id="' + d + '">' + esc(x.code) + " " + esc(x.title) + (x.status === "done" ? " (done)" : "") + "</button>"; }).join(" ") + "</div></section>" : "") +
@@ -1024,7 +1601,7 @@ html.lock { overflow: hidden; }
         (eps ? "<section><h3>Endpoint spec <small>" + plural(t.endpoints.length, "endpoint") + "</small></h3><div class=\"list-ep\">" + eps + "</div></section>" : "") +
         (!t.endpoints.length && t.accept.length ? '<section><h3>Done when</h3><ul class="plain test">' + t.accept.map(function (a) { return "<li>" + esc(a) + "</li>"; }).join("") + "</ul></section>" : "") +
         (!t.endpoints.length && t.files.length ? '<section class="files"><h3>Files</h3>' + t.files.map(function (f) { return "<code>" + esc(f) + "</code>"; }).join("") + "</section>" : "") +
-        '<section><h3>Notes <small>' + ns.length + '</small></h3><div class="grid" style="gap:8px">' + (ns.map(function (n) { return '<div class="note"><header>' + avatar(n.by) + "<strong>" + esc(n.by) + "</strong><span>" + esc(new Date(n.at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })) + "</span></header><p>" + esc(n.text) + "</p></div>"; }).join("") || '<p class="muted">No notes yet. Leave one when you hit a question or finish a part.</p>') + '</div><form id="noteForm" data-id="' + t.id + '" style="display:grid;gap:8px;margin-top:10px"><label class="sr-only" for="noteText">Add a note</label><textarea id="noteText" rows="3" maxlength="1500" placeholder="Add a note for the team"></textarea><div><button class="btn dark" type="submit">Add note</button></div></form></section>' +
+        '<section><h3>Notes <small>' + ns.length + '</small></h3><div class="grid" style="gap:8px">' + (ns.map(function (n) { return '<div class="note"><header>' + avatar(n.by) + "<strong>" + esc(n.by) + "</strong><span>" + esc(new Date(n.at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })) + "</span></header><p>" + esc(n.text) + "</p></div>"; }).join("") || '<p class="muted">No notes yet. Anyone can leave one when they hit a question or finish a part.</p>') + '</div><form id="noteForm" data-id="' + t.id + '" style="display:grid;gap:8px;margin-top:10px"><label class="sr-only" for="noteText">Add a note</label><textarea id="noteText" rows="3" maxlength="1500" placeholder="Add a note for the team"></textarea><div><button class="btn dark" type="submit">Add note</button></div></form></section>' +
         "</div>";
       var ta = $("#noteText", dr); if (ta) ta.value = S.draft;
     }
@@ -1136,6 +1713,7 @@ html.lock { overflow: hidden; }
       '<div class="grid g2" style="margin-bottom:28px"><div class="panel sect"><h3>How the team uses this board</h3><ul class="plain"><li>Open Packages and take one that is free. You own all its cards, listed in the order to build them.</li><li>If the split feels uneven, drag a card onto another package, or open the package and change the Package of a card. The card goes to the owner of that package.</li><li>Build each card on its own branch, open a pull request, and ask a second member to review it. No code reaches main before that.</li><li>Move the card to In review when the pull request is open, and to Done after the merge. Then tick the Trello card.</li><li>Stuck for more than a day? Leave a note on the card and say it in the mid-week check-in.</li><li>A card that Waits for another needs it first. You can still read its spec and write the DTO and the mapper while you wait.</li></ul></div>' +
       '<div class="panel sect"><h3>Done means</h3><ul class="plain test">' + D.doneDef.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul><h3 style="margin-top:6px">Card sizes</h3><ul class="plain"><li><b>S</b> about 1 to 2 hours</li><li><b>M</b> about half a day</li><li><b>L</b> about a full day</li></ul></div></div>' +
       '<div class="sect" style="margin-bottom:28px"><h3>Getting started</h3>' + table(["Step", "Do this"], setup) + "</div>" +
+      '<div class="sect" style="margin-bottom:28px"><h3>How the dates are worked out</h3><ul class="plain"><li>Every card has a size. S is 2 hours of work, M is 4 and L is 8. A card in review has 1 hour left. Finished cards do not count.</li><li>One person works through a package, one card at a time. A card never starts before the cards it needs are finished, even when they belong to another package. So a package starts when the first card it needs is ready, and it can wait again later.</li><li>The board owner picks how many hours a day each member works. Every date follows from that, so changing it moves the whole plan.</li><li>Every calendar day counts, starting today, like the Trello sprints. No time is added for meetings or reviews.</li><li>The plan starts again from today every time you open the board. When someone finishes a card or moves one to another package, the dates change for everyone.</li><li>The critical path is the chain of packages that decides the end date. Room is how many days a package can slip without moving the end date.</li><li>Trello keeps the deadlines. The schedule shows them beside the plan and says when the plan would miss one.</li></ul></div>' +
       '<div class="sect" style="margin-bottom:28px"><h3>Words used on this board</h3>' + table(["Word", "Meaning"], (D.glossary || []).map(function (g) { return [esc(g[0]), esc(g[1])]; })) + "</div>" +
       '<div class="sect" style="margin-bottom:28px"><h3>API conventions</h3><p class="lead">Decide these once so every endpoint looks the same to the front end.</p>' + table(["Topic", "Convention"], D.conventions.map(function (c) { return [esc(c[0]), esc(c[1])]; })) + "</div>" +
       '<div class="sect"><h3>Decisions for the team</h3><p class="lead">The spec already uses the suggested answer in each case. Pick another one here if the team disagrees, and the person who builds that card will see it.</p><div class="grid g2">' + dec + "</div></div>";
@@ -1144,7 +1722,7 @@ html.lock { overflow: hidden; }
   /* ---------------------------------------------------------------- render */
   function renderView() {
     $("#view").setAttribute("aria-labelledby", "tab-" + S.tab);
-    ({ packages: renderPackages, board: renderBoard, pages: renderPages, endpoints: renderEndpoints, data: renderData, trello: renderTrello, guide: renderGuide })[S.tab]();
+    ({ packages: renderPackages, schedule: renderSchedule, board: renderBoard, pages: renderPages, endpoints: renderEndpoints, data: renderData, trello: renderTrello, guide: renderGuide })[S.tab]();
     if (S.focusEp) {
       var el = $('#view [data-ep="' + S.focusEp + '"]') || $('#view [data-key="' + S.focusEp + '"]');
       S.focusEp = null;
@@ -1170,7 +1748,11 @@ html.lock { overflow: hidden; }
     if (!el) return;
     var a = el.dataset.act, id = el.dataset.id;
     if (el.tagName === "INPUT" || el.tagName === "SELECT") return;
+    if (a === "hint-gone") { S.hintGone = true; try { localStorage.setItem("wf-share-hint", "1"); } catch (x) {} return renderAll(); }
+    if (a === "copy-owner-msg") return copyText("Hi, I opened the Wayfare Backend Board but it says View only, so I cannot take a package. Please open Share on the board and either give me Contributor access, or turn off \"Anyone with the link\" and add my email as an Editor. Then I can take my package. Thanks!", "Message");
     if (a === "tab") return setTab(id);
+    if (a === "pace") return act.setPace(el.dataset.v);
+    if (a === "gv-mode") { S.gv.mode = el.dataset.v; return renderSchedule(); }
     if (a === "open-task") { if (ev.target.closest("button[data-act='take']")) return; return openTask(id, el.dataset.from); }
     if (a === "open-pkg") return openPackage(id);
     if (a === "take-pkg") { ev.stopPropagation(); return act.takePkg(id); }
@@ -1180,6 +1762,7 @@ html.lock { overflow: hidden; }
     if (a === "rename-reset") return act.renamePkg(id, "");
     if (a === "close-drawer") return closeDrawer();
     if (a === "take") { ev.stopPropagation(); return act.take(id); }
+    if (a === "unlock-pkg") { ev.stopPropagation(); return act.unlockPkg(id); }
     if (a === "release") return act.release(id);
     if (a === "status") return act.status(id, el.dataset.v);
     if (a === "nav") { if (S.openTask) { S.openTask = null; renderDrawer(); } if (el.dataset.tab === "endpoints") { S.epArea = ""; S.epQ = ""; } return setTab(el.dataset.tab, el.dataset.tab === "endpoints" ? id : null); }
@@ -1212,6 +1795,7 @@ html.lock { overflow: hidden; }
     else if (el.id === "fwho") { S.f.who = el.value; renderBoardList(); renderSummary(); }
     else if (el.id === "ftier") { S.f.tier = el.value; renderBoardList(); }
     else if (el.id === "assignee") { act.assign(el.dataset.id, el.value); }
+    else if (el.dataset && el.dataset.act === "gv-trello") { S.gv.trello = el.checked; renderSchedule(); }
     else if (el.dataset && el.dataset.act === "check") { el.checked = !el.checked; act.check(el.dataset.id, el.dataset.i); }
     else if (el.dataset && el.dataset.act === "trello-flag") { var on = el.checked; el.checked = !on; act.trello(el.dataset.key, on); }
   });
@@ -1280,6 +1864,7 @@ html.lock { overflow: hidden; }
 
   /* ---------------------------------------------------------------- start */
   try { var th = localStorage.getItem("wf-theme"); if (th) document.documentElement.dataset.theme = th; } catch (e) {}
+  try { S.hintGone = localStorage.getItem("wf-share-hint") === "1"; } catch (e) {}
   var h = (location.hash || "").replace("#", "");
   if (TABS.some(function (t) { return t.id === h; })) S.tab = h;
   try { var nm = localStorage.getItem("wf-me"); if (nm && D.team.indexOf(nm) >= 0) S.me.name = nm; } catch (e) {}

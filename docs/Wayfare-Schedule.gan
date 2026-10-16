@@ -2,7 +2,8 @@
 <project name="Wayfare - Car Rental Management System" company="Wayfare project team" webLink="https://trello.com/b/MFhbwJxe/wayfare" view-date="2026-09-21" view-index="0" gantt-divider-location="420" resource-divider-location="300" version="3.2.3240" locale="en_GB">
     <description><![CDATA[Wayfare car rental management system: project schedule.
 Built from the Trello board https://trello.com/b/MFhbwJxe/wayfare (read on 15 Oct 2026).
-One summary task per sprint (one Trello list), one task per card from its start date to its due date. Cards without a start date sit on their due date. Milestones are the cards with the Milestone label. Every day counts as a working day, as on the board.]]></description>
+One summary task per sprint (one Trello list), one task per card from its start date to its due date. Cards without a start date sit on their due date. Milestones are the cards with the Milestone label. Every day counts as a working day, as on the board.
+A second group of tasks, the back-end package plan, is worked out from card sizes and what each card needs, 2 hours a day from 16 Oct 2026. Its tasks are linked finish to start.]]></description>
     <view zooming-state="default:2" id="gantt-chart">
         <field id="tpd3" name="Name" width="260" order="0"/>
         <field id="tpd4" name="Begin date" width="80" order="1"/>
@@ -424,6 +425,253 @@ https://trello.com/b/MFhbwJxe/wayfare]]></notes>
             <task id="77" name="8.1 Test the whole system and fix any bugs" color="#d9a520" meeting="false" start="2026-12-02" duration="24" complete="0" webLink="https://trello.com/c/nw3eoCRm" expand="true">
                 <notes><![CDATA[Trello card: https://trello.com/c/nw3eoCRm
 Labels: Testing, Integrating with Frontend]]></notes>
+            </task>
+        </task>
+        <task id="78" name="Back-end package plan (worked out 16 Oct, 2 hours a day)" color="#0f1215" meeting="false" start="2026-10-16" duration="24" complete="0" expand="true">
+            <notes><![CDATA[Six packages, one for each working member. A package starts when the cards it needs are finished. Card sizes S 2, M 4, L 8 hours; every calendar day counts. Snapshot of the Backend Board schedule. Trello keeps the deadlines.
+Critical path: A > D > F]]></notes>
+            <task id="79" name="A - Foundation and sign in" color="#0f1215" meeting="false" start="2026-10-16" duration="11" complete="0" expand="true">
+                <notes><![CDATA[22 hours of work. Needs first: Nothing. On the critical path. Trello deadline: 2026-10-22.]]></notes>
+                <task id="85" name="F1 Fix enum typos and add the missing fields" color="#b8392b" meeting="false" start="2026-10-16" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package A. Size S (2 hours). Needs nothing first. On the critical path. Trello due date: 2026-10-16.]]></notes>
+                </task>
+                <task id="86" name="F2 Program.cs setup" color="#b8392b" meeting="false" start="2026-10-17" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package A. Size M (4 hours). Needs nothing first. On the critical path. Trello due date: 2026-10-16.]]></notes>
+                    <depend id="85" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="87" name="F3 Seed roles, admin account and sample cars" color="#b8392b" meeting="false" start="2026-10-19" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package A. Size M (4 hours). Needs first: F1 (package A). On the critical path. Trello due date: 2026-10-17.]]></notes>
+                    <depend id="85" type="2" difference="0" hardness="Strong"/>
+                    <depend id="86" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="88" name="F5 Authentication and authorization with Identity and JWT" color="#b8392b" meeting="false" start="2026-10-21" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package A. Size M (4 hours). Needs first: F2 (package A). On the critical path. Trello due date: 2026-10-19.]]></notes>
+                    <depend id="86" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="89" name="F6 Login controller, DTO and mapper" color="#b8392b" meeting="false" start="2026-10-23" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package A. Size S (2 hours). Needs first: F5 (package A), F3 (package A). On the critical path. Trello due date: 2026-10-15.]]></notes>
+                    <depend id="88" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="90" name="Q1 Create the .http file and the login requests" color="#2f62b8" meeting="false" start="2026-10-24" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package A. Size S (2 hours). Needs first: F6 (package A). Room to slip: 9 days. Trello due date: 2026-10-22.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="91" name="Q2 Sprint 3 test with the front end: sign in and cars" color="#14171a" meeting="false" start="2026-10-25" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package A. Size M (4 hours). Needs first: F6 (package A), F7 (package B), C1 (package C). Room to slip: 9 days. Trello due date: 2026-10-22.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="93" type="2" difference="0" hardness="Strong"/>
+                    <depend id="100" type="2" difference="0" hardness="Strong"/>
+                    <depend id="90" type="2" difference="0" hardness="Strong"/>
+                </task>
+            </task>
+            <task id="80" name="B - Accounts and profiles" color="#0f1215" meeting="false" start="2026-10-16" duration="14" complete="0" expand="true">
+                <notes><![CDATA[18 hours of work. Needs first: A (ready 23 Oct). Room to slip: 4 days. Trello deadline: 2026-11-27.]]></notes>
+                <task id="92" name="F4 Image storage service" color="#2f62b8" meeting="false" start="2026-10-16" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package B. Size M (4 hours). Needs nothing first. Room to slip: 9 days. Trello due date: 2026-10-17.]]></notes>
+                </task>
+                <task id="93" name="F7 Register controller, DTO and mapper" color="#2f62b8" meeting="false" start="2026-10-23" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package B. Size M (4 hours). Needs first: F4 (package B), F5 (package A), F1 (package A). Room to slip: 4 days. Trello due date: 2026-10-15.]]></notes>
+                    <depend id="92" type="2" difference="0" hardness="Strong"/>
+                    <depend id="88" type="2" difference="0" hardness="Strong"/>
+                    <depend id="85" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="94" name="F8 ChangePassword endpoint" color="#2f62b8" meeting="false" start="2026-10-25" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package B. Size S (2 hours). Needs first: F5 (package A). Room to slip: 4 days. Trello due date: 2026-10-20.]]></notes>
+                    <depend id="88" type="2" difference="0" hardness="Strong"/>
+                    <depend id="93" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="95" name="P1 GetUserProfile controller and UserProfileDto" color="#2f62b8" meeting="false" start="2026-10-26" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package B. Size S (2 hours). Needs first: F6 (package A), F3 (package A). Room to slip: 4 days. Trello due date: 2026-10-31.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="94" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="96" name="P2 UpdateProfile and UpdateLicense endpoints" color="#2f62b8" meeting="false" start="2026-10-27" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package B. Size M (4 hours). Needs first: F6 (package A), F4 (package B), F1 (package A). Room to slip: 4 days. Trello due date: 2026-11-02.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="92" type="2" difference="0" hardness="Strong"/>
+                    <depend id="85" type="2" difference="0" hardness="Strong"/>
+                    <depend id="95" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="97" name="P5 Admin profile endpoints" color="#2f62b8" meeting="false" start="2026-10-29" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package B. Size S (2 hours). Needs first: F6 (package A), F3 (package A). Room to slip: 4 days. Trello due date: 2026-11-27.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="96" type="2" difference="0" hardness="Strong"/>
+                </task>
+            </task>
+            <task id="81" name="C - Browse cars and request one" color="#0f1215" meeting="false" start="2026-10-16" duration="16" complete="0" expand="true">
+                <notes><![CDATA[24 hours of work. Needs first: A (ready 23 Oct). Room to slip: 4 days. Trello deadline: 2026-11-02.]]></notes>
+                <task id="98" name="M1 RentalRules service: price, overlap and refund" color="#2f62b8" meeting="false" start="2026-10-16" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package C. Size M (4 hours). Needs nothing first. Room to slip: 8 days. Trello due date: 2026-10-17.]]></notes>
+                </task>
+                <task id="99" name="F9 Branches endpoint" color="#2f62b8" meeting="false" start="2026-10-19" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package C. Size S (2 hours). Needs first: F2 (package A). Room to slip: 7 days. Trello due date: 2026-10-17.]]></notes>
+                    <depend id="86" type="2" difference="0" hardness="Strong"/>
+                    <depend id="98" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="100" name="C1 ListCar controller, DTO and mapper" color="#2f62b8" meeting="false" start="2026-10-23" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package C. Size M (4 hours). Needs first: F3 (package A), M1 (package C), F5 (package A). Room to slip: 4 days. Trello due date: 2026-10-17.]]></notes>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="98" type="2" difference="0" hardness="Strong"/>
+                    <depend id="88" type="2" difference="0" hardness="Strong"/>
+                    <depend id="99" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="101" name="C2 Car details endpoint" color="#2f62b8" meeting="false" start="2026-10-25" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package C. Size S (2 hours). Needs first: C1 (package C). Room to slip: 4 days. Trello due date: 2026-10-25.]]></notes>
+                    <depend id="100" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="102" name="R1 RentalRequest controller, DTO and mapper" color="#2f62b8" meeting="false" start="2026-10-26" duration="4" complete="0" expand="true">
+                    <notes><![CDATA[Package C. Size L (8 hours). Needs first: M1 (package C), F6 (package A), F3 (package A). Room to slip: 4 days. Trello due date: 2026-10-27.]]></notes>
+                    <depend id="98" type="2" difference="0" hardness="Strong"/>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="101" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="103" name="Q3 Sprint 4 test with the front end: requests, cancel and profile" color="#14171a" meeting="false" start="2026-10-30" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package C. Size M (4 hours). Needs first: R1 (package C), R2 (package D), R3 (package D), R4 (package D), P1 (package B), P2 (package B). Room to slip: 4 days. Trello due date: 2026-11-02.]]></notes>
+                    <depend id="102" type="2" difference="0" hardness="Strong"/>
+                    <depend id="104" type="2" difference="0" hardness="Strong"/>
+                    <depend id="105" type="2" difference="0" hardness="Strong"/>
+                    <depend id="106" type="2" difference="0" hardness="Strong"/>
+                    <depend id="95" type="2" difference="0" hardness="Strong"/>
+                    <depend id="96" type="2" difference="0" hardness="Strong"/>
+                </task>
+            </task>
+            <task id="82" name="D - Rental lifecycle" color="#0f1215" meeting="false" start="2026-10-24" duration="12" complete="0" expand="true">
+                <notes><![CDATA[24 hours of work. Needs first: A (ready 23 Oct) and C (ready 17 Oct). On the critical path. Trello deadline: 2026-11-25.]]></notes>
+                <task id="104" name="R2 ListMyRentals controller, DTO and mapper" color="#b8392b" meeting="false" start="2026-10-24" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package D. Size M (4 hours). Needs first: F6 (package A), F3 (package A). On the critical path. Trello due date: 2026-10-25.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="105" name="R3 CancelRental controller" color="#b8392b" meeting="false" start="2026-10-26" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package D. Size S (2 hours). Needs first: F6 (package A), F3 (package A), M1 (package C). On the critical path. Trello due date: 2026-10-29.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="98" type="2" difference="0" hardness="Strong"/>
+                    <depend id="104" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="106" name="R4 RefuseRental controller (10% fee)" color="#b8392b" meeting="false" start="2026-10-27" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package D. Size S (2 hours). Needs first: F6 (package A), F3 (package A), M1 (package C). On the critical path. Trello due date: 2026-10-31.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="98" type="2" difference="0" hardness="Strong"/>
+                    <depend id="105" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="107" name="A1 AdminListAllRentals controller and DTO" color="#b8392b" meeting="false" start="2026-10-28" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package D. Size M (4 hours). Needs first: F6 (package A), F3 (package A). On the critical path. Trello due date: 2026-11-09.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="106" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="108" name="A2 ApproveRental controller" color="#b8392b" meeting="false" start="2026-10-30" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package D. Size S (2 hours). Needs first: F6 (package A), F3 (package A), M1 (package C). On the critical path. Trello due date: 2026-11-15.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="98" type="2" difference="0" hardness="Strong"/>
+                    <depend id="107" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="109" name="A4 HandOverKeys controller" color="#b8392b" meeting="false" start="2026-10-31" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package D. Size S (2 hours). Needs first: F6 (package A), F3 (package A). On the critical path. Trello due date: 2026-11-17.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="108" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="110" name="A3 Rental rejection controller" color="#b8392b" meeting="false" start="2026-11-01" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package D. Size S (2 hours). Needs first: F6 (package A), F3 (package A), M1 (package C). On the critical path. Trello due date: 2026-11-19.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="98" type="2" difference="0" hardness="Strong"/>
+                    <depend id="109" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="111" name="A5 RecordReturn controller" color="#b8392b" meeting="false" start="2026-11-02" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package D. Size S (2 hours). Needs first: F6 (package A), F3 (package A), F1 (package A). On the critical path. Trello due date: 2026-11-25.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="85" type="2" difference="0" hardness="Strong"/>
+                    <depend id="110" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="112" name="Q5 Sprint 6 test with the front end: the staff workflow" color="#b8392b" meeting="false" start="2026-11-03" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package D. Size M (4 hours). Needs first: A2 (package D), A3 (package D), A4 (package D), C4 (package E). On the critical path. Trello due date: 2026-11-22.]]></notes>
+                    <depend id="108" type="2" difference="0" hardness="Strong"/>
+                    <depend id="110" type="2" difference="0" hardness="Strong"/>
+                    <depend id="109" type="2" difference="0" hardness="Strong"/>
+                    <depend id="114" type="2" difference="0" hardness="Strong"/>
+                    <depend id="111" type="2" difference="0" hardness="Strong"/>
+                </task>
+            </task>
+            <task id="83" name="E - Staff fleet" color="#0f1215" meeting="false" start="2026-10-23" duration="13" complete="0" expand="true">
+                <notes><![CDATA[20 hours of work. Needs first: A (ready 22 Oct) and B (ready 17 Oct). On the critical path. Trello deadline: 2026-12-02.]]></notes>
+                <task id="113" name="C3 Staff ListCars controller" color="#2f62b8" meeting="false" start="2026-10-23" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package E. Size S (2 hours). Needs first: F5 (package A), F3 (package A). Room to slip: 3 days. Trello due date: 2026-11-07.]]></notes>
+                    <depend id="88" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="114" name="C4 AddCar controller, DTO and mapper" color="#2f62b8" meeting="false" start="2026-10-24" duration="4" complete="0" expand="true">
+                    <notes><![CDATA[Package E. Size L (8 hours). Needs first: F4 (package B), F5 (package A), F3 (package A). Room to slip: 3 days. Trello due date: 2026-11-21.]]></notes>
+                    <depend id="92" type="2" difference="0" hardness="Strong"/>
+                    <depend id="88" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="113" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="115" name="C6 DeleteCar controller" color="#2f62b8" meeting="false" start="2026-10-28" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package E. Size S (2 hours). Needs first: F5 (package A), F3 (package A). Room to slip: 3 days. Trello due date: 2026-11-29.]]></notes>
+                    <depend id="88" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="114" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="116" name="C5 EditCar controller" color="#2f62b8" meeting="false" start="2026-10-29" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package E. Size M (4 hours). Needs first: C4 (package E). Room to slip: 3 days. Trello due date: 2026-11-25.]]></notes>
+                    <depend id="114" type="2" difference="0" hardness="Strong"/>
+                    <depend id="115" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="117" name="Q6 Sprint 7 test with the front end: edit, delete, return" color="#b8392b" meeting="false" start="2026-11-03" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package E. Size M (4 hours). Needs first: C5 (package E), C6 (package E), A5 (package D), P5 (package B). On the critical path. Trello due date: 2026-12-02.]]></notes>
+                    <depend id="116" type="2" difference="0" hardness="Strong"/>
+                    <depend id="115" type="2" difference="0" hardness="Strong"/>
+                    <depend id="111" type="2" difference="0" hardness="Strong"/>
+                    <depend id="97" type="2" difference="0" hardness="Strong"/>
+                </task>
+            </task>
+            <task id="84" name="F - Staff customers, payments and final test" color="#0f1215" meeting="false" start="2026-10-24" duration="16" complete="0" expand="true">
+                <notes><![CDATA[22 hours of work. Needs first: A (ready 23 Oct) and C (ready 17 Oct). On the critical path. Trello deadline: 2026-12-25.]]></notes>
+                <task id="118" name="P3 ListCustomers controller and DTO" color="#2f62b8" meeting="false" start="2026-10-24" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package F. Size M (4 hours). Needs first: F6 (package A), F3 (package A). Room to slip: 5 days. Trello due date: 2026-11-05.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="119" name="P4 VerifyLicense endpoint (staff)" color="#2f62b8" meeting="false" start="2026-10-26" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Package F. Size S (2 hours). Needs first: F6 (package A), F3 (package A), F1 (package A). Room to slip: 5 days. Trello due date: 2026-11-06.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="85" type="2" difference="0" hardness="Strong"/>
+                    <depend id="118" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="120" name="M2 ListPayments controller, DTO and mapper" color="#2f62b8" meeting="false" start="2026-10-27" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package F. Size M (4 hours). Needs first: F6 (package A), F3 (package A), M1 (package C). Room to slip: 5 days. Trello due date: 2026-11-11.]]></notes>
+                    <depend id="89" type="2" difference="0" hardness="Strong"/>
+                    <depend id="87" type="2" difference="0" hardness="Strong"/>
+                    <depend id="98" type="2" difference="0" hardness="Strong"/>
+                    <depend id="119" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="121" name="Q4 Sprint 5 test with the front end: staff lists" color="#14171a" meeting="false" start="2026-10-30" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Package F. Size M (4 hours). Needs first: P3 (package F), C3 (package E), A1 (package D), M2 (package F). Room to slip: 4 days. Trello due date: 2026-11-12.]]></notes>
+                    <depend id="118" type="2" difference="0" hardness="Strong"/>
+                    <depend id="113" type="2" difference="0" hardness="Strong"/>
+                    <depend id="107" type="2" difference="0" hardness="Strong"/>
+                    <depend id="120" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="122" name="Q7 Final test of the whole system and bug fixing" color="#b8392b" meeting="false" start="2026-11-05" duration="4" complete="0" expand="true">
+                    <notes><![CDATA[Package F. Size L (8 hours). Needs first: Q2 (package A), Q3 (package C), Q4 (package F), Q5 (package D), Q6 (package E). On the critical path. Trello due date: 2026-12-25.]]></notes>
+                    <depend id="91" type="2" difference="0" hardness="Strong"/>
+                    <depend id="103" type="2" difference="0" hardness="Strong"/>
+                    <depend id="121" type="2" difference="0" hardness="Strong"/>
+                    <depend id="112" type="2" difference="0" hardness="Strong"/>
+                    <depend id="117" type="2" difference="0" hardness="Strong"/>
+                </task>
             </task>
         </task>
     </tasks>
