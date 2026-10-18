@@ -5,6 +5,6 @@ namespace wayfare_backend.Enums.CarEnums
         Petrol = 1,
         Electric = 2,
         Hybrid = 3,
-        Disel = 4
+        Diesel = 4
     }
 }
