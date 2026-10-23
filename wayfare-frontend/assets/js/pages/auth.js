@@ -1,4 +1,3 @@
-
 /* Login, register and staff login (data-auth-form).
    This only checks the fields and shows the button state. The server does the
    real work: set the form's action and method="post" and remove the redirect
@@ -29,50 +28,121 @@ App.ready(() => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!App.validate(form)) return;
-    if(kind === "staff") {
-      const payload = {
-        email:App.$("#email",form).value.trim() ?? "",
-        password:App.$("#password",form).value ?? ""
-      }
-      App.setLoading(submitBtn, true);
-      const API_BASE = "http://localhost:5290"
-      try {
+    
+    const API_BASE = "http://localhost:5290";
+    App.setLoading(submitBtn, true);
+
+    try {
+      if(kind === "staff") {
+        const payload = {
+          email: App.$("#email",form).value.trim() ?? "",
+          password: App.$("#password",form).value ?? ""
+        };
         const response = await fetch(`${API_BASE}/api/auth/admin`, {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json",
-            "Accept":"application/json"
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
           },
           body: JSON.stringify(payload)
         });
         const data = await response.json();
+        
         if(!response.ok){
           let errorMsg = data.message;
           if(data.errors && Array.isArray(data.errors)) {
             errorMsg = data.errors.join("\n");
-          }else if(data.errors && typeof data.errors === "object") {
+          } else if(data.errors && typeof data.errors === "object") {
             errorMsg = Object.values(data.errors).flat().join("\n");
           }
           throw new Error(errorMsg || "Login Failed!");
         }
+        
         if(data.token){
-          localStorage.setItem("authToken",data.token);
-          localStorage.setItem("currentUser",JSON.stringify({
+          localStorage.setItem("authToken", data.token);
+          localStorage.setItem("currentUser", JSON.stringify({
             userId: data.id,
             email: data.email,
             name: data.name,
             role: data.role
           }));
         }
-          App.toast("Login Successeful! Redirecting to home page ...");
-          setTimeout(() => {
-            window.location.href = "index.html";
-          }, 1200);
-      } catch(err) {
-        App.toast(err.message , { error : true});
-      } finally{
-        App.setLoading(submitBtn , false);
+        App.toast("Login Successful! Redirecting to home page ...");
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1200);
+
+      } else if (kind === "register") {
+        const formData = new FormData(form);
+        
+        const response = await fetch(`${API_BASE}/api/auth/register`, {
+          method: "POST",
+          body: formData
+        });
+        
+        const text = await response.text();
+        let data = {};
+        if (text) {
+          try { data = JSON.parse(text); } catch(e) {}
+        }
+        
+        if(!response.ok) {
+          let errorMsg = data.message || `Registration Failed! Server returned status: ${response.status}`;
+          if (data.errors && typeof data.errors === "object") {
+            errorMsg = Object.values(data.errors).flat().join("\n");
+          }
+          throw new Error(errorMsg);
+        }
+
+        App.toast("Account created successfully! Redirecting to login...");
+        setTimeout(() => window.location.href = "login.html", 1200);
+
+      } else if (kind === "login") {
+        const payload = {
+          email: App.$("#email",form).value.trim() ?? "",
+          password: App.$("#password",form).value ?? ""
+        };
+        const response = await fetch(`${API_BASE}/api/auth/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+        
+        const text = await response.text();
+        let data = {};
+        if (text) {
+          try { data = JSON.parse(text); } catch(e) {}
+        }
+        
+        if(!response.ok){
+          let errorMsg = data.message || `Login Failed! Server returned status: ${response.status}`;
+          if(data.errors && typeof data.errors === "object") {
+            errorMsg = Object.values(data.errors).flat().join("\n");
+          }
+          throw new Error(errorMsg);
+        }
+        
+        if(data.token){
+          localStorage.setItem("authToken", data.token);
+          localStorage.setItem("currentUser", JSON.stringify({
+            userId: data.id,
+            email: data.email,
+            name: data.name,
+            role: data.role
+          }));
+        }
+        App.toast("Login Successful! Redirecting to home page ...");
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1200);
       }
+    } catch(err) {
+      App.toast(err.message, { error: true });
+    } finally {
+      App.setLoading(submitBtn, false);
     }
   });
 });
