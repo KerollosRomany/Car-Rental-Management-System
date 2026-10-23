@@ -8,9 +8,13 @@ namespace wayfare_backend.Configurations
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            builder.Property(u => u.FullName)
+            builder.Property(u => u.FirstName)
                .IsRequired()
-               .HasMaxLength(100);
+               .HasMaxLength(50);
+
+            builder.Property(u => u.LastName)
+               .IsRequired()
+               .HasMaxLength(50);
         }
     }
 }

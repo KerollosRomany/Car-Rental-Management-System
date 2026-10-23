@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payments | Wayfare staff</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../assets/img/logo-icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="../assets/css/app.css">
+</head>
+<body class="theme-light" data-layout="admin" data-base="../" data-page="payments" data-title="Payments">
+  <div class="admin">
+    <aside id="admin-sidebar" aria-label="Staff navigation"></aside>
+    <div class="admin-main">
+      <header id="admin-topbar"></header>
+
+      <main class="admin-content" id="main">
+        <div class="page-head">
+          <div>
+            <h1>Payments</h1>
+            <p>The system takes the payment when a customer sends a request, and makes every refund on its own. Nothing to record by hand.</p>
+          </div>
+        </div>
+
+        <section class="stats stats--3" id="stats" aria-label="Payment totals"></section>
+
+        <section class="card" style="overflow:hidden" aria-label="Payments">
+          <div class="toolbar">
+            <div class="input-wrap">
+              <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+              <input class="input" id="q" type="search" placeholder="Search customer, rental or car" aria-label="Search payments">
+            </div>
+            <select class="select select-sm" id="f-status" aria-label="Filter by status">
+              <option value="">All statuses</option>
+              <option value="paid">Paid</option>
+              <option value="partial">10% fee kept</option>
+              <option value="refunded">Refunded</option>
+            </select>
+          </div>
+          <div class="table-wrap" id="payments-table"></div>
+          <div class="table-foot"><span id="payments-count"></span><span class="muted">Refunds: full when a request is rejected or cancelled before approval, 90% when cancelled after approval.</span></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/render.js"></script>
+  <script src="../assets/js/pages/admin-payments.js"></script>
+</body>
+</html>
