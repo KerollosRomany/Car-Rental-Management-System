@@ -151,5 +151,60 @@
   <script src="assets/js/ui.js"></script>
   <script src="assets/js/render.js"></script>
   <script src="assets/js/pages/home.js"></script>
+
+  <!-- Script to sync and display user profile data in the UI and Header -->
+  <script>
+    async function syncUserProfile() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        const response = await fetch('http://localhost:5290/api/auth/Profile', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const profile = await response.json();
+          localStorage.setItem('user', JSON.stringify(profile));
+          updateHeaderUI(profile);
+        } else if (response.status === 401) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
+      } catch (err) {
+        console.error('Failed to sync profile:', err);
+        const cachedUser = JSON.parse(localStorage.getItem('user'));
+        if (cachedUser) updateHeaderUI(cachedUser);
+      }
+    }
+
+    function updateHeaderUI(user) {
+      if (!user) return;
+      const displayName = user.name || user.fullName || user.userName || user.email || 'Account';
+
+      // Target login links in the header and replace them with the user's name
+      const loginLinks = document.querySelectorAll('a[href*="login.html"]');
+      loginLinks.forEach(link => {
+        link.textContent = displayName;
+        link.href = '#';
+        link.title = 'Logged in as ' + displayName;
+      });
+
+      // Hide the register link since the user is already logged in
+      const registerLinks = document.querySelectorAll('a[href*="register.html"]');
+      registerLinks.forEach(link => {
+        link.style.display = 'none';
+      });
+    }
+
+    // Wait for ui.js scripts to finish building the header
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(syncUserProfile, 150);
+    });
+  </script>
 </body>
 </html>
