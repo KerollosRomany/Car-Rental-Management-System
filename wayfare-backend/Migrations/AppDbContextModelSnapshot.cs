@@ -174,10 +174,25 @@ namespace wayfare_backend.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+<<<<<<< HEAD
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LicenseUrl")
+                        .HasColumnType("nvarchar(max)");
+=======
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");

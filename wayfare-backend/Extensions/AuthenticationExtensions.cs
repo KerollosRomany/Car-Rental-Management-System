@@ -6,7 +6,11 @@ using wayfare_backend;
 using wayfare_backend.Models;
 using wayfare_backend.Services;
 
+<<<<<<< HEAD
 namespace YourProjectNamespace.Extensions;
+=======
+namespace wayfare_backend.Extensions;
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
 
 public static class AuthenticationExtensions
 {

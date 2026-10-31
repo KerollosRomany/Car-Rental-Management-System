@@ -35,8 +35,14 @@
         <h2>Welcome back</h2>
         <p class="sub">Log in to manage your rentals.</p>
 
+<<<<<<< HEAD
+        <form id="loginForm" data-auth-form="login" novalidate>
+          <div id="errorMessage" style="display:none; color:#ef4444; background:#fee2e2; padding:10px; border-radius:8px; margin-bottom:15px; font-size:14px;"></div>
+
+=======
         <!-- Backend: set action to the login endpoint and method="post". -->
         <form data-auth-form="login" action="index.html" method="post" novalidate>
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
           <div class="field">
             <label class="label" for="email">Email</label>
             <div class="input-wrap">
@@ -59,7 +65,11 @@
             <a class="link text-sm" href="#">Forgot password?</a>
           </div>
 
+<<<<<<< HEAD
+          <button id="submitBtn" class="btn btn-primary btn-lg btn-block" type="submit">Log in</button>
+=======
           <button class="btn btn-primary btn-lg btn-block" type="submit">Log in</button>
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
         </form>
 
         <p class="auth-foot">New to Wayfare? <a class="link" href="register.html">Create an account</a></p>
@@ -69,6 +79,90 @@
   </main>
 
   <script src="assets/js/ui.js"></script>
+<<<<<<< HEAD
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const errorDiv = document.getElementById('errorMessage');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorDiv.style.display = 'none';
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!email || !password) {
+        errorDiv.textContent = 'Please fill in all fields.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Logging in...';
+
+      try {
+        const response = await fetch('http://localhost:5290/api/auth/user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        console.log('Login response:', data);
+
+        if (response.ok) {
+          // استخراج التوكن أياً كان اسمه في السيرفر
+          const token = data.token || data.accessToken || data.jwt || (data.data && data.data.token);
+          
+          if (token) {
+            localStorage.setItem('token', token);
+
+            // جلب بيانات البروفايل وحفظها مباشرة قبل التحويل
+            try {
+              const profileRes = await fetch('http://localhost:5290/api/auth/Profile', {
+                method: 'GET',
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+                }
+              });
+
+              if (profileRes.ok) {
+                const profileData = await profileRes.json();
+                console.log('Profile data:', profileData);
+                localStorage.setItem('user', JSON.stringify(profileData));
+              } else {
+                // حفظ البيانات الراجعة من تسجيل الدخول كبديل
+                localStorage.setItem('user', JSON.stringify(data.user || data));
+              }
+            } catch (profileErr) {
+              console.warn('Profile fetch error:', profileErr);
+              localStorage.setItem('user', JSON.stringify(data.user || data));
+            }
+          }
+
+          window.location.href = 'index.html';
+        } else {
+          errorDiv.textContent = data.message || `Login failed (Status: ${response.status})`;
+          errorDiv.style.display = 'block';
+        }
+      } catch (err) {
+        errorDiv.textContent = 'Server is unreachable. Please ensure the backend is running.';
+        errorDiv.style.display = 'block';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Log in';
+      }
+    });
+  </script>
+</body>
+</html>
+=======
   <script src="assets/js/pages/auth.js"></script>
 </body>
 </html>
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
