@@ -35,6 +35,24 @@
         <h2>Create your account</h2>
         <p class="sub">It takes about a minute. We ask for a photo of your license so pick-up is quick.</p>
 
+<<<<<<< HEAD
+        <form data-auth-form="register" action="index.html" method="post" enctype="multipart/form-data" novalidate>
+          <div class="form-grid">
+            
+            <div class="field">
+              <label class="label" for="FirstName">First name</label>
+              <div class="input-wrap">
+                <i class="ph ph-user" aria-hidden="true"></i>
+                <input class="input" id="FirstName" name="FirstName" type="text" autocomplete="given-name" placeholder="First name" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="LastName">Last name</label>
+              <div class="input-wrap">
+                <i class="ph ph-user" aria-hidden="true"></i>
+                <input class="input" id="LastName" name="LastName" type="text" autocomplete="family-name" placeholder="Last name" required>
+=======
         <!-- Backend: POST /api/auth/register as multipart/form-data (the license photo is a file). -->
         <form data-auth-form="register" action="index.html" method="post" enctype="multipart/form-data" novalidate>
           <div class="form-grid">
@@ -43,6 +61,7 @@
               <div class="input-wrap">
                 <i class="ph ph-user" aria-hidden="true"></i>
                 <input class="input" id="name" name="name" type="text" autocomplete="name" placeholder="As shown on your license" required>
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
               </div>
             </div>
 
@@ -68,12 +87,21 @@
             </div>
 
             <div class="field span-2">
+<<<<<<< HEAD
+              <label class="label" for="LicenseImage">Driving license photo</label>
+              <label class="upload" for="LicenseImage">
+                <span class="upload-thumb"><i class="ph ph-identification-card" aria-hidden="true"></i><img alt=""></span>
+                <span class="upload-text"><strong data-upload-title>Upload a photo of your license</strong><span>JPG, PNG or WebP, up to 5 MB. Name and expiry date must be readable.</span></span>
+                <span class="btn btn-secondary btn-sm" aria-hidden="true">Browse</span>
+                <input class="sr-only" id="LicenseImage" name="LicenseImage" type="file" accept="image/jpeg,image/png,image/webp" data-max-mb="5" required data-msg-required="Upload a photo of your driving license.">
+=======
               <label class="label" for="licensePhoto">Driving license photo</label>
               <label class="upload" for="licensePhoto">
                 <span class="upload-thumb"><i class="ph ph-identification-card" aria-hidden="true"></i><img alt=""></span>
                 <span class="upload-text"><strong data-upload-title>Upload a photo of your license</strong><span>JPG, PNG or WebP, up to 5 MB. Name and expiry date must be readable.</span></span>
                 <span class="btn btn-secondary btn-sm" aria-hidden="true">Browse</span>
                 <input class="sr-only" id="licensePhoto" name="licensePhoto" type="file" accept="image/jpeg,image/png,image/webp" data-max-mb="5" required data-msg-required="Upload a photo of your driving license.">
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
               </label>
               <p class="hint">Staff compare it with your physical license at pick-up. It must be valid for your whole rental.</p>
             </div>
@@ -120,4 +148,8 @@
   <script src="assets/js/ui.js"></script>
   <script src="assets/js/pages/auth.js"></script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
