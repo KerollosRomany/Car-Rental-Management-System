@@ -1,14 +1,24 @@
+<<<<<<< HEAD
 ﻿using System.Text;
+=======
+using System.Text;
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+<<<<<<< HEAD
 using Microsoft.OpenApi.Models;
+=======
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
 using wayfare_backend;
 using wayfare_backend.Extensions;
 using wayfare_backend.Models;
 using wayfare_backend.Services;
+<<<<<<< HEAD
 using YourProjectNamespace.Extensions;
+=======
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,12 +27,20 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddControllers();
 
+<<<<<<< HEAD
 //Jwt and Identity Authentications 
+=======
+// Jwt and Identity Authentications 
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
 builder.Services.AddAuthServices(builder.Configuration);
 
 builder.Services.AddAuthorization();
 
+<<<<<<< HEAD
 //Allow Communication with Frontend
+=======
+// Allow Communication with Frontend
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -34,6 +52,7 @@ builder.Services.AddCors(options =>
 });
 
 // Add services to the container.
+<<<<<<< HEAD
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -69,13 +88,28 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 
 //data seeders 
+=======
+builder.Services.AddOpenApi();
+
+// Register Cloudflare R2 image services
+builder.Services.AddImageServices();
+
+var app = builder.Build();
+
+
+// data seeders 
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
 await app.SeedDatabaseAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+<<<<<<< HEAD
     app.UseSwagger();
     app.UseSwaggerUI();
+=======
+    app.MapOpenApi();
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
 }
 
 app.UseHttpsRedirection();
@@ -83,7 +117,10 @@ app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
+<<<<<<< HEAD
 app.UseStaticFiles();
+=======
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
 app.UseAuthorization();
 
 app.MapControllers();

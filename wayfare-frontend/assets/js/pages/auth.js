@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
 /* Login, register and staff login (data-auth-form).
    This only checks the fields and shows the button state. The server does the
    real work: set the form's action and method="post" and remove the redirect
@@ -28,6 +32,7 @@ App.ready(() => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!App.validate(form)) return;
+<<<<<<< HEAD
     
     const API_BASE = "http://localhost:5290";
     App.setLoading(submitBtn, true);
@@ -43,30 +48,59 @@ App.ready(() => {
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
+=======
+    if(kind === "staff") {
+      const payload = {
+        email:App.$("#email",form).value.trim() ?? "",
+        password:App.$("#password",form).value ?? ""
+      }
+      App.setLoading(submitBtn, true);
+      const API_BASE = "http://localhost:5290"
+      try {
+        const response = await fetch(`${API_BASE}/api/auth/admin`, {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+            "Accept":"application/json"
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
           },
           body: JSON.stringify(payload)
         });
         const data = await response.json();
+<<<<<<< HEAD
         
+=======
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
         if(!response.ok){
           let errorMsg = data.message;
           if(data.errors && Array.isArray(data.errors)) {
             errorMsg = data.errors.join("\n");
+<<<<<<< HEAD
           } else if(data.errors && typeof data.errors === "object") {
+=======
+          }else if(data.errors && typeof data.errors === "object") {
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
             errorMsg = Object.values(data.errors).flat().join("\n");
           }
           throw new Error(errorMsg || "Login Failed!");
         }
+<<<<<<< HEAD
         
         if(data.token){
           localStorage.setItem("authToken", data.token);
           localStorage.setItem("currentUser", JSON.stringify({
+=======
+        if(data.token){
+          localStorage.setItem("authToken",data.token);
+          localStorage.setItem("currentUser",JSON.stringify({
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
             userId: data.id,
             email: data.email,
             name: data.name,
             role: data.role
           }));
         }
+<<<<<<< HEAD
         App.toast("Login Successful! Redirecting to home page ...");
         setTimeout(() => {
           window.location.href = "index.html";
@@ -146,3 +180,17 @@ App.ready(() => {
     }
   });
 });
+=======
+          App.toast("Login Successeful! Redirecting to home page ...");
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 1200);
+      } catch(err) {
+        App.toast(err.message , { error : true});
+      } finally{
+        App.setLoading(submitBtn , false);
+      }
+    }
+  });
+});
+>>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
