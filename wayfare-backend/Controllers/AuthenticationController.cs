@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,46 +100,6 @@ namespace wayfare_backend.Controllers
         [HttpPost("Register")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Register([FromForm] RegisterDto dto)
-=======
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using wayfare_backend.Dtos.AuthDtos;
-using wayfare_backend.Models;
-using wayfare_backend.Services;
-using System.Linq;
-
-namespace wayfare_backend.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthenticationController : ControllerBase
-    {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly AppDbContext _context;
-        private readonly IImageService _imageService;
-        private readonly JwtTokenService _jwtTokenService;
-
-        public AuthenticationController(
-            UserManager<ApplicationUser> userManager,
-            AppDbContext context,
-            IImageService imageService,
-            JwtTokenService jwtTokenService)
-        {
-            _userManager = userManager;
-            _context = context;
-            _imageService = imageService;
-            _jwtTokenService = jwtTokenService;
-        }
-
-        [HttpPost("register")]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Register([FromForm] RegisterRequestDto request)
->>>>>>> a27b103 (feat: implement accounts and profiles endpoints)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
