@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Wayfare - Car Rental Management System" company="Wayfare project team" webLink="https://trello.com/b/MFhbwJxe/wayfare" view-date="2026-09-21" view-index="0" gantt-divider-location="420" resource-divider-location="300" version="3.2.3240" locale="en_GB">
+    <description><![CDATA[Wayfare car rental management system: project schedule.
+Built from the Trello board https://trello.com/b/MFhbwJxe/wayfare (read on 15 Oct 2026).
+One summary task per sprint (one Trello list), one task per card from its start date to its due date. Cards without a start date sit on their due date. Milestones are the cards with the Milestone label. Every day counts as a working day, as on the board.]]></description>
+    <view zooming-state="default:2" id="gantt-chart">
+        <field id="tpd3" name="Name" width="260" order="0"/>
+        <field id="tpd4" name="Begin date" width="80" order="1"/>
+        <field id="tpd5" name="End date" width="80" order="2"/>
+        <field id="tpd7" name="Completion" width="70" order="3"/>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Name" width="210" order="0"/>
+        <field id="1" name="Default role" width="86" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="0" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0"/>
+            <only-show-weekends value="false"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="0" name="Sprint 1 - Front-end wireframe and project structure" color="#0f1215" meeting="false" start="2026-09-23" duration="11" complete="100" expand="true">
+            <notes><![CDATA[Trello list: Sprint 1 - Frontend WireFrame && Project Structure
+https://trello.com/b/MFhbwJxe/wayfare]]></notes>
+            <task id="1" name="1.1 Set up GitHub and add project members" color="#1f845a" meeting="false" start="2026-09-23" duration="2" complete="100" webLink="https://trello.com/c/pbxrXGua" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/pbxrXGua
+Labels: none]]></notes>
+            </task>
+            <task id="2" name="1.2 Project requirements" color="#1f845a" meeting="false" start="2026-09-24" duration="4" complete="100" webLink="https://trello.com/c/z2inEAyY" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/z2inEAyY
+Labels: none]]></notes>
+            </task>
+            <task id="3" name="1.3 Choose the web stack" color="#1f845a" meeting="false" start="2026-09-27" duration="1" complete="100" webLink="https://trello.com/c/poem249a" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/poem249a
+Labels: none]]></notes>
+            </task>
+            <task id="4" name="1.4 Determine the project structure" color="#1f845a" meeting="false" start="2026-09-27" duration="1" complete="100" webLink="https://trello.com/c/Y49jBrQV" expand="true">
+                <notes><![CDATA[Determining Project Structure and Folders
+
+![image.webp](https://trello.com/1/cards/6ac88a6d1091c991ea40da8c/attachments/6ac88ad9481904c01b69c993/previews/6ac88ad9481904c01b69c99b/download/image.webp)
+
+Trello card: https://trello.com/c/Y49jBrQV
+Labels: none]]></notes>
+            </task>
+            <task id="5" name="1.5 Front-end wireframe" color="#1f845a" meeting="false" start="2026-09-27" duration="4" complete="100" webLink="https://trello.com/c/1aZ2m2yk" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/1aZ2m2yk
+Labels: Integrating with Frontend]]></notes>
+            </task>
+            <task id="6" name="1.6 Front-end review and notes" color="#1f845a" meeting="false" start="2026-09-30" duration="4" complete="100" webLink="https://trello.com/c/E47IsomR" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/E47IsomR
+Labels: Integrating with Frontend, Testing]]></notes>
+            </task>
+        </task>
+        <task id="7" name="Sprint 2 - Back-end data and database" color="#0f1215" meeting="false" start="2026-10-03" duration="11" complete="100" expand="true">
+            <notes><![CDATA[Trello list: Sprint 2 - Backend Data && Database
+https://trello.com/b/MFhbwJxe/wayfare]]></notes>
+            <task id="8" name="2.1 Business flow and requirements" color="#1f845a" meeting="false" start="2026-10-03" duration="1" complete="100" webLink="https://trello.com/c/IZKHleJT" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/IZKHleJT
+Labels: none]]></notes>
+            </task>
+            <task id="9" name="2.2 Entities and their attributes" color="#1f845a" meeting="false" start="2026-10-03" duration="2" complete="100" webLink="https://trello.com/c/OfLrs972" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/OfLrs972
+Labels: none]]></notes>
+            </task>
+            <task id="10" name="2.3 Install the required NuGet packages" color="#1f845a" meeting="false" start="2026-10-04" duration="1" complete="100" webLink="https://trello.com/c/LiJgQ3Pm" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/LiJgQ3Pm
+Labels: none]]></notes>
+            </task>
+            <task id="11" name="2.4 ERD and its documentation" color="#1f845a" meeting="false" start="2026-10-05" duration="3" complete="100" webLink="https://trello.com/c/qKKuvXoH" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/qKKuvXoH
+Labels: Database]]></notes>
+            </task>
+            <task id="12" name="2.5 Back-end models and enums" color="#1f845a" meeting="false" start="2026-10-07" duration="3" complete="100" webLink="https://trello.com/c/oxyW7ctG" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/oxyW7ctG
+Labels: Feature]]></notes>
+            </task>
+            <task id="13" name="2.6 List all API endpoints" color="#1f845a" meeting="false" start="2026-10-09" duration="2" complete="100" webLink="https://trello.com/c/A54TWQNu" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/A54TWQNu
+Labels: none]]></notes>
+            </task>
+            <task id="14" name="2.7 DbContext and database" color="#1f845a" meeting="false" start="2026-10-09" duration="3" complete="100" webLink="https://trello.com/c/EZ9lnIYX" expand="true">
+                <notes><![CDATA[CONFIGURING DATABASE
+
+Trello card: https://trello.com/c/EZ9lnIYX
+Labels: Database, Milestone]]></notes>
+            </task>
+            <task id="15" name="M1 DbContext and database ready" color="#14171a" meeting="true" start="2026-10-11" duration="0" complete="100" expand="true"/>
+            <task id="16" name="2.8 Bug fixing and edits" color="#1f845a" meeting="false" start="2026-10-03" duration="11" complete="100" webLink="https://trello.com/c/h3qVbUWz" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/h3qVbUWz
+Labels: Testing]]></notes>
+            </task>
+            <task id="17" name="2.9 Back-end data configurations" color="#1f845a" meeting="false" start="2026-10-11" duration="3" complete="100" webLink="https://trello.com/c/K72zYdgA" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/K72zYdgA
+Labels: Database]]></notes>
+            </task>
+        </task>
+        <task id="18" name="Sprint 3 - Authentication endpoints and one customer endpoint" color="#0f1215" meeting="false" start="2026-10-13" duration="10" complete="0" expand="true">
+            <notes><![CDATA[Trello list: Sprint 3 - Authentication Endpoints + one cutomer endpoint
+https://trello.com/b/MFhbwJxe/wayfare]]></notes>
+            <task id="19" name="3.1 Login controller" color="#2f62b8" meeting="false" start="2026-10-13" duration="3" complete="0" webLink="https://trello.com/c/6yknThto" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/6yknThto
+Labels: Feature]]></notes>
+            </task>
+            <task id="20" name="3.2 Register controller" color="#2f62b8" meeting="false" start="2026-10-13" duration="3" complete="0" webLink="https://trello.com/c/IIN7A8qu" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/IIN7A8qu
+Labels: Feature]]></notes>
+            </task>
+            <task id="21" name="3.3 Register DTO and its mapper" color="#2f62b8" meeting="false" start="2026-10-13" duration="3" complete="0" webLink="https://trello.com/c/vEIV10KO" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/vEIV10KO
+Labels: Feature]]></notes>
+            </task>
+            <task id="22" name="3.4 Login DTO and its mapper" color="#2f62b8" meeting="false" start="2026-10-13" duration="3" complete="0" webLink="https://trello.com/c/T825V92l" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/T825V92l
+Labels: Feature]]></notes>
+            </task>
+            <task id="23" name="3.5 Fix enum typos and add Rental fields" color="#7d64c8" meeting="false" start="2026-10-15" duration="2" complete="0" webLink="https://trello.com/c/Vn43DkQX" expand="true">
+                <notes><![CDATA[Rename Disel to Diesel, Acitve to Active and Canceled to Cancelled. Add UserLicense.Pending. Add PickedUpAt, ReturnedAt and ReturnNotes to Rental. Create the migration and update the ERD document.
+
+Planned start: Oct 15.
+Spec and steps: Wayfare Backend Board, card F1 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/Vn43DkQX
+Labels: Database]]></notes>
+            </task>
+            <task id="24" name="3.6 Program.cs setup" color="#2f62b8" meeting="false" start="2026-10-15" duration="2" complete="0" webLink="https://trello.com/c/CYEYdoCJ" expand="true">
+                <notes><![CDATA[AddControllers with string enums, ProblemDetails, CORS for development, a viewer for the OpenAPI document, static files, Identity password options.
+
+Planned start: Oct 15.
+Spec and steps: Wayfare Backend Board, card F2 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/CYEYdoCJ
+Labels: Feature]]></notes>
+            </task>
+            <task id="25" name="3.7 ListCar controller" color="#2f62b8" meeting="false" start="2026-10-15" duration="3" complete="0" webLink="https://trello.com/c/QP40LNBB" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/QP40LNBB
+Labels: Feature]]></notes>
+            </task>
+            <task id="26" name="3.8 ListCar DTO and its mapper" color="#2f62b8" meeting="false" start="2026-10-15" duration="3" complete="0" webLink="https://trello.com/c/jQtCx9ab" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/jQtCx9ab
+Labels: Feature]]></notes>
+            </task>
+            <task id="27" name="3.9 RentalRules service" color="#2f62b8" meeting="false" start="2026-10-16" duration="2" complete="0" webLink="https://trello.com/c/TExOruDr" expand="true">
+                <notes><![CDATA[One place for CountDays, Total, the overlap test, the 10% fee and the payment status. ListCars, RentCar, Approve and the refund endpoints all use it.
+
+Planned start: Oct 16.
+Spec and steps: Wayfare Backend Board, card M1 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/TExOruDr
+Labels: Feature]]></notes>
+            </task>
+            <task id="28" name="3.10 Seed roles, admin account and sample cars" color="#7d64c8" meeting="false" start="2026-10-16" duration="2" complete="0" webLink="https://trello.com/c/0pL339MB" expand="true">
+                <notes><![CDATA[Create the Admin and Customer roles, one admin user (password from user-secrets) and the twelve sample cars from the front end, so everyone can test.
+
+Planned start: Oct 16.
+Spec and steps: Wayfare Backend Board, card F3 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/0pL339MB
+Labels: Database]]></notes>
+            </task>
+            <task id="29" name="3.11 Image storage service" color="#2f62b8" meeting="false" start="2026-10-16" duration="2" complete="0" webLink="https://trello.com/c/WPmSJB3H" expand="true">
+                <notes><![CDATA[Save, validate and delete uploaded images under wwwroot/uploads. Used by Register, UpdateLicense, AddCar and EditCar.
+
+Planned start: Oct 16.
+Spec and steps: Wayfare Backend Board, card F4 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/WPmSJB3H
+Labels: Feature]]></notes>
+            </task>
+            <task id="30" name="3.12 Branches endpoint" color="#2f62b8" meeting="false" start="2026-10-17" duration="1" complete="0" webLink="https://trello.com/c/SdEdmdWh" expand="true">
+                <notes><![CDATA[GET /api/branches returns the four branches for the pick-up lists and the staff car form.
+
+Planned start: Oct 17.
+Spec and steps: Wayfare Backend Board, card F9 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/SdEdmdWh
+Labels: Feature]]></notes>
+            </task>
+            <task id="31" name="3.13 Authentication and authorization with Identity + JWT" color="#4f5b6e" meeting="false" start="2026-10-17" duration="3" complete="0" webLink="https://trello.com/c/YnKxkEPO" expand="true">
+                <notes><![CDATA[APP AUTHENTICATION
+
+Trello card: https://trello.com/c/YnKxkEPO
+Labels: Milestone, Feature, Authentication]]></notes>
+            </task>
+            <task id="32" name="M2 Authentication and authorization live" color="#14171a" meeting="true" start="2026-10-19" duration="0" complete="0" expand="true"/>
+            <task id="33" name="3.14 ChangePassword endpoint" color="#4f5b6e" meeting="false" start="2026-10-19" duration="2" complete="0" webLink="https://trello.com/c/ZNfG4BXB" expand="true">
+                <notes><![CDATA[PUT /api/authentication/change-password for customers and staff.
+
+Planned start: Oct 19.
+Spec and steps: Wayfare Backend Board, card F8 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/ZNfG4BXB
+Labels: Authentication, Feature]]></notes>
+            </task>
+            <task id="34" name="3.15 Testing with the front end" color="#d9a520" meeting="false" start="2026-10-13" duration="9" complete="0" webLink="https://trello.com/c/HPVKFVOq" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/HPVKFVOq
+Labels: Integrating with Frontend]]></notes>
+            </task>
+            <task id="35" name="3.16 Bug fixing and edits" color="#b8392b" meeting="false" start="2026-10-13" duration="10" complete="0" webLink="https://trello.com/c/FDMITjOf" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/FDMITjOf
+Labels: Testing]]></notes>
+            </task>
+            <task id="36" name="3.17 .http file for every endpoint" color="#b8392b" meeting="false" start="2026-10-15" duration="8" complete="0" webLink="https://trello.com/c/ewzo1CUj" expand="true">
+                <notes><![CDATA[Replace the weatherforecast sample in wayfare-backend.http. Add a request, with a sample body, for each endpoint as it lands, so anyone can test it. Keep adding requests in later sprints.
+
+Planned start: Oct 15.
+Spec and steps: Wayfare Backend Board, card Q1 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/ewzo1CUj
+Labels: Testing]]></notes>
+            </task>
+        </task>
+        <task id="37" name="Sprint 4 - Customer endpoints" color="#0f1215" meeting="false" start="2026-10-23" duration="11" complete="0" expand="true">
+            <notes><![CDATA[Trello list: Sprint 4 - 3 Customer Endpoints
+https://trello.com/b/MFhbwJxe/wayfare]]></notes>
+            <task id="38" name="4.1 ListMyRentals controller" color="#2f62b8" meeting="false" start="2026-10-23" duration="3" complete="0" webLink="https://trello.com/c/sYUsWQ6o" expand="true">
+                <notes><![CDATA[Customer endpoint: return only the authenticated customer's rental history and current rental statuses. Enforce ownership authorization and use DTOs.
+
+Trello card: https://trello.com/c/sYUsWQ6o
+Labels: Feature]]></notes>
+            </task>
+            <task id="39" name="4.2 ListRentals DTO and its mapper" color="#2f62b8" meeting="false" start="2026-10-23" duration="3" complete="0" webLink="https://trello.com/c/kU0U0Ms6" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/kU0U0Ms6
+Labels: Feature]]></notes>
+            </task>
+            <task id="40" name="4.3 CarDetails endpoint (customer)" color="#2f62b8" meeting="false" start="2026-10-23" duration="3" complete="0" webLink="https://trello.com/c/zesf9oYV" expand="true">
+                <notes><![CDATA[GET /api/customer/cars/{id}: one car with every photo and its booked ranges.
+
+Planned start: Oct 23.
+Spec and steps: Wayfare Backend Board, card C2 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/zesf9oYV
+Labels: Feature]]></notes>
+            </task>
+            <task id="41" name="4.4 RentalRequest controller" color="#2f62b8" meeting="false" start="2026-10-25" duration="3" complete="0" webLink="https://trello.com/c/gEnSeHBT" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/gEnSeHBT
+Labels: Feature]]></notes>
+            </task>
+            <task id="42" name="4.5 RentalRequest DTO and its mapper" color="#2f62b8" meeting="false" start="2026-10-25" duration="3" complete="0" webLink="https://trello.com/c/OJIHKKam" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/OJIHKKam
+Labels: Feature]]></notes>
+            </task>
+            <task id="43" name="4.6 CancelRental controller" color="#2f62b8" meeting="false" start="2026-10-27" duration="3" complete="0" webLink="https://trello.com/c/SLynyBL4" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/SLynyBL4
+Labels: Feature]]></notes>
+            </task>
+            <task id="44" name="4.7 UserProfileDto and its mapper" color="#2f62b8" meeting="false" start="2026-10-29" duration="3" complete="0" webLink="https://trello.com/c/8O9KrEim" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/8O9KrEim
+Labels: Feature]]></notes>
+            </task>
+            <task id="45" name="4.8 GetUserProfile controller" color="#2f62b8" meeting="false" start="2026-10-29" duration="3" complete="0" webLink="https://trello.com/c/WtUZaQGB" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/WtUZaQGB
+Labels: Feature]]></notes>
+            </task>
+            <task id="46" name="4.9 RefuseRental controller" color="#2f62b8" meeting="false" start="2026-10-29" duration="3" complete="0" webLink="https://trello.com/c/7PbQrPyP" expand="true">
+                <notes><![CDATA[PUT /api/customer/refuserental/{id}: an approved booking becomes Refused, 10% is kept and 90% is refunded. It is on the team's endpoint list but had no card.
+
+Planned start: Oct 29.
+Spec and steps: Wayfare Backend Board, card R4 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/7PbQrPyP
+Labels: Feature]]></notes>
+            </task>
+            <task id="47" name="4.10 Testing with the front end" color="#d9a520" meeting="false" start="2026-10-23" duration="11" complete="0" webLink="https://trello.com/c/cvPQAwAl" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/cvPQAwAl
+Labels: Integrating with Frontend]]></notes>
+            </task>
+            <task id="48" name="4.11 Bug fixing and edits" color="#b8392b" meeting="false" start="2026-10-23" duration="11" complete="0" webLink="https://trello.com/c/yHDCuwF9" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/yHDCuwF9
+Labels: Testing]]></notes>
+            </task>
+            <task id="49" name="4.12 UpdateProfile and UpdateLicense endpoints" color="#2f62b8" meeting="false" start="2026-10-31" duration="3" complete="0" webLink="https://trello.com/c/yY7HQGmO" expand="true">
+                <notes><![CDATA[PUT /api/customer/profile and PUT /api/customer/profile/license (photo and expiry). A new license goes back to Pending.
+
+Planned start: Oct 31.
+Spec and steps: Wayfare Backend Board, card P2 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/yY7HQGmO
+Labels: Feature]]></notes>
+            </task>
+        </task>
+        <task id="50" name="Sprint 5 - Admin listing functionalities" color="#0f1215" meeting="false" start="2026-11-03" duration="10" complete="0" expand="true">
+            <notes><![CDATA[Trello list: Sprint 5 - Admin Listing Functionalities
+https://trello.com/b/MFhbwJxe/wayfare]]></notes>
+            <task id="51" name="5.1 ListCustomers controller" color="#2f62b8" meeting="false" start="2026-11-03" duration="3" complete="0" webLink="https://trello.com/c/lI3MsePw" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/lI3MsePw
+Labels: Feature]]></notes>
+            </task>
+            <task id="52" name="5.2 ListCustomer DTO and its mapper" color="#2f62b8" meeting="false" start="2026-11-03" duration="3" complete="0" webLink="https://trello.com/c/TDfcLpj3" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/TDfcLpj3
+Labels: Feature]]></notes>
+            </task>
+            <task id="53" name="5.3 VerifyLicense endpoint (staff)" color="#2f62b8" meeting="false" start="2026-11-05" duration="2" complete="0" webLink="https://trello.com/c/Gba8Blg4" expand="true">
+                <notes><![CDATA[PUT /api/admin/customers/{id}/license marks a license Verified or Pending.
+
+Planned start: Nov 5.
+Spec and steps: Wayfare Backend Board, card P4 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/Gba8Blg4
+Labels: Feature]]></notes>
+            </task>
+            <task id="54" name="5.4 ListCars controller" color="#2f62b8" meeting="false" start="2026-11-05" duration="3" complete="0" webLink="https://trello.com/c/LGP4xh0T" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/LGP4xh0T
+Labels: Feature]]></notes>
+            </task>
+            <task id="55" name="5.5 AdminListAllRentals controller" color="#2f62b8" meeting="false" start="2026-11-07" duration="3" complete="0" webLink="https://trello.com/c/0HQMY2zr" expand="true">
+                <notes><![CDATA[Admin-only endpoint: list all rental requests/rentals with status and relevant customer/car details. Enforce admin authorization and use DTOs.
+
+Trello card: https://trello.com/c/0HQMY2zr
+Labels: Feature]]></notes>
+            </task>
+            <task id="56" name="5.6 ListPayments controller" color="#2f62b8" meeting="false" start="2026-11-09" duration="3" complete="0" webLink="https://trello.com/c/EQs9Ose5" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/EQs9Ose5
+Labels: Feature]]></notes>
+            </task>
+            <task id="57" name="5.7 ListPayments DTO and its mapper" color="#2f62b8" meeting="false" start="2026-11-09" duration="3" complete="0" webLink="https://trello.com/c/A1ebSNFP" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/A1ebSNFP
+Labels: Feature]]></notes>
+            </task>
+            <task id="58" name="5.8 Testing with the front end" color="#d9a520" meeting="false" start="2026-11-03" duration="10" complete="0" webLink="https://trello.com/c/3NdSl3Az" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/3NdSl3Az
+Labels: Integrating with Frontend]]></notes>
+            </task>
+            <task id="59" name="5.9 Bug fixing and edits" color="#b8392b" meeting="false" start="2026-11-03" duration="10" complete="0" webLink="https://trello.com/c/EkeVUfMH" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/EkeVUfMH
+Labels: Testing]]></notes>
+            </task>
+        </task>
+        <task id="60" name="Sprint 6 - Admin core functionalities" color="#0f1215" meeting="false" start="2026-11-13" duration="10" complete="0" expand="true">
+            <notes><![CDATA[Trello list: Sprint 6 - Admin Core Functionalities
+https://trello.com/b/MFhbwJxe/wayfare]]></notes>
+            <task id="61" name="6.1 ApproveRental controller" color="#2f62b8" meeting="false" start="2026-11-13" duration="3" complete="0" webLink="https://trello.com/c/fhxihmyz" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/fhxihmyz
+Labels: Feature]]></notes>
+            </task>
+            <task id="62" name="6.2 HandOverKeys controller" color="#2f62b8" meeting="false" start="2026-11-15" duration="3" complete="0" webLink="https://trello.com/c/lw0foecX" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/lw0foecX
+Labels: Feature]]></notes>
+            </task>
+            <task id="63" name="6.3 Rental rejection controller" color="#2f62b8" meeting="false" start="2026-11-17" duration="3" complete="0" webLink="https://trello.com/c/CNo7iQOy" expand="true">
+                <notes><![CDATA[Document and implement the business rules for admin rejection, including the agreed fee/refund calculation, payment status transitions, audit trail, and tests. The RejectRental endpoint implementation belongs to Sprint 6; avoid duplicating the controller here.
+
+Trello card: https://trello.com/c/CNo7iQOy
+Labels: Feature]]></notes>
+            </task>
+            <task id="64" name="6.4 AddCar controller" color="#2f62b8" meeting="false" start="2026-11-19" duration="3" complete="0" webLink="https://trello.com/c/JUUM49D7" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/JUUM49D7
+Labels: Feature]]></notes>
+            </task>
+            <task id="65" name="6.5 AddCar DTO and its mapper" color="#2f62b8" meeting="false" start="2026-11-19" duration="3" complete="0" webLink="https://trello.com/c/YIya8MUK" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/YIya8MUK
+Labels: Feature]]></notes>
+            </task>
+            <task id="66" name="6.6 Testing with the front end" color="#d9a520" meeting="false" start="2026-11-13" duration="10" complete="0" webLink="https://trello.com/c/01CM7B17" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/01CM7B17
+Labels: Integrating with Frontend]]></notes>
+            </task>
+            <task id="67" name="6.7 Bug fixing and edits" color="#b8392b" meeting="false" start="2026-11-13" duration="10" complete="0" webLink="https://trello.com/c/mZVKaGMl" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/mZVKaGMl
+Labels: Testing]]></notes>
+            </task>
+        </task>
+        <task id="68" name="Sprint 7 - Admin endpoints, part 2" color="#0f1215" meeting="false" start="2026-11-23" duration="10" complete="0" expand="true">
+            <notes><![CDATA[Trello list: Sprint 7 - admin endpoints part 2
+https://trello.com/b/MFhbwJxe/wayfare]]></notes>
+            <task id="69" name="7.1 EditCar controller" color="#2f62b8" meeting="false" start="2026-11-23" duration="3" complete="0" webLink="https://trello.com/c/Vwhs7g9J" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/Vwhs7g9J
+Labels: Feature]]></notes>
+            </task>
+            <task id="70" name="7.2 RecordReturn controller" color="#2f62b8" meeting="false" start="2026-11-23" duration="3" complete="0" webLink="https://trello.com/c/kvaM6AD2" expand="true">
+                <notes><![CDATA[PUT /api/admin/return/{id}: an Active rental becomes Completed and the car becomes Available. This is the "vehicle returns" feature from the brief.
+
+Planned start: Nov 23.
+Spec and steps: Wayfare Backend Board, card A5 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/kvaM6AD2
+Labels: Feature]]></notes>
+            </task>
+            <task id="71" name="7.3 Admin profile endpoints" color="#2f62b8" meeting="false" start="2026-11-25" duration="3" complete="0" webLink="https://trello.com/c/mD7RNnDy" expand="true">
+                <notes><![CDATA[GET and PUT /api/admin/profile for the staff profile page.
+
+Planned start: Nov 25.
+Spec and steps: Wayfare Backend Board, card P5 (https://claude.ai/artifact/XAhABjARY58u5PsGeve9m4).
+
+Trello card: https://trello.com/c/mD7RNnDy
+Labels: Feature]]></notes>
+            </task>
+            <task id="72" name="7.4 DeleteCar controller" color="#2f62b8" meeting="false" start="2026-11-25" duration="5" complete="0" webLink="https://trello.com/c/ErdjjFYd" expand="true">
+                <notes><![CDATA[Last APP FEATURE
+
+Trello card: https://trello.com/c/ErdjjFYd
+Labels: Milestone, Feature]]></notes>
+            </task>
+            <task id="73" name="M3 Last app feature built" color="#14171a" meeting="true" start="2026-11-29" duration="0" complete="0" expand="true"/>
+            <task id="74" name="7.5 Testing with the front end" color="#d9a520" meeting="false" start="2026-11-23" duration="10" complete="0" webLink="https://trello.com/c/o2jdTlZt" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/o2jdTlZt
+Labels: Integrating with Frontend]]></notes>
+            </task>
+            <task id="75" name="7.6 Bug fixing and edits" color="#b8392b" meeting="false" start="2026-11-23" duration="10" complete="0" webLink="https://trello.com/c/9UE8HTBT" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/9UE8HTBT
+Labels: Testing]]></notes>
+            </task>
+        </task>
+        <task id="76" name="Sprint 8 - Final testing" color="#0f1215" meeting="false" start="2026-12-02" duration="24" complete="0" expand="true">
+            <notes><![CDATA[Trello list: Sprint 8 - Final Testing
+https://trello.com/b/MFhbwJxe/wayfare]]></notes>
+            <task id="77" name="8.1 Test the whole system and fix any bugs" color="#d9a520" meeting="false" start="2026-12-02" duration="24" complete="0" webLink="https://trello.com/c/nw3eoCRm" expand="true">
+                <notes><![CDATA[Trello card: https://trello.com/c/nw3eoCRm
+Labels: Testing, Integrating with Frontend]]></notes>
+            </task>
+        </task>
+    </tasks>
+    <resources>
+        <resource id="0" name="Abdelrahman Hany" function="Default:1" contacts="" phone=""/>
+        <resource id="1" name="Kerollos Romany" function="Default:2" contacts="" phone=""/>
+        <resource id="2" name="Mina Maher" function="Default:2" contacts="" phone=""/>
+        <resource id="3" name="Samuel Mokhles" function="Default:2" contacts="" phone=""/>
+        <resource id="4" name="Matthew Ashraf" function="Default:2" contacts="" phone=""/>
+        <resource id="5" name="Marwan Mohamed" function="Default:2" contacts="" phone=""/>
+        <resource id="6" name="Basem Hany" function="Default:2" contacts="" phone=""/>
+    </resources>
+    <allocations>
+        <allocation task-id="1" resource-id="1" function="Default:2" responsible="true" load="100.0"/>
+        <allocation task-id="2" resource-id="2" function="Default:2" responsible="true" load="100.0"/>
+        <allocation task-id="2" resource-id="1" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="2" resource-id="0" function="Default:1" responsible="false" load="100.0"/>
+        <allocation task-id="2" resource-id="5" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="2" resource-id="4" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="2" resource-id="3" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="3" resource-id="2" function="Default:2" responsible="true" load="100.0"/>
+        <allocation task-id="3" resource-id="0" function="Default:1" responsible="false" load="100.0"/>
+        <allocation task-id="3" resource-id="1" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="3" resource-id="5" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="3" resource-id="4" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="3" resource-id="3" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="4" resource-id="2" function="Default:2" responsible="true" load="100.0"/>
+        <allocation task-id="4" resource-id="0" function="Default:1" responsible="false" load="100.0"/>
+        <allocation task-id="4" resource-id="1" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="4" resource-id="5" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="4" resource-id="4" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="4" resource-id="3" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="5" resource-id="0" function="Default:1" responsible="true" load="100.0"/>
+        <allocation task-id="6" resource-id="2" function="Default:2" responsible="true" load="100.0"/>
+        <allocation task-id="6" resource-id="1" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="8" resource-id="2" function="Default:2" responsible="true" load="100.0"/>
+        <allocation task-id="8" resource-id="0" function="Default:1" responsible="false" load="100.0"/>
+        <allocation task-id="8" resource-id="1" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="8" resource-id="5" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="8" resource-id="4" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="8" resource-id="3" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="9" resource-id="1" function="Default:2" responsible="true" load="100.0"/>
+        <allocation task-id="10" resource-id="2" function="Default:2" responsible="true" load="100.0"/>
+        <allocation task-id="10" resource-id="1" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="11" resource-id="2" function="Default:2" responsible="true" load="100.0"/>
+        <allocation task-id="12" resource-id="2" function="Default:2" responsible="true" load="100.0"/>
+        <allocation task-id="13" resource-id="2" function="Default:2" responsible="true" load="100.0"/>
+        <allocation task-id="14" resource-id="1" function="Default:2" responsible="true" load="100.0"/>
+        <allocation task-id="16" resource-id="0" function="Default:1" responsible="true" load="100.0"/>
+        <allocation task-id="16" resource-id="2" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="16" resource-id="5" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="16" resource-id="1" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="16" resource-id="4" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="16" resource-id="3" function="Default:2" responsible="false" load="100.0"/>
+        <allocation task-id="17" resource-id="1" function="Default:2" responsible="true" load="100.0"/>
+    </allocations>
+    <vacations/>
+    <previousTasks/>
+    <roles roleset-name="Default"/>
+</project>
