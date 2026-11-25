@@ -1,8 +1,9 @@
-
 /* Login, register and staff login (data-auth-form).
-   This only checks the fields and shows the button state. The server does the
-   real work: set the form's action and method="post" and remove the redirect
-   at the bottom, and the browser will submit it for real. */
+   Checks the fields, then calls the backend through Api:
+   - login     POST /api/Authentication/login
+   - register  POST /api/Authentication/register (multipart, with the license photo), then logs in
+   - staff     POST /api/Authentication/login, and the account must have the Admin role
+   The JWT is stored by Api (localStorage "authToken"). */
 App.ready(() => {
   const form = App.$("[data-auth-form]");
   if (!form) return;
@@ -29,50 +30,38 @@ App.ready(() => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!App.validate(form)) return;
-    if(kind === "staff") {
-      const payload = {
-        email:App.$("#email",form).value.trim() ?? "",
-        password:App.$("#password",form).value ?? ""
-      }
-      App.setLoading(submitBtn, true);
-      const API_BASE = "http://localhost:5290"
-      try {
-        const response = await fetch(`${API_BASE}/api/auth/admin`, {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json",
-            "Accept":"application/json"
-          },
-          body: JSON.stringify(payload)
-        });
-        const data = await response.json();
-        if(!response.ok){
-          let errorMsg = data.message;
-          if(data.errors && Array.isArray(data.errors)) {
-            errorMsg = data.errors.join("\n");
-          }else if(data.errors && typeof data.errors === "object") {
-            errorMsg = Object.values(data.errors).flat().join("\n");
-          }
-          throw new Error(errorMsg || "Login Failed!");
+    const email = App.$("#email", form).value.trim();
+    const password = App.$("#password", form).value;
+    App.setLoading(submitBtn, true);
+    try {
+      if (kind === "register") {
+        const fd = new FormData();
+        fd.append("Name", App.$("#name", form).value.trim());
+        fd.append("Email", email);
+        fd.append("Phone", App.$("#phone", form).value.trim());
+        fd.append("Password", password);
+        fd.append("LicenseExpiry", App.$("#licenseExpiry", form).value);
+        const photo = App.$("#licensePhoto", form).files[0];
+        if (photo) fd.append("LicensePhoto", photo, photo.name);
+        await Api.register(fd);
+        await Api.login({ email, password }); // register does not return a token
+        App.toast("Account created. Welcome to Wayfare!");
+      } else {
+        const user = await Api.login({ email, password });
+        if (kind === "staff" && user.role !== "Admin") {
+          Api.logout();
+          throw new Error("This account does not have staff access.");
         }
-        if(data.token){
-          localStorage.setItem("authToken",data.token);
-          localStorage.setItem("currentUser",JSON.stringify({
-            userId: data.id,
-            email: data.email,
-            name: data.name,
-            role: data.role
-          }));
+        if (kind === "login" && user.role === "Admin") {
+          Api.logout();
+          throw new Error("This is a staff account. Use the staff login.");
         }
-          App.toast("Login Successeful! Redirecting to home page ...");
-          setTimeout(() => {
-            window.location.href = "index.html";
-          }, 1200);
-      } catch(err) {
-        App.toast(err.message , { error : true});
-      } finally{
-        App.setLoading(submitBtn , false);
+        App.toast("Logged in. Redirecting...");
       }
+      setTimeout(() => (location.href = "index.html"), 800);
+    } catch (err) {
+      App.toast(err.message || "Something went wrong. Try again.", { error: true });
+      App.setLoading(submitBtn, false);
     }
   });
 });

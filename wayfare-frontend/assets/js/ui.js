@@ -357,6 +357,12 @@
   const fillLogos = () => document.querySelectorAll("[data-logo]").forEach((el) => { el.outerHTML = App.logo; });
 
   function userMenu(user) {
+    // Not signed in: show log in / create account instead of the user menu.
+    if (!user) {
+      return `
+      <a class="btn btn-ghost btn-sm hide-sm" href="${l("register.html")}">Create account</a>
+      <a class="btn btn-primary btn-sm" href="${l("login.html")}">${App.icon("sign-in")}Log in</a>`;
+    }
     return `
       <div class="menu-anchor">
         <button class="user-btn" type="button" data-menu-toggle aria-haspopup="menu" aria-expanded="false">
@@ -367,7 +373,7 @@
           <div class="menu-head"><strong>${App.esc(user.name)}</strong><span>${App.esc(user.email || "")}</span></div>
           <a role="menuitem" href="${l("my-rentals.html")}">${App.icon("key")}My rentals</a>
           <a role="menuitem" href="${l("profile.html")}">${App.icon("user-circle")}Profile</a>
-          <a role="menuitem" class="danger" href="${l("login.html")}">${App.icon("sign-out")}Log out</a>
+          <a role="menuitem" class="danger" href="${l("login.html")}" data-logout>${App.icon("sign-out")}Log out</a>
         </div>
       </div>`;
   }
@@ -387,7 +393,7 @@
             ${item("my-rentals.html", "My rentals", "rentals")}
           </nav>
           <div class="header-actions">
-            ${userMenu(window.DB.me)}
+            ${userMenu(window.DB.signedIn ? window.DB.me : null)}
             <button class="menu-toggle icon-btn" type="button" aria-label="Open menu" aria-expanded="false" data-nav-toggle>${App.icon("list")}</button>
           </div>
         </div>
@@ -396,7 +402,7 @@
           ${mItem("cars.html", "Cars", "car-profile")}
           ${mItem("my-rentals.html", "My rentals", "key")}
           ${mItem("profile.html", "Profile", "user-circle")}
-          ${mItem("login.html", "Log out", "sign-out")}
+          ${window.DB.signedIn ? `<a href="${l("login.html")}" data-logout>${App.icon("sign-out")}Log out</a>` : mItem("login.html", "Log in", "sign-in")}
         </nav>
       </header>`;
   }
@@ -466,7 +472,7 @@
       </nav>
       <div class="side-foot">
         ${link("admin/profile.html", "profile", "user-circle", "My profile")}
-        <a class="side-link" href="${l("admin/login.html")}">${App.icon("sign-out")}Log out</a>
+        <a class="side-link" href="${l("admin/login.html")}" data-logout>${App.icon("sign-out")}Log out</a>
       </div>`;
   }
 
@@ -485,7 +491,7 @@
         <div class="menu" role="menu" hidden>
           <div class="menu-head"><strong>${App.esc(user.name)}</strong><span>${App.esc(user.role)}</span></div>
           <a role="menuitem" href="${l("admin/profile.html")}">${App.icon("user-circle")}My profile</a>
-          <a role="menuitem" class="danger" href="${l("admin/login.html")}">${App.icon("sign-out")}Log out</a>
+          <a role="menuitem" class="danger" href="${l("admin/login.html")}" data-logout>${App.icon("sign-out")}Log out</a>
         </div>
       </div>`;
   }
@@ -543,11 +549,35 @@
     }
   }
 
+  // Page scripts wait for the DOM and for Api.boot(), which loads the signed-in
+  // user's real profile from the backend. Sign-in pages (layout "none") skip it.
+  const domReady = new Promise((resolve) => {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", resolve);
+    else resolve();
+  });
+  const needsBoot = window.Api && window.Api.boot && document.body && document.body.dataset.layout !== "none";
+  App.booted = domReady.then(() => (needsBoot ? window.Api.boot() : null));
+
   App.ready = (fn) => {
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn);
-    else fn();
+    App.booted
+      .then(() => fn())
+      .catch((err) => {
+        console.error(err);
+        if (App.toast) App.toast((err && err.message) || "Something went wrong.", { error: true });
+      });
   };
 
+  // "Log out" links forget the token before they navigate.
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest("[data-logout]")) return;
+    try {
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("currentUser");
+    } catch (err) {
+      /* ignore */
+    }
+  });
+
   App.ready(fillLogos);
-  mountLayout();
+  App.ready(mountLayout);
 })();

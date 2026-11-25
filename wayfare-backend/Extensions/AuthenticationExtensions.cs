@@ -6,7 +6,7 @@ using wayfare_backend;
 using wayfare_backend.Models;
 using wayfare_backend.Services;
 
-namespace YourProjectNamespace.Extensions;
+namespace wayfare_backend.Extensions;
 
 public static class AuthenticationExtensions
 {
@@ -19,11 +19,12 @@ public static class AuthenticationExtensions
         {
             options.User.RequireUniqueEmail = true;
 
+            // تحديد طول الباسورد بـ 8 حروف وإلغاء القيود المعقدة
             options.Password.RequiredLength = 8;
-            options.Password.RequireDigit = true;
-            options.Password.RequireLowercase = true;
-            options.Password.RequireUppercase = true;
-            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireDigit = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireNonAlphanumeric = false;
         })
         .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<AppDbContext>()

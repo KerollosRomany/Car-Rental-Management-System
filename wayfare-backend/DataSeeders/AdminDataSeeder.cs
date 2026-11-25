@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.Differencing;
 using wayfare_backend.Models;
 
 namespace wayfare_backend.DataSeeders
@@ -29,8 +30,10 @@ namespace wayfare_backend.DataSeeders
             var adminEmail = _configuration["Admin:Email"];
             var adminPassword = _configuration["Admin:Password"];
             var adminPhone = _configuration["Admin:Phone"];
+        
+            var existingAdmin = await _userManager.GetUsersInRoleAsync("Admin");
 
-            if((await _userManager.FindByEmailAsync(adminEmail!)) is null)
+            if(existingAdmin.Count == 0)
             {
                 var adminUser = new ApplicationUser
                 {

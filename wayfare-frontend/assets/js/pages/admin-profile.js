@@ -30,6 +30,8 @@ App.ready(() => {
       Object.assign(me, await Api.updateStaffProfile({ name: $("#a-name").value.trim(), email: $("#a-email").value.trim(), phone: $("#a-phone").value.trim() }));
       renderCard();
       App.toast("Profile saved.");
+    } catch (err) {
+      App.toast(err.message || "Could not save. Try again.", { error: true });
     } finally {
       App.setLoading(btn, false);
     }
@@ -41,9 +43,14 @@ App.ready(() => {
     if (!App.validate(form)) return;
     const btn = $("[type=submit]", form);
     App.setLoading(btn, true);
-    await Api.changePassword({ currentPassword: $("#pw-current").value, newPassword: $("#pw-new").value });
-    App.setLoading(btn, false);
-    form.reset();
-    App.toast("Password updated.");
+    try {
+      await Api.changePassword({ currentPassword: $("#pw-current").value, newPassword: $("#pw-new").value });
+      form.reset();
+      App.toast("Password updated.");
+    } catch (err) {
+      App.toast(err.message || "Could not change the password.", { error: true });
+    } finally {
+      App.setLoading(btn, false);
+    }
   });
 });

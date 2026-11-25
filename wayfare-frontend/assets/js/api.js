@@ -22,6 +22,116 @@
    ========================================================================== */
 (function () {
   const DB = window.DB;
+
+  /* ==========================================================================
+     Real backend (wayfare-backend). Only the endpoints that exist today are
+     connected here:
+       POST /api/Authentication/register      POST /api/Authentication/login
+       GET  /api/Customer/profile             PUT  /api/Customer/profile
+       PUT  /api/Customer/license             PUT  /api/Customer/change-password
+       GET  /api/Admin/profile                PUT  /api/Admin/profile
+     Everything else below still uses the sample data in data.js until its
+     endpoint is built.
+     ========================================================================== */
+  const API_BASE = String(window.WAYFARE_API || "http://localhost:5290").replace(/\/+$/, "");
+  const TOKEN_KEY = "authToken";
+  const USER_KEY = "currentUser";
+
+  const store = {
+    get(k) {
+      try { return localStorage.getItem(k); } catch (e) { return null; }
+    },
+    set(k, v) {
+      try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) { /* private mode */ }
+    },
+  };
+
+  const Session = {
+    token: () => store.get(TOKEN_KEY),
+    user() {
+      try { return JSON.parse(store.get(USER_KEY) || "null"); } catch (e) { return null; }
+    },
+    save(token, user) {
+      store.set(TOKEN_KEY, token);
+      store.set(USER_KEY, JSON.stringify(user));
+    },
+    clear() {
+      store.set(TOKEN_KEY, null);
+      store.set(USER_KEY, null);
+    },
+    isStaff: () => Boolean(Session.token() && (Session.user() || {}).role === "Admin"),
+    isCustomer: () => Boolean(Session.token() && (Session.user() || {}).role === "User"),
+  };
+
+  const isAdminPage = () => document.body && document.body.dataset.layout === "admin";
+  const base = () => (document.body && document.body.dataset.base) || "";
+  function goToLogin() {
+    location.href = isAdminPage() ? `${base()}admin/login.html` : `${base()}login.html`;
+  }
+
+  function errorMessage(data, status) {
+    if (!data) return `Request failed (${status}).`;
+    if (typeof data === "string") return data;
+    if (data.message || data.Message) return data.message || data.Message;
+    // Identity errors come back as [{ code, description }]; validation as { errors: { Field: ["msg"] } }
+    if (Array.isArray(data)) return data.map((e) => e.description || e).join(" ");
+    if (data.errors) {
+      const list = Array.isArray(data.errors) ? data.errors : Object.values(data.errors).flat();
+      if (list.length) return list.join(" ");
+    }
+    return data.title || `Request failed (${status}).`;
+  }
+
+  async function request(method, path, { json, form, auth = true } = {}) {
+    const headers = { Accept: "application/json" };
+    if (auth && Session.token()) headers.Authorization = `Bearer ${Session.token()}`;
+    let body;
+    if (json !== undefined) {
+      headers["Content-Type"] = "application/json";
+      body = JSON.stringify(json);
+    } else if (form) {
+      body = form; // multipart: the browser sets the boundary
+    }
+    let res;
+    try {
+      res = await fetch(API_BASE + path, { method, headers, body });
+    } catch (e) {
+      throw Object.assign(new Error(`Could not reach the server at ${API_BASE}. Is the backend running?`), { status: 0 });
+    }
+    const text = await res.text();
+    let data = null;
+    if (text) {
+      try { data = JSON.parse(text); } catch (e) { data = text; }
+    }
+    if (res.status === 401 && auth) {
+      Session.clear();
+      goToLogin();
+    }
+    if (!res.ok) throw Object.assign(new Error(errorMessage(data, res.status)), { status: res.status, data });
+    return data;
+  }
+
+  const dateOnly = (v) => (v ? String(v).slice(0, 10) : null);
+
+  // UserProfileDto -> the fields the customer pages read on DB.me
+  function applyCustomerProfile(p) {
+    Object.assign(DB.me, {
+      name: p.fullName || DB.me.name,
+      email: p.email || "",
+      phone: p.phone || "",
+      licenseExpiry: dateOnly(p.licenseExpiry),
+      licenseVerified: p.licenseState === "verified",
+      licensePhoto: p.licenseImageUrl || "",
+      joined: dateOnly(p.joinedAt) || DB.me.joined,
+    });
+    return DB.me;
+  }
+
+  // AdminProfileDto -> DB.staff
+  function applyStaffProfile(p) {
+    Object.assign(DB.staff, { id: p.adminId, name: p.fullName || DB.staff.name, email: p.email || "", phone: p.phone || "" });
+    return DB.staff;
+  }
   const BLOCKING = ["approved", "active"];
   const CANCEL_FEE = 0.1;
 
@@ -250,33 +360,91 @@
       return copy(c);
     },
 
-    /* ----- Profile (customers and staff) ----- */
+    /* ----- Sign in and register (real backend) ----- */
 
-    // PUT /api/customer/profile   body: { fullName, email, phone }
+    session: Session,
+
+    // POST /api/Authentication/login   body: { email, password }  ->  { token, roles }
+    async login({ email, password }) {
+      const data = await request("POST", "/api/Authentication/login", { json: { email, password }, auth: false });
+      const roles = data.roles || [];
+      const role = roles.includes("Admin") ? "Admin" : roles.includes("Customer") ? "Customer" : roles[0] || "";
+      Session.save(data.token, { email, role, roles });
+      return { email, role, roles };
+    },
+
+    // POST /api/Authentication/register   multipart: Name, Email, Phone, Password, LicenseExpiry, LicensePhoto
+    // The backend does not return a token, so the caller logs in afterwards.
+    async register(formData) {
+      return request("POST", "/api/Authentication/register", { form: formData, auth: false });
+    },
+
+    logout() {
+      Session.clear();
+    },
+
+    // Runs before the page scripts: loads the signed-in user's real profile.
+async boot() {
+  const layout = document.body.dataset.layout;
+  const page = document.body.dataset.page;
+  const signedIn = layout === "admin" ? Session.isStaff() : Session.isCustomer();
+  DB.signedIn = false;
+
+  if (!signedIn) {
+    if (page === "profile") {
+      goToLogin();
+      return new Promise(() => {});
+    }
+    return;
+  }
+
+  // Mark as signed in immediately from the stored session
+  const savedUser = Session.user() || {};
+  if (layout !== "admin") {
+    DB.me.email = savedUser.email || DB.me.email;
+    DB.me.name = (savedUser.email || "User").split("@")[0];
+  }
+  DB.signedIn = true;
+
+  try {
+    if (layout === "admin") applyStaffProfile(await request("GET", "/api/Admin/profile"));
+    else applyCustomerProfile(await request("GET", "/api/Customer/profile"));
+  } catch (e) {
+    console.warn("Could not refresh profile from API:", e);
+    if (page === "profile") throw e;
+  }
+},
+    /* ----- Profile (real backend) ----- */
+
+    // PUT /api/Customer/profile   body: { fullName, email, phone }
     async updateProfile(data) {
-      await wait(400);
-      Object.assign(DB.me, data);
-      return copy(DB.me);
+      return applyCustomerProfile(
+        await request("PUT", "/api/Customer/profile", { json: { fullName: data.name, email: data.email, phone: data.phone } })
+      );
     },
 
-    // PUT /api/customer/profile/license   (multipart: licensePhoto file and licenseExpiry)
-    // A new photo or date resets the staff check.
+    // PUT /api/Customer/license   multipart: LicenseExpiry and (optional) LicensePhoto file. Resets the staff check.
+    // The endpoint only answers { message }, so the profile is read again afterwards.
     async updateLicense(data) {
-      await wait(400);
-      Object.assign(DB.me, data, { licenseVerified: false });
-      return copy(DB.me);
+      const fd = new FormData();
+      fd.append("LicenseExpiry", data.licenseExpiry);
+      if (data.licenseFile) fd.append("LicensePhoto", data.licenseFile, data.licenseFile.name);
+      await request("PUT", "/api/Customer/license", { form: fd });
+      return applyCustomerProfile(await request("GET", "/api/Customer/profile"));
     },
 
-    // PUT /api/admin/profile   body: { fullName, email, phone }
+    // PUT /api/Admin/profile   body: { fullName, email, phone }
     async updateStaffProfile(data) {
-      await wait(400);
-      Object.assign(DB.staff, data);
-      return copy(DB.staff);
+      return applyStaffProfile(
+        await request("PUT", "/api/Admin/profile", { json: { fullName: data.name, email: data.email, phone: data.phone } })
+      );
     },
 
-    // PUT /api/authentication/change-password   body: { currentPassword, newPassword }   (customers and staff)
-    async changePassword() {
-      await wait(500);
+    // PUT /api/Customer/change-password   body: { currentPassword, newPassword }
+    // Customers only: the backend has no change-password endpoint for staff yet.
+    async changePassword({ currentPassword, newPassword }) {
+      if (isAdminPage()) throw new Error("Changing the staff password is not available yet (no backend endpoint).");
+      await request("PUT", "/api/Customer/change-password", { json: { currentPassword, newPassword } });
       return true;
     },
 

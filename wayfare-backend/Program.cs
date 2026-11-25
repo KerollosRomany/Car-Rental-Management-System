@@ -7,7 +7,6 @@ using wayfare_backend;
 using wayfare_backend.Extensions;
 using wayfare_backend.Models;
 using wayfare_backend.Services;
-using YourProjectNamespace.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,29 +15,32 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddControllers();
 
-//Jwt and Identity Authentications 
+// Jwt and Identity Authentications 
 builder.Services.AddAuthServices(builder.Configuration);
 
 builder.Services.AddAuthorization();
 
-//Allow Communication with Frontend
+// Allow Communication with Frontend
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://127.0.0.1:5500", "http://localhost:5500")
+        policy.WithOrigins("http://127.0.0.1:3500", "http://localhost:5290")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// Register Cloudflare R2 image services
+builder.Services.AddImageServices();
 
 var app = builder.Build();
 
-//data seeders 
+
+// data seeders 
 await app.SeedDatabaseAsync();
 
 // Configure the HTTP request pipeline.
@@ -46,15 +48,26 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+// Global middleware to handle BadHttpRequestException as 400 Bad Request
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (BadHttpRequestException ex)
+    {
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsJsonAsync(new { message = ex.Message });
+    }
+});
 
 app.UseHttpsRedirection();
-
 app.UseCors("AllowFrontend");
-
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 app.Run();
-

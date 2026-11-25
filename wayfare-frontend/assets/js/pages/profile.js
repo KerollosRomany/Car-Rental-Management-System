@@ -56,7 +56,7 @@ App.ready(() => {
     const file = $("#p-photo").files[0];
     save(
       e.currentTarget,
-      async () => ({ licenseExpiry: $("#p-expiry").value, ...(file ? { licensePhoto: await App.readImage(file) } : {}) }),
+      async () => ({ licenseExpiry: $("#p-expiry").value, ...(file ? { licenseFile: file } : {}) }),
       "License saved. Staff will check it again at pick-up.",
       Api.updateLicense
     );
@@ -68,9 +68,14 @@ App.ready(() => {
     if (!App.validate(form)) return;
     const btn = $("[type=submit]", form);
     App.setLoading(btn, true);
-    await Api.changePassword({ currentPassword: $("#pw-current").value, newPassword: $("#pw-new").value });
-    App.setLoading(btn, false);
-    form.reset();
-    App.toast("Password updated.");
+    try {
+      await Api.changePassword({ currentPassword: $("#pw-current").value, newPassword: $("#pw-new").value });
+      form.reset();
+      App.toast("Password updated.");
+    } catch (err) {
+      App.toast(err.message || "Could not change the password.", { error: true });
+    } finally {
+      App.setLoading(btn, false);
+    }
   });
 });
