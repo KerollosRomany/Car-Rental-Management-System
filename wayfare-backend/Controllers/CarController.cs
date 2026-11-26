@@ -12,12 +12,12 @@ namespace wayfare_backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CarsController : ControllerBase
+    public class CarController : ControllerBase
     {
         private readonly AppDbContext _context;
         private readonly IRentalRulesService _rentalRulesService;
 
-        public CarsController(AppDbContext context, IRentalRulesService rentalRulesService)
+        public CarController(AppDbContext context, IRentalRulesService rentalRulesService)
         {
             _context = context;
             _rentalRulesService = rentalRulesService;

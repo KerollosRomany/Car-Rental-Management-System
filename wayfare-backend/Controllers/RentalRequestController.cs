@@ -11,13 +11,14 @@ using wayfare_backend.Services;
 namespace wayfare_backend.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "Customer")]
     [Route("api/[controller]")]
-    public class RentalRequestsController : ControllerBase
+    public class RentalRequestController : ControllerBase
     {
         private readonly AppDbContext _context;
         private readonly IRentalRulesService _rentalRulesService;
 
-        public RentalRequestsController(AppDbContext context, IRentalRulesService rentalRulesService)
+        public RentalRequestController(AppDbContext context, IRentalRulesService rentalRulesService)
         {
             _context = context;
             _rentalRulesService = rentalRulesService;

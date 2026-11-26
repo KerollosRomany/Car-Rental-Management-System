@@ -16,7 +16,8 @@ namespace wayfare_backend.Services
         private static readonly RentalStatus[] BlockingStatuses =
         {
             RentalStatus.Approved,
-            RentalStatus.Active
+            RentalStatus.Active,
+            RentalStatus.Pending
         };
 
         private readonly AppDbContext _context;
