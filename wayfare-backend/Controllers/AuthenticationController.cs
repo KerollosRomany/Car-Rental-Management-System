@@ -89,12 +89,12 @@ namespace wayfare_backend.Controllers
 
                 await transaction.CommitAsync();
 
-                return CreatedAtAction(nameof(CustomerController.GetUserProfile), new { id = user.Id }, new
-                {
-                    Message = "User registered successfully.",
-                    UserId = user.Id,
-                    Email = user.Email
-                });
+            return StatusCode(StatusCodes.Status201Created, new
+            {
+                Message = "User registered successfully.",
+                UserId = user.Id,
+                Email = user.Email
+            });
             }
             catch (Exception)
             {

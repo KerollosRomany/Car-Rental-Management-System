@@ -1,51 +1,60 @@
 /* Car detail: gallery, specs, availability calendar, price, request flow. */
-App.ready(async () => {
-  const { $, $$, icon, fmt, esc } = App;
-  const q = new URLSearchParams(location.search);
-  const car = await Api.getCar(q.get("id"));
-  const detail = $("#detail");
+App.ready(async() => {
+            const { $, $$, icon, fmt, esc } = App;
+            const q = new URLSearchParams(location.search);
+            const car = await Api.getCar(q.get("id"));
+            const detail = $("#detail");
 
-  if (!car) {
-    detail.outerHTML = App.empty({
-      icon: "car-profile",
-      title: "We could not find that car",
-      text: "It may have been removed from the fleet. Browse the cars that are available.",
-      action: { label: "Browse cars", href: "cars.html" },
-    });
-    return;
-  }
+            if (!car) {
+                detail.outerHTML = App.empty({
+                    icon: "car-profile",
+                    title: "We could not find that car",
+                    text: "It may have been removed from the fleet. Browse the cars that are available.",
+                    action: { label: "Browse cars", href: "cars.html" },
+                });
+                return;
+            }
 
-  document.title = `${car.brand} ${car.model} | Wayfare`;
-  $("#crumbs").innerHTML = `
+            document.title = `${car.brand} ${car.model} | Wayfare`;
+            $("#crumbs").innerHTML = `
     <a href="cars.html">Cars</a>${icon("caret-right")}
     <a href="cars.html?category=${encodeURIComponent(car.category)}">${esc(car.category)}</a>${icon("caret-right")}
     <span aria-current="page">${esc(car.brand)} ${esc(car.model)}</span>`;
 
-  /* ---------- Trip state ---------- */
-  let from = q.get("from");
-  let to = q.get("to");
-  const loc = q.get("loc") || DB.locations[0].id;
-  const clash = from && to && car.bookedRanges.some((b) => from < b.to && b.from < to);
-  const maintenance = car.status === "maintenance";
-  if (clash || maintenance) from = to = null;
+            /* ---------- Trip state ---------- */
+            let from = q.get("from");
+            let to = q.get("to");
+            const locations = await Api.getLocations();
+            const carBranchId = car.branchId !== undefined && car.branchId !== null ?
+                car.branchId :
+                (car.BranchId !== undefined && car.BranchId !== null ? car.BranchId : null);
+            const matchedBranch =
+                locations.find((l) => String(l.id) === String(carBranchId)) ||
+                locations.find((l) => l.name && car.branchName && l.name.toLowerCase() === String(car.branchName).toLowerCase()) ||
+                null;
+            const loc = matchedBranch ? String(matchedBranch.id) : (carBranchId != null ? String(carBranchId) : "");
+            const locName = matchedBranch ? matchedBranch.name : (car.branchName || "Assigned branch");
+            const clash = from && to && car.bookedRanges.some((b) => from < b.to && b.from < to);
+            const maintenance = car.status === "maintenance";
+            if (clash || maintenance) from = to = null;
 
-  const statusPill =
-    car.status === "maintenance"
-      ? App.status("car", "maintenance")
-      : car.status === "rented"
-      ? `<span class="status status--info">Rented right now</span>`
-      : App.status("car", "available");
+            const statusPill =
+                car.status === "maintenance" ?
+                App.status("car", "maintenance") :
+                car.status === "rented" ?
+                `<span class="status status--info">Rented right now</span>` :
+                App.status("car", "available");
 
-  const specs = [
-    ["gear-six", "Transmission", car.transmission],
-    [App.fuelIcon(car.fuel), "Fuel", car.fuel],
-    ["users", "Seats", `${car.seats} seats`],
-    ["suitcase", "Luggage", `${car.bags} ${car.bags === 1 ? "bag" : "bags"}`],
-    ["palette", "Colour", car.color],
-    ["car-profile", "Type", car.category],
-  ];
+            const specs = [
+                ["gear-six", "Transmission", car.transmission],
+                [App.fuelIcon(car.fuel), "Fuel", car.fuel],
+                ["users", "Seats", `${car.seats} seats`],
+                ["suitcase", "Luggage", `${car.bags} ${car.bags === 1 ? "bag" : "bags"}`],
+                ["palette", "Colour", car.color],
+                ["car-profile", "Type", car.category],
+            ];
 
-  detail.innerHTML = `
+            detail.innerHTML = `
     <div class="detail-main">
       <div class="gallery">
         <div class="gallery-main"><img id="g-main" src="${esc(App.img(car.images[0], 1400))}" alt="${esc(`${car.color} ${car.brand} ${car.model}`)}" width="1400" height="875"></div>
@@ -119,13 +128,12 @@ App.ready(async () => {
           </div>
           <p class="error-msg">Choose your pick-up and return dates.</p>
         </div>
+
         <div class="field">
           <label class="label" for="b-loc">Pick-up location</label>
           <div class="input-wrap">
             <i class="ph ph-map-pin" aria-hidden="true"></i>
-            <select class="select" id="b-loc"${maintenance ? " disabled" : ""}>
-              ${DB.locations.map((l) => `<option value="${l.id}"${l.id === loc ? " selected" : ""}>${esc(l.name)}</option>`).join("")}
-            </select>
+            <input class="input" id="b-loc" type="text" value="${esc(locName)}" readonly disabled>
           </div>
         </div>
 
@@ -183,7 +191,6 @@ App.ready(async () => {
       return;
     }
     const days = Api.daysBetween(from, to);
-    const locName = DB.locations.find((l) => l.id === $("#b-loc").value).name;
     $("#cb-car").innerHTML = `
       <img src="${esc(App.img(car.images[0], 360))}" alt="" width="120" height="84">
       <div><strong>${esc(car.brand)} ${esc(car.model)}</strong><div class="muted text-sm">${esc(car.category)}, ${esc(car.year)}, ${esc(car.transmission)}</div></div>`;
@@ -206,7 +213,7 @@ App.ready(async () => {
         carId: car.id,
         pickupDate: from,
         returnDate: to,
-        pickupLocation: $("#b-loc").value,
+        branchId: loc ? Number(loc) : undefined,
       });
       $("#cb-ref").textContent = rental.id;
       $("#cb-review").hidden = true;

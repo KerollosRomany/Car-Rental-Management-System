@@ -25,9 +25,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://127.0.0.1:3500", "http://localhost:5290")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+            "http://localhost:5500",
+            "http://127.0.0.1:5500",
+             "http://localhost:5290"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
 });
 
@@ -36,6 +40,8 @@ builder.Services.AddOpenApi();
 
 // Register Cloudflare R2 image services
 builder.Services.AddImageServices();
+
+builder.Services.AddScoped<IRentalRulesService, RentalRulesService>();
 
 var app = builder.Build();
 
