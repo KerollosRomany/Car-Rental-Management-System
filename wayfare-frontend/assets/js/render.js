@@ -3,67 +3,85 @@
    Every dynamic value goes through App.esc() before it reaches innerHTML.
    Keep doing that when real data replaces the mock data.
    ========================================================================== */
-(function () {
-  "use strict";
+(function() {
+        "use strict";
 
-  const App = window.App;
-  const { esc, fmt, icon } = App;
+        const App = window.App;
+        const { esc, fmt, icon } = App;
 
-  /* ---------- Small pieces ---------- */
-  const STATUS = {
-    rental: {
-      pending: ["Pending", "warn"],
-      approved: ["Approved", "info"],
-      active: ["Active", "live"],
-      completed: ["Completed", "neutral"],
-      rejected: ["Rejected", "danger"],
-      cancelled: ["Cancelled", "neutral"],
-      refused: ["Cancelled (fee)", "neutral"],
-    },
-    car: {
-      available: ["Available", "ok"],
-      rented: ["Rented", "info"],
-      maintenance: ["Maintenance", "warn"],
-    },
-    payment: {
-      paid: ["Paid", "ok"],
-      partial: ["10% fee kept", "warn"],
-      refunded: ["Refunded", "neutral"],
-    },
-  };
+        /* ---------- Small pieces ---------- */
+        const STATUS = {
+            rental: {
+                pending: ["Pending", "warn"],
+                approved: ["Approved", "info"],
+                active: ["Active", "live"],
+                completed: ["Completed", "neutral"],
+                rejected: ["Rejected", "danger"],
+                cancelled: ["Cancelled", "neutral"],
+                refused: ["Cancelled (fee)", "neutral"],
+            },
+            car: {
+                available: ["Available", "ok"],
+                rented: ["Rented", "info"],
+                maintenance: ["Maintenance", "warn"],
+            },
+            payment: {
+                paid: ["Paid", "ok"],
+                partial: ["10% fee kept", "warn"],
+                refunded: ["Refunded", "neutral"],
+            },
+        };
 
-  App.status = (kind, value) => {
-    const [label, tone] = (STATUS[kind] && STATUS[kind][value]) || [value, "neutral"];
-    return `<span class="status${tone === "neutral" ? "" : " status--" + tone}">${esc(label)}</span>`;
-  };
+        App.status = (kind, value) => {
+            const [label, tone] = (STATUS[kind] && STATUS[kind][value]) || [value, "neutral"];
+            return `<span class="status${tone === "neutral" ? "" : " status--" + tone}">${esc(label)}</span>`;
+        };
 
-  App.statusLabel = (kind, value) => ((STATUS[kind] && STATUS[kind][value]) || [value])[0];
+        App.statusLabel = (kind, value) => ((STATUS[kind] && STATUS[kind][value]) || [value])[0];
 
-  App.avatar = (name, size) => {
-    const sum = Array.from(name).reduce((a, c) => a + c.charCodeAt(0), 0);
-    const tone = ["", "tone-2", "tone-3", "tone-4"][sum % 4];
-    const style = size ? ` style="--av:${size}px"` : "";
-    return `<span class="avatar ${tone}"${style}>${esc(fmt.initials(name))}</span>`;
-  };
+        App.avatar = (name, size) => {
+            const sum = Array.from(name).reduce((a, c) => a + c.charCodeAt(0), 0);
+            const tone = ["", "tone-2", "tone-3", "tone-4"][sum % 4];
+            const style = size ? ` style="--av:${size}px"` : "";
+            return `<span class="avatar ${tone}"${style}>${esc(fmt.initials(name))}</span>`;
+        };
 
-  App.plate = (text) => `<span class="plate"><span>${esc(text)}</span></span>`;
+        App.plate = (text) => `<span class="plate"><span>${esc(text)}</span></span>`;
 
-  App.fuelIcon = (fuel) => (fuel === "Electric" ? "lightning" : fuel === "Hybrid" ? "leaf" : "gas-pump");
+        App.fuelIcon = (fuel) => (fuel === "Electric" ? "lightning" : fuel === "Hybrid" ? "leaf" : "gas-pump");
 
-  App.featureIcon = (name) => {
-    const n = name.toLowerCase();
-    const map = [
-      ["air conditioning", "snowflake"], ["climate", "snowflake"], ["bluetooth", "bluetooth"], ["gps", "navigation-arrow"],
-      ["camera", "camera"], ["leather", "armchair"], ["heated", "thermometer"], ["keyless", "key"], ["cruise", "gauge"],
-      ["usb", "plugs-connected"], ["charging", "lightning"], ["panoramic", "sun"], ["roof", "sun"], ["carplay", "device-mobile"],
-      ["lane", "path"], ["sensor", "wifi-high"], ["child", "users"], ["sliding", "door"], ["4x4", "mountains"],
-      ["suspension", "wind"], ["sport", "speedometer"], ["screen", "devices"], ["reclining", "armchair"],
-    ];
-    const hit = map.find(([k]) => n.includes(k));
-    return hit ? hit[1] : "check-circle";
-  };
+        App.featureIcon = (name) => {
+            const n = name.toLowerCase();
+            const map = [
+                ["air conditioning", "snowflake"],
+                ["climate", "snowflake"],
+                ["bluetooth", "bluetooth"],
+                ["gps", "navigation-arrow"],
+                ["camera", "camera"],
+                ["leather", "armchair"],
+                ["heated", "thermometer"],
+                ["keyless", "key"],
+                ["cruise", "gauge"],
+                ["usb", "plugs-connected"],
+                ["charging", "lightning"],
+                ["panoramic", "sun"],
+                ["roof", "sun"],
+                ["carplay", "device-mobile"],
+                ["lane", "path"],
+                ["sensor", "wifi-high"],
+                ["child", "users"],
+                ["sliding", "door"],
+                ["4x4", "mountains"],
+                ["suspension", "wind"],
+                ["sport", "speedometer"],
+                ["screen", "devices"],
+                ["reclining", "armchair"],
+            ];
+            const hit = map.find(([k]) => n.includes(k));
+            return hit ? hit[1] : "check-circle";
+        };
 
-  App.empty = ({ icon: ic = "magnifying-glass", title, text, action }) => `
+        App.empty = ({ icon: ic = "magnifying-glass", title, text, action }) => `
     <div class="empty">
       <div class="empty-icon">${icon(ic)}</div>
       <h3>${esc(title)}</h3>

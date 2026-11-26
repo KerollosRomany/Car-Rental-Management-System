@@ -42,9 +42,6 @@ namespace wayfare_backend.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (request.LicenseExpiry.Date <= DateTime.UtcNow.Date)
-                return BadRequest(new { Message = "License expiry date must be in the future." });
-
             var existingUser = await _userManager.FindByEmailAsync(request.Email);
             if (existingUser != null)
                 return Conflict(new { Message = "Email is already registered." });
@@ -89,12 +86,12 @@ namespace wayfare_backend.Controllers
 
                 await transaction.CommitAsync();
 
-                return CreatedAtAction(nameof(CustomerController.GetUserProfile), new { id = user.Id }, new
-                {
-                    Message = "User registered successfully.",
-                    UserId = user.Id,
-                    Email = user.Email
-                });
+            return StatusCode(StatusCodes.Status201Created, new
+            {
+                Message = "User registered successfully.",
+                UserId = user.Id,
+                Email = user.Email
+            });
             }
             catch (Exception)
             {

@@ -3,51 +3,51 @@
    Shared by the dashboard and the rentals page. Each action returns a Promise
    that resolves true when something changed, false when the staff member backed out.
    ========================================================================== */
-(function () {
-  "use strict";
+(function() {
+        "use strict";
 
-  const { $, esc, fmt, icon } = App;
+        const { $, esc, fmt, icon } = App;
 
-  function dialog(id, markup) {
-    let d = document.getElementById(id);
-    if (!d) {
-      d = document.createElement("dialog");
-      d.id = id;
-      d.className = "modal";
-      document.body.appendChild(d);
-    }
-    d.innerHTML = markup;
-    return d;
-  }
+        function dialog(id, markup) {
+            let d = document.getElementById(id);
+            if (!d) {
+                d = document.createElement("dialog");
+                d.id = id;
+                d.className = "modal";
+                document.body.appendChild(d);
+            }
+            d.innerHTML = markup;
+            return d;
+        }
 
-  const first = (r) => r.customer.name.split(" ")[0];
-  const carName = (r) => `${r.car.brand} ${r.car.model}`;
+        const first = (r) => r.customer.name.split(" ")[0];
+        const carName = (r) => `${r.car.brand} ${r.car.model}`;
 
-  // Keep the sidebar count in step with the data.
-  function refreshPendingBadge() {
-    const n = DB.rentals.filter((r) => r.status === "pending").length;
-    const badge = $('.side-link[href$="rentals.html"] .count-badge');
-    if (badge) {
-      badge.textContent = n;
-      badge.hidden = n === 0;
-    }
-  }
+        // Keep the sidebar count in step with the data.
+        function refreshPendingBadge() {
+            const n = DB.rentals.filter((r) => r.status === "pending").length;
+            const badge = $('.side-link[href$="rentals.html"] .count-badge');
+            if (badge) {
+                badge.textContent = n;
+                badge.hidden = n === 0;
+            }
+        }
 
-  const AdminActions = {
-    refreshPendingBadge,
+        const AdminActions = {
+                refreshPendingBadge,
 
-    async approve(r) {
-      await Api.setRentalStatus(r.id, "approved");
-      refreshPendingBadge();
-      App.toast(`Request ${r.id} approved. ${first(r)} can see it in their account.`);
-      return true;
-    },
+                async approve(r) {
+                    await Api.setRentalStatus(r.id, "approved");
+                    refreshPendingBadge();
+                    App.toast(`Request ${r.id} approved. ${first(r)} can see it in their account.`);
+                    return true;
+                },
 
-    reject(r) {
-      return new Promise((resolve) => {
-        const d = dialog(
-          "reject-dialog",
-          `
+                reject(r) {
+                    return new Promise((resolve) => {
+                        const d = dialog(
+                            "reject-dialog",
+                            `
           <div class="dialog-head">
             <div><h3>Reject request ${esc(r.id)}?</h3><p>${esc(r.customer.name)} asked for the ${esc(carName(r))} from ${fmt.range(r.pickupDate, r.returnDate)}. They will see your reason and get the full ${fmt.money(r.paidAmount)} back.</p></div>
             <button class="icon-btn" type="button" data-close aria-label="Close">${icon("x")}</button>
@@ -71,43 +71,43 @@
             <button class="btn btn-secondary" type="button" data-close>Keep request</button>
             <button class="btn btn-danger-solid" type="button" id="rj-confirm">Reject request</button>
           </div>`
-        );
-        let changed = false;
-        $("#rj-confirm", d).onclick = async (e) => {
-          App.setLoading(e.currentTarget, true);
-          const note = $("#rj-note", d).value.trim();
-          const reason = $("#rj-reason", d).value + (note ? ` ${note}` : "");
-          await Api.setRentalStatus(r.id, "rejected", { reason });
-          changed = true;
-          d.close();
-          refreshPendingBadge();
-          App.toast(`Request ${r.id} rejected.`);
-        };
-        d.onclose = () => resolve(changed);
-        d.showModal();
-      });
-    },
+                        );
+                        let changed = false;
+                        $("#rj-confirm", d).onclick = async(e) => {
+                            App.setLoading(e.currentTarget, true);
+                            const note = $("#rj-note", d).value.trim();
+                            const reason = $("#rj-reason", d).value + (note ? ` ${note}` : "");
+                            await Api.setRentalStatus(r.id, "rejected", { reason });
+                            changed = true;
+                            d.close();
+                            refreshPendingBadge();
+                            App.toast(`Request ${r.id} rejected.`);
+                        };
+                        d.onclose = () => resolve(changed);
+                        d.showModal();
+                    });
+                },
 
-    async pickup(r) {
-      const ok = await App.confirm({
-        title: "Hand over the keys?",
-        body: `Compare ${first(r)}'s physical driving license with the photo on file. It must be valid until ${fmt.date(r.returnDate)}; it expires ${fmt.date(r.customer.licenseExpiry)}. The ${carName(r)} will be marked as rented.`,
-        details: App.licensePhoto(r.customer, "lg"),
-        confirmLabel: "Hand over keys",
-        cancelLabel: "Not yet",
-      });
-      if (!ok) return false;
-      await Api.setRentalStatus(r.id, "active");
-      App.toast(`${carName(r)} is now rented to ${first(r)}.`);
-      return true;
-    },
+                async pickup(r) {
+                    const ok = await App.confirm({
+                        title: "Hand over the keys?",
+                        body: `Compare ${first(r)}'s physical driving license with the photo on file. It must be valid until ${fmt.date(r.returnDate)}; it expires ${fmt.date(r.customer.licenseExpiry)}. The ${carName(r)} will be marked as rented.`,
+                        details: App.licensePhoto(r.customer, "lg"),
+                        confirmLabel: "Hand over keys",
+                        cancelLabel: "Not yet",
+                    });
+                    if (!ok) return false;
+                    await Api.setRentalStatus(r.id, "active");
+                    App.toast(`${carName(r)} is now rented to ${first(r)}.`);
+                    return true;
+                },
 
-    returnCar(r) {
-      return new Promise((resolve) => {
-        const overdue = Math.round((fmt.parse(DB.today) - fmt.parse(r.returnDate)) / 86400000);
-        const d = dialog(
-          "return-dialog",
-          `
+                returnCar(r) {
+                    return new Promise((resolve) => {
+                                const overdue = Math.round((fmt.parse(DB.today) - fmt.parse(r.returnDate)) / 86400000);
+                                const d = dialog(
+                                        "return-dialog",
+                                        `
           <div class="dialog-head">
             <div><h3>Record return</h3><p>${esc(carName(r))} from ${esc(r.customer.name)}. The car becomes available again.</p></div>
             <button class="icon-btn" type="button" data-close aria-label="Close">${icon("x")}</button>
