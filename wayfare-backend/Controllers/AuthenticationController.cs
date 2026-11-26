@@ -42,9 +42,6 @@ namespace wayfare_backend.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (request.LicenseExpiry.Date <= DateTime.UtcNow.Date)
-                return BadRequest(new { Message = "License expiry date must be in the future." });
-
             var existingUser = await _userManager.FindByEmailAsync(request.Email);
             if (existingUser != null)
                 return Conflict(new { Message = "Email is already registered." });

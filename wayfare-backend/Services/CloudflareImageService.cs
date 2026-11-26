@@ -32,7 +32,7 @@ namespace wayfare_backend.Services
                 ForcePathStyle = true
             };
 
-            _s3Client = new AmazonS3Client(r2Config["AccessKey"], r2Config["SecretKey"], s3Config);
+            _s3Client = new AmazonS3Client(r2Config["AccessKeyId"], r2Config["SecretAccessKey"], s3Config);
         }
 
         public async Task<string?> UploadImageAsync(IFormFile? file, string folderName)
@@ -91,7 +91,16 @@ namespace wayfare_backend.Services
             if (string.IsNullOrWhiteSpace(imageUrl))
                 return;
 
-            string objectKey = imageUrl.TrimStart('/');
+            string objectKey = imageUrl;
+
+            // Strip the public base URL if a full URL was stored in the DB
+            if (!string.IsNullOrWhiteSpace(_publicUrl) &&
+                objectKey.StartsWith(_publicUrl, StringComparison.OrdinalIgnoreCase))
+            {
+                objectKey = objectKey[_publicUrl.Length..];
+            }
+
+            objectKey = objectKey.TrimStart('/');
 
             var deleteRequest = new DeleteObjectRequest
             {
