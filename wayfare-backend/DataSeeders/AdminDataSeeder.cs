@@ -17,7 +17,7 @@ namespace wayfare_backend.DataSeeders
             var _configuration = serviceProvider.GetRequiredService<IConfiguration>();
             
             // 1.Seeding Roles
-            string[] roles = ["Admin","Customer"];
+            string[] roles = ["Admin" , "Customer"];
             foreach(var role in roles)
             {
                 if(!await _roleManager.RoleExistsAsync(role))

@@ -28,7 +28,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://localhost:5500",
-            "http://127.0.0.1:3500",
+            "http://127.0.0.1:5500",
              "http://localhost:5290"
         )
         .AllowAnyHeader()
@@ -59,6 +59,8 @@ builder.Services.AddSingleton<IAmazonS3>(sp =>
 
     return new AmazonS3Client(accessKey, secretKey, config);
 });
+
+builder.Services.AddScoped<IRentalRulesService, RentalRulesService>();
 
 builder.Services.AddScoped<IRentalRulesService, RentalRulesService>();
 

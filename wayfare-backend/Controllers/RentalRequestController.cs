@@ -11,6 +11,7 @@ using wayfare_backend.Services;
 namespace wayfare_backend.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "Customer")]
     [Route("api/[controller]")]
     public class RentalRequestController : ControllerBase
     {
