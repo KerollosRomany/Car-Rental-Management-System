@@ -260,7 +260,7 @@
         // Customers only get cars they can book: without dates, cars that are available now.
         async getCars(filters = {}) {
             const qs = buildCarsQuery(filters);
-            const list = await request("GET", `/api/cars${qs}`, { auth: false });
+            const list = await request("GET", `/api/car${qs}`, { auth: false });
             return Array.isArray(list) ? list.map(normalizeCar) : [];
         },
 
@@ -273,7 +273,7 @@
         // GET /api / cars /: id
         async getCar(id) {
             try {
-                const car = await request("GET", `/api/cars/${id}`, { auth: false });
+                const car = await request("GET", `/api/car/${id}`, { auth: false });
                 return normalizeCar(car);
             } catch (e) {
                 if (e && e.status === 404) return null;
@@ -329,7 +329,7 @@
                 payload.branchId = Number(branchId);
             }
 
-            const created = await request("POST", "/api/rentalrequests", { json: payload, auth: true });
+            const created = await request("POST", "/api/rentalrequest", { json: payload, auth: true });
             const pickup = dateOnly(created.startDate ? created.startDate : created.pickupDate) || pickupDate;
             const ret = dateOnly(created.endDate ? created.endDate : created.returnDate) || returnDate;
             const days = created.days ? created.days : daysBetween(pickup, ret);
