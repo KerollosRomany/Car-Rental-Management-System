@@ -71,6 +71,8 @@
     }
 
     function errorMessage(data, status) {
+        if (!data && status === 403)
+            return "This account is not allowed to do that (staff only).";
         if (!data) return `Request failed (${status}).`;
         if (typeof data === "string") return data;
         if (data.message || data.Message) return data.message || data.Message;
@@ -160,6 +162,65 @@
             bookedRanges,
             availableForDates: c.availableForDates !== false,
         };
+    }
+
+
+    const capitalize = (s) => (s ? String(s).charAt(0).toUpperCase() + String(s).slice(1).toLowerCase() : "");
+
+    // AdminCarDto (GET /api/admin/cars, POST newcar, PUT editcar) -> the shape admin-cars.js reads.
+    // images stays a list of URLs (first = main) like the rest of the site;
+    // imageList keeps the ids, which the edit form needs to say which photos to keep.
+    function normalizeAdminCar(c) {
+        if (!c) return null;
+        const imageList = (Array.isArray(c.images) ? c.images : [])
+            .map((i) => ({ id: i.id, url: i.url, isMain: Boolean(i.isMain), displayOrder: i.displayOrder }))
+            .sort((a, b) => (b.isMain - a.isMain) || (a.displayOrder - b.displayOrder));
+        return {
+            id: c.id,
+            brand: c.brand,
+            model: c.model,
+            year: c.year,
+            category: normalizeCategory(c.carType),
+            transmission: capitalize(c.transmission),
+            fuel: capitalize(c.fuel),
+            seats: c.seats,
+            bags: c.luggage,
+            dailyRate: c.dailyRate,
+            color: c.color || "",
+            plate: c.plateNumber,
+            status: String(c.status || "").toLowerCase(),
+            branchId: c.branchId,
+            branchName: c.branchName || "",
+            description: c.description || "",
+            features: Array.isArray(c.features) ? c.features : [],
+            images: imageList.map((i) => i.url),
+            imageList,
+        };
+    }
+
+    // The car form -> multipart fields with the names of AddCarRequestDto / EditCarRequestDto.
+    function carFormData(data) {
+        const fd = new FormData();
+        fd.append("Brand", data.brand);
+        fd.append("Model", data.model);
+        fd.append("Year", String(data.year));
+        fd.append("CarType", data.category); // "SUV" binds to CarType.Suv (case does not matter)
+        fd.append("Transmission", data.transmission);
+        fd.append("Fuel", data.fuel);
+        fd.append("Seat", String(data.seats));
+        fd.append("Luggage", String(data.bags || 0));
+        fd.append("DailyRate", String(data.dailyRate));
+        fd.append("PlateNumber", data.plate);
+        fd.append("Color", data.color);
+        fd.append("Status", data.status);
+        fd.append("BranchId", String(data.branchId));
+        fd.append("Description", data.description || "");
+        fd.append("IncludedFeature", (data.features || []).join(", "));
+        // Edit only: existing photos to keep, in order. Photos left out are deleted.
+        (data.keepImageIds || []).forEach((id) => fd.append("KeepImageIds", String(id)));
+        // New photo files, in order. On add the first one is the main photo.
+        (data.newFiles || []).forEach((file) => fd.append("Images", file, file.name));
+        return fd;
     }
 
     function buildCarsQuery(filters = {}) {
@@ -266,11 +327,11 @@
 
         // GET /api/admin/cars   (staff only: every car, whatever its status)
         async getFleet() {
-            await wait();
-            return copy(DB.cars);
+            const list = await request("GET", "/api/admin/cars");
+            return Array.isArray(list) ? list.map(normalizeAdminCar) : [];
         },
 
-        // GET /api / cars /: id
+        // GET /api/car/:id
         async getCar(id) {
             try {
                 const car = await request("GET", `/api/car/${id}`, { auth: false });
@@ -282,32 +343,19 @@
         },
 
         // POST /api/admin/newcar  or  PUT /api/admin/editcar/:id   (staff only, multipart form data)
-        // images: the first one is the main photo, the rest keep their order.
+        // data.keepImageIds: existing photos to keep (edit only). data.newFiles: new File objects.
+        // The server orders photos as: kept ones first, then the new files. The first is the main photo.
         async saveCar(data) {
-            await wait();
-            if (data.id) {
-                Object.assign(findCar(data.id), data);
-                return copy(findCar(data.id));
-            }
-            const id = `c${String(nextNumber(DB.cars)).padStart(2, "0")}`;
-            const car = {
-                images: [],
-                features: [],
-                description: "",
-                bags: 2,
-                color: "",
-                ...data,
-                id,
-            };
-            DB.cars.unshift(car);
-            return copy(car);
+            const form = carFormData(data);
+            const saved = data.id ?
+                await request("PUT", `/api/admin/editcar/${data.id}`, { form }) :
+                await request("POST", "/api/admin/newcar", { form });
+            return normalizeAdminCar(saved);
         },
 
         // DELETE /api/admin/deletecar/:id   (staff only). A car with rental history answers 409.
         async deleteCar(id) {
-            await wait();
-            const i = DB.cars.findIndex((c) => c.id === id);
-            if (i > -1) DB.cars.splice(i, 1);
+            await request("DELETE", `/api/admin/deletecar/${id}`);
             return true;
         },
 

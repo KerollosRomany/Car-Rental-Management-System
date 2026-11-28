@@ -42,6 +42,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddImageServices();
 
 builder.Services.AddScoped<IRentalRulesService, RentalRulesService>();
+builder.Services.AddScoped<IAdminCarService, AdminCarService>();
 
 var app = builder.Build();
 

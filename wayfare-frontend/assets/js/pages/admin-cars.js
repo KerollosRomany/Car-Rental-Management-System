@@ -1,48 +1,55 @@
 /* Staff: manage cars. Search, filter, paginate, add, edit, delete, several photos per car. */
-App.ready(async () => {
-  const { $, $$, icon, fmt, esc } = App;
-  const PAGE = 8;
-  const state = { q: "", cat: "", status: "", page: 1 };
-  let cars = [];
+App.ready(async() => {
+            const { $, $$, icon, fmt, esc } = App;
+            const PAGE = 8;
+            const state = { q: "", cat: "", status: "", page: 1 };
+            let cars = [];
 
-  $("#f-cat").innerHTML = `<option value="">All types</option>` + DB.categories.map((c) => `<option>${c}</option>`).join("");
-  $("#c-category").innerHTML = DB.categories.map((c) => `<option>${c}</option>`).join("");
-  $("#cars-table").innerHTML = `<div style="padding:24px" class="stack"><div class="skeleton" style="height:48px"></div><div class="skeleton" style="height:48px"></div><div class="skeleton" style="height:48px"></div></div>`;
+            $("#f-cat").innerHTML = `<option value="">All types</option>` + DB.categories.map((c) => `<option>${c}</option>`).join("");
+            $("#c-category").innerHTML = DB.categories.map((c) => `<option>${c}</option>`).join("");
+            $("#cars-table").innerHTML = `<div style="padding:24px" class="stack"><div class="skeleton" style="height:48px"></div><div class="skeleton" style="height:48px"></div><div class="skeleton" style="height:48px"></div></div>`;
+            // Year: 2000 up to next year (same rule as the backend).
+            $("#c-year").max = String(new Date().getFullYear() + 1);
 
-  async function load() {
-    cars = await Api.getFleet();
-    render();
-  }
+            // Branches come from GET /api/branches. The backend needs a BranchId for every car.
+            const branches = await Api.getLocations();
+            $("#c-branch").innerHTML =
+                `<option value="">Choose a branch</option>` +
+                branches.map((b) => `<option value="${esc(b.id)}">${esc(b.name)}</option>`).join("");
+            async function load() {
+                cars = await Api.getFleet();
+                render();
+            }
 
-  function filtered() {
-    const q = state.q.toLowerCase();
-    return cars.filter(
-      (c) =>
-        (!q || `${c.brand} ${c.model} ${c.plate}`.toLowerCase().includes(q)) &&
-        (!state.cat || c.category === state.cat) &&
-        (!state.status || c.status === state.status)
-    );
-  }
+            function filtered() {
+                const q = state.q.toLowerCase();
+                return cars.filter(
+                    (c) =>
+                    (!q || `${c.brand} ${c.model} ${c.plate}`.toLowerCase().includes(q)) &&
+                    (!state.cat || c.category === state.cat) &&
+                    (!state.status || c.status === state.status)
+                );
+            }
 
-  function render() {
-    const list = filtered();
-    const pages = Math.max(1, Math.ceil(list.length / PAGE));
-    state.page = Math.min(state.page, pages);
-    const slice = list.slice((state.page - 1) * PAGE, state.page * PAGE);
-    const free = cars.filter((c) => c.status === "available").length;
-    $("#cars-sub").textContent = `${fmt.plural(cars.length, "car")} in the fleet, ${free} available now.`;
+            function render() {
+                const list = filtered();
+                const pages = Math.max(1, Math.ceil(list.length / PAGE));
+                state.page = Math.min(state.page, pages);
+                const slice = list.slice((state.page - 1) * PAGE, state.page * PAGE);
+                const free = cars.filter((c) => c.status === "available").length;
+                $("#cars-sub").textContent = `${fmt.plural(cars.length, "car")} in the fleet, ${free} available now.`;
 
-    if (!slice.length) {
-      $("#cars-table").innerHTML = App.empty({
-        icon: "car-profile",
-        title: cars.length ? "No cars match your search" : "No cars in the fleet yet",
-        text: cars.length ? "Try a different word or clear the filters." : "Add your first car so customers can request it.",
-        action: cars.length ? null : { label: "Add car" },
-      });
-      const add = $("[data-empty-action]");
-      if (add) add.addEventListener("click", () => openForm());
-    } else {
-      $("#cars-table").innerHTML = `
+                if (!slice.length) {
+                    $("#cars-table").innerHTML = App.empty({
+                        icon: "car-profile",
+                        title: cars.length ? "No cars match your search" : "No cars in the fleet yet",
+                        text: cars.length ? "Try a different word or clear the filters." : "Add your first car so customers can request it.",
+                        action: cars.length ? null : { label: "Add car" },
+                    });
+                    const add = $("[data-empty-action]");
+                    if (add) add.addEventListener("click", () => openForm());
+                } else {
+                    $("#cars-table").innerHTML = `
         <table class="table" style="min-width:860px">
           <thead><tr><th>Car</th><th>Plate</th><th>Type</th><th>Specs</th><th style="text-align:right">Daily rate</th><th>Status</th><th></th></tr></thead>
           <tbody>
@@ -97,7 +104,8 @@ App.ready(async () => {
   $("#cars-table").addEventListener("click", async (e) => {
     const btn = e.target.closest("[data-act]");
     if (!btn) return;
-    const car = cars.find((c) => c.id === btn.closest("tr").dataset.id);
+    const car = cars.find((c) => String(c.id) === btn.closest("tr").dataset.id);
+    if (!car) return;
     if (btn.dataset.act === "edit") return openForm(car);
     if (car.status === "rented") {
       App.toast(`The ${car.brand} ${car.model} is rented right now. Record its return before deleting it.`, { error: true });
@@ -105,127 +113,136 @@ App.ready(async () => {
     }
     const ok = await App.confirm({
       title: `Delete ${car.brand} ${car.model}?`,
-      body: "It will disappear from the site. Past rentals keep their history.",
+      body: "This cannot be undone. A car that was ever rented cannot be deleted: set it to Maintenance instead.",
       confirmLabel: "Delete car",
       danger: true,
     });
+
     if (!ok) return;
-    await Api.deleteCar(car.id);
-    App.toast(`${car.brand} ${car.model} deleted.`);
-    load();
-  });
+
+    try {
+      await Api.deleteCar(car.id);
+      App.toast(`${car.brand} ${car.model} deleted.`);
+      await load();
+    } catch (err) {
+      App.toast(err.message || "Could not delete the car.", { error: true });
+      if (err.status === 404) await load();
+    }
+  }); 
 
   /* ---------- Add / edit form ---------- */
   const dlg = $("#car-dialog");
   const form = $("#car-form");
   const MAX_PHOTOS = 8;
   let editing = null;
-  let photos = []; // [{ src }] the first one is the main photo. New photos are data URLs in this demo.
+  // Each photo is either
+  // { id, src }  an existing photo saved on the server
+  // { file, src } a new photo selected by the user
+  let photos = [];
 
+  const isNew = (p) => Boolean(p.file);
+  const hasExisting = () => photos.some((p) => !isNew(p));
   const photoError = (message) => {
     $("#photos-field").classList.toggle("has-error", Boolean(message));
     if (message) $("#photos-error").textContent = message;
   };
-
-  function renderPhotos() {
+  
+  function releasePreviews(list) {
+    list.filter(isNew).forEach((p) => URL.revokeObjectURL(p.src));
+  }
+function renderPhotos() {
     $("#photo-grid").innerHTML =
       photos
-        .map(
-          (p, i) => `
+        .map((p, i) => {
+          const canBeMain = i > 0 && (!isNew(p) || !hasExisting());
+          return `
         <div class="photo-tile${i === 0 ? " is-main" : ""}" data-i="${i}">
           <img src="${esc(App.img(p.src, 420))}" alt="Photo ${i + 1} of ${photos.length}">
-          ${i === 0 ? `<span class="photo-badge">Main</span>` : ""}
+          ${i === 0 ? `<span class="photo-badge">Main</span>` : isNew(p) && hasExisting() ? `<span class="photo-badge">New</span>` : ""}
           <div class="photo-actions">
-            ${i > 0 ? `<button type="button" data-photo="main" aria-label="Make photo ${i + 1} the main photo" title="Make main">${icon("star")}</button>` : ""}
+            ${canBeMain ? `<button type="button" data-photo="main" aria-label="Make photo ${i + 1} the main photo" title="Make main">${icon("star")}</button>` : ""}
             <button type="button" data-photo="remove" aria-label="Remove photo ${i + 1}" title="Remove">${icon("trash")}</button>
           </div>
-        </div>`
-        )
+        </div>`;
+        })
         .join("") +
       (photos.length < MAX_PHOTOS
         ? `<label class="photo-add" for="c-photos">${icon("plus")}<strong>${photos.length ? "Add more" : "Add photos"}</strong><span>${photos.length ? `${MAX_PHOTOS - photos.length} left` : "Drop or browse, several at once"}</span></label>`
         : "");
   }
+  // A rented car must keep the status "rented".
+  function setStatusOptions(car) {
+    const select = $("#c-status");
+    const rented = Boolean(car && car.status === "rented");
 
+    $('option[value="rented"]', select).disabled = !rented;
+    select.disabled = rented;
+    $("#c-status-hint").hidden = !rented;
+  }
   function openForm(car) {
     editing = car || null;
     form.reset();
     $$(".field", form).forEach((f) => f.classList.remove("has-error"));
     $("#car-dialog-title").textContent = car ? `Edit ${car.brand} ${car.model}` : "Add car";
     $("#car-save").textContent = car ? "Save changes" : "Add car";
+    setStatusOptions(car);
     if (car) {
       Object.entries({
         brand: car.brand, model: car.model, year: car.year, category: car.category, transmission: car.transmission,
         fuel: car.fuel, seats: car.seats, bags: car.bags, dailyRate: car.dailyRate, plate: car.plate, color: car.color,
-        status: car.status, description: car.description, features: (car.features || []).join(", "),
+        status: car.status, branchId: car.branchId, description: car.description, features: (car.features || []).join(", "),
       }).forEach(([k, v]) => {
         if (form.elements[k]) form.elements[k].value = v == null ? "" : v;
       });
     }
-    photos = car ? car.images.map((src) => ({ src })) : [];
+    releasePreviews(photos);
+    photos = car ? (car.imageList || []).map((img) => ({ id: img.id, src: img.url })) : [];
+    photoError("");
     renderPhotos();
     App.openDialog(dlg);
   }
 
   $("#add-car").addEventListener("click", () => openForm());
 
-  // New photos are read, shrunk and kept as data URLs so they survive the demo reload.
-  // The real endpoint takes the original files as multipart form data instead.
-  function shrink(file) {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onerror = () => resolve(null);
-      reader.onload = () => {
-        const img = new Image();
-        img.onerror = () => resolve(null);
-        img.onload = () => {
-          const scale = Math.min(1, 1200 / img.width);
-          const canvas = document.createElement("canvas");
-          canvas.width = Math.round(img.width * scale);
-          canvas.height = Math.round(img.height * scale);
-          canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL("image/jpeg", 0.82));
-        };
-        img.src = reader.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  }
+function addPhotos(fileList) {
+  let problem = "";
 
-  async function addPhotos(fileList) {
-    let problem = "";
-    for (const file of Array.from(fileList)) {
-      if (photos.length >= MAX_PHOTOS) {
-        problem = `A car can have up to ${MAX_PHOTOS} photos.`;
-        break;
-      }
-      if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
-        problem = "Choose JPG, PNG or WebP images.";
-        continue;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        problem = "Each photo must be under 5 MB.";
-        continue;
-      }
-      const src = await shrink(file);
-      if (src) photos.push({ src });
+  for (const file of Array.from(fileList)) {
+    if (photos.length >= MAX_PHOTOS) {
+      problem = `A car can have up to ${MAX_PHOTOS} photos.`;
+      break;
     }
-    photoError(problem);
-    renderPhotos();
+
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
+      problem = "Choose JPG, PNG or WebP images.";
+      continue;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      problem = "Each photo must be under 5 MB.";
+      continue;
+    }
+
+    photos.push({ file, src: URL.createObjectURL(file) });
   }
 
-  $("#c-photos").addEventListener("change", async (e) => {
-    await addPhotos(e.target.files);
-    e.target.value = ""; // so the same file can be chosen again
-  });
+  photoError(problem);
+  renderPhotos();
+}
+
+
+$("#c-photos").addEventListener("change", (e) => {
+  addPhotos(e.target.files);
+  e.target.value = "";
+});
 
   const grid = $("#photo-grid");
   grid.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-photo]");
     if (!btn) return;
     const i = Number(btn.closest("[data-i]").dataset.i);
-    if (btn.dataset.photo === "remove") photos.splice(i, 1);
-    else photos.unshift(photos.splice(i, 1)[0]);
+    if (btn.dataset.photo === "remove") releasePreviews(photos.splice(i, 1));
+else photos.unshift(photos.splice(i, 1)[0]);
     photoError("");
     renderPhotos();
   });
@@ -252,19 +269,32 @@ App.ready(async () => {
       plate: f.plate.value.trim().toUpperCase(),
       color: f.color.value.trim(),
       status: f.status.value,
+      branchId: Number(f.branchId.value),
       description: f.description.value.trim(),
       features: f.features.value.split(",").map((s) => s.trim()).filter(Boolean),
+      keepImageIds: photos.filter((p) => !isNew(p)).map((p) => p.id),
+      newFiles: photos.filter(isNew).map((p) => p.file),
     };
     if (editing) data.id = editing.id;
-    data.images = photos.map((p) => p.src); // first = main photo
     const btn = $("#car-save");
     App.setLoading(btn, true);
     try {
       await Api.saveCar(data);
+      releasePreviews(photos);
+      photos = [];
       App.closeDialog(dlg);
       App.toast(editing ? `${data.brand} ${data.model} updated.` : `${data.brand} ${data.model} added to the fleet.`);
       await load();
-    } finally {
+    } 
+    catch (err) {
+      // 400: a field or photo was refused. 409: plate already used, or the car is out on rent.
+      App.toast(err.message || "Could not save the car.", { error: true });
+      if (err.status === 404) {
+        App.closeDialog(dlg);
+        await load();
+      }
+    }
+    finally {
       App.setLoading(btn, false);
     }
   });
